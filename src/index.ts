@@ -86,3 +86,42 @@ export type {
   ToolCallTone,
   ToolCallView,
 } from "./chat/model.js";
+export {
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+} from "./surfaces/card.js";
+export {
+  Field,
+  Field as FieldShell,
+  CheckboxField,
+  SelectField,
+  SelectField as SelectFieldShell,
+  TextAreaField,
+  TextField,
+  type FieldContext,
+  type FieldProps,
+} from "./forms/field.js";
+export { Switch, type SwitchProps } from "./forms/switch.js";
+export {
+  SegmentedControl,
+  type SegmentedControlOption,
+  type SegmentedControlProps,
+} from "./forms/segmented-control.js";
+export {
+  Badge,
+  Chip,
+  StatusPill,
+  type BadgeProps,
+  type ChipProps,
+  type UiTone,
+} from "./data/badge.js";
+export {
+  DataTable,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from "./data/table.js";

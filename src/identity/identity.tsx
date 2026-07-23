@@ -11,6 +11,17 @@ export type IdentityProps = Omit<HTMLAttributes<HTMLDivElement>, "title"> & {
   readonly badges?: ReactNode;
   readonly metadata?: ReactNode;
   readonly actions?: ReactNode;
+  readonly classes?: {
+    readonly media?: string;
+    readonly body?: string;
+    readonly heading?: string;
+    readonly name?: string;
+    readonly description?: string;
+    readonly status?: string;
+    readonly badges?: string;
+    readonly metadata?: string;
+    readonly actions?: string;
+  };
 };
 
 /** Canonical media → name → supporting information identity skeleton. */
@@ -23,6 +34,7 @@ export function Identity({
   badges,
   metadata,
   actions,
+  classes,
   className,
   ...props
 }: IdentityProps) {
@@ -32,19 +44,19 @@ export function Identity({
 
   return (
     <div {...props} className={cx("ui-identity", className)}>
-      <div className="ui-identity__media">{media ?? (avatar ? <Avatar {...avatar} /> : null)}</div>
-      <div className="ui-identity__body">
-        <div className="ui-identity__heading">
-          <div className="ui-identity__name">{name}</div>
-          {status === undefined ? null : <div className="ui-identity__status">{status}</div>}
+      <div className={cx("ui-identity__media", classes?.media)}>{media ?? (avatar ? <Avatar {...avatar} /> : null)}</div>
+      <div className={cx("ui-identity__body", classes?.body)}>
+        <div className={cx("ui-identity__heading", classes?.heading)}>
+          <div className={cx("ui-identity__name", classes?.name)}>{name}</div>
+          {status === undefined ? null : <div className={cx("ui-identity__status", classes?.status)}>{status}</div>}
         </div>
         {description === undefined ? null : (
-          <div className="ui-identity__description">{description}</div>
+          <div className={cx("ui-identity__description", classes?.description)}>{description}</div>
         )}
-        {badges === undefined ? null : <div className="ui-identity__badges">{badges}</div>}
-        {metadata === undefined ? null : <div className="ui-identity__metadata">{metadata}</div>}
+        {badges === undefined ? null : <div className={cx("ui-identity__badges", classes?.badges)}>{badges}</div>}
+        {metadata === undefined ? null : <div className={cx("ui-identity__metadata", classes?.metadata)}>{metadata}</div>}
       </div>
-      {actions === undefined ? null : <div className="ui-identity__actions">{actions}</div>}
+      {actions === undefined ? null : <div className={cx("ui-identity__actions", classes?.actions)}>{actions}</div>}
     </div>
   );
 }
