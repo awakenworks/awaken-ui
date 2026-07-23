@@ -32,4 +32,10 @@ for (const theme of ["Awaken", "Oversight"] as const) {
     const scene = page.getByRole("heading", { name: "Metric cards" }).locator("..");
     await expect(scene).toHaveScreenshot(`stat-card-${theme.toLowerCase()}.png`);
   });
+
+  test(`Editor form under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    const scene = page.getByRole("heading", { name: "Editor form" }).locator("..");
+    await expect(scene).toHaveScreenshot(`editor-form-${theme.toLowerCase()}.png`);
+  });
 }

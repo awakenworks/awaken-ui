@@ -104,6 +104,17 @@
   margin-inline-start: calc(var(--ui-space-2) * -1);
 }
 
+.ui-editor-form-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.65fr);
+  min-width: 0;
+}
+
+.ui-editor-form-split__form,
+.ui-editor-form-split__assistant {
+  min-width: 0;
+}
+
 .ui-button {
   box-sizing: border-box;
   display: inline-flex;

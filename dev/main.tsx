@@ -9,6 +9,7 @@ import {
   ConfirmProvider,
   Dialog,
   Drawer,
+  EditorForm,
   IdentityCard,
   MenuPopover,
   ReasoningBlock,
@@ -178,6 +179,23 @@ function Gallery() {
           <StatCard label="Healthy runs" tone="success" value={38} />
           <StatCard label="Needs attention" tone="warning" value={3} />
         </StatGrid>
+      </section>
+
+      <section>
+        <h2>Editor form</h2>
+        <EditorForm
+          assistant={<aside className="gallery__assistant">Agent drafting rail</aside>}
+          cancelLabel="Cancel"
+          onCancel={() => undefined}
+          onSubmit={(event) => event.preventDefault()}
+          pending={false}
+          submitLabel="Save changes"
+        >
+          <label className="gallery__field">
+            Name
+            <input defaultValue="Release review" />
+          </label>
+        </EditorForm>
       </section>
 
       <Dialog

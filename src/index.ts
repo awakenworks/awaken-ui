@@ -133,6 +133,11 @@ export {
   type CheckPickerOption,
   type CheckPickerProps,
 } from "./forms/check-picker.js";
+export {
+  EditorForm,
+  type EditorFormClasses,
+  type EditorFormProps,
+} from "./forms/editor-form.js";
 export { Switch, type SwitchProps } from "./forms/switch.js";
 export {
   SegmentedControl,
