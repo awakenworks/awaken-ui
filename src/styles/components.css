@@ -30,6 +30,11 @@
   box-shadow: var(--ui-shadow-overlay);
 }
 
+.ui-dialog-surface__portal,
+.ui-dialog-surface__viewport {
+  display: contents;
+}
+
 .ui-button {
   box-sizing: border-box;
   display: inline-flex;

@@ -11,6 +11,10 @@ export {
   type OverlaySize,
 } from "./overlays/dialog.js";
 export {
+  DialogSurface,
+  type DialogSurfaceProps,
+} from "./overlays/dialog-surface.js";
+export {
   Drawer,
   type DrawerProps,
   type DrawerSide,
