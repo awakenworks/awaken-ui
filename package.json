@@ -37,7 +37,9 @@
     "prepack": "pnpm check"
   },
   "dependencies": {
-    "@base-ui/react": "1.6.0"
+    "@base-ui/react": "1.6.0",
+    "dompurify": "3.3.0",
+    "marked": "18.0.4"
   },
   "peerDependencies": {
     "react": "^19.0.0",

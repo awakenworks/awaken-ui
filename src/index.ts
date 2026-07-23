@@ -4,6 +4,7 @@ export {
   type ButtonSize,
   type ButtonVariant,
 } from "./primitives/button.js";
+export { CopyButton, type CopyButtonProps } from "./primitives/copy-button.js";
 export {
   Dialog,
   type DialogProps,
@@ -86,6 +87,12 @@ export type {
   ToolCallTone,
   ToolCallView,
 } from "./chat/model.js";
+export {
+  ChatMarkdown,
+  hasMarkdown,
+  renderSafeMarkdown,
+  type ChatMarkdownProps,
+} from "./chat/markdown.js";
 export {
   Card,
   CardBody,
