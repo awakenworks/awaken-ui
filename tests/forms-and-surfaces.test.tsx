@@ -22,7 +22,7 @@ describe("forms and surfaces", () => {
 
   it("exposes switch state and delegates changes", () => {
     const change = vi.fn();
-    render(<Switch checked={false} onChange={change} label="Enabled" />);
+    render(<Switch checked={false} onCheckedChange={change} label="Enabled" />);
     fireEvent.click(screen.getByRole("switch", { name: "Enabled" }));
     expect(change).toHaveBeenCalledWith(true);
   });

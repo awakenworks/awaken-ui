@@ -19,6 +19,7 @@ import {
   SelectField,
   StatCard,
   StatGrid,
+  Switch,
   TextAreaField,
   TextField,
   ToolCallGroup,
@@ -45,6 +46,7 @@ function Gallery() {
   });
   const [gridQuery, setGridQuery] = useState("");
   const [gridSort, setGridSort] = useState("name");
+  const [switchEnabled, setSwitchEnabled] = useState(true);
 
   return (
     <main className="gallery" data-ui-theme={theme} data-product-theme={theme}>
@@ -75,6 +77,11 @@ function Gallery() {
           <Button loading loadingLabel="Saving">
             Save
           </Button>
+          <Switch
+            checked={switchEnabled}
+            label="Enable agent"
+            onCheckedChange={setSwitchEnabled}
+          />
         </div>
       </section>
 

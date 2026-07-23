@@ -1,26 +1,33 @@
+import type { ChangeEventHandler, InputHTMLAttributes } from "react";
 import { cx } from "../internal/cx.js";
 
-export type SwitchProps = {
-  readonly checked: boolean;
-  readonly onChange: (checked: boolean) => void;
-  readonly label: string;
-  readonly disabled?: boolean;
-  readonly className?: string;
+export type SwitchProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
+  readonly label?: string | undefined;
+  readonly onCheckedChange?: ((checked: boolean) => void) | undefined;
 };
 
-export function Switch({ checked, onChange, label, disabled, className }: SwitchProps) {
+export function Switch({
+  className,
+  label,
+  onChange,
+  onCheckedChange,
+  ...props
+}: SwitchProps) {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    onChange?.(event);
+    if (!event.defaultPrevented) {
+      onCheckedChange?.(event.currentTarget.checked);
+    }
+  };
+
   return (
-    <button
-      type="button"
+    <input
+      {...props}
+      type="checkbox"
       role="switch"
-      aria-checked={checked}
-      aria-label={label}
-      disabled={disabled}
-      data-on={checked || undefined}
+      aria-label={props["aria-label"] ?? label}
       className={cx("ui-switch", className)}
-      onClick={() => onChange(!checked)}
-    >
-      <span className="ui-switch__knob" aria-hidden="true" />
-    </button>
+      onChange={handleChange}
+    />
   );
 }

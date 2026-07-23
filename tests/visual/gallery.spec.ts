@@ -18,6 +18,12 @@ test("Agent conversation under Oversight tokens", async ({ page }) => {
 });
 
 for (const theme of ["Awaken", "Oversight"] as const) {
+  test(`Buttons and switch under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    const scene = page.getByRole("heading", { name: "Buttons" }).locator("..");
+    await expect(scene).toHaveScreenshot(`buttons-switch-${theme.toLowerCase()}.png`);
+  });
+
   test(`Popover under ${theme} tokens`, async ({ page }) => {
     await page.getByRole("button", { name: `${theme} tokens` }).click();
     await page.getByRole("button", { name: "Open actions" }).click();
