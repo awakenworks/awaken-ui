@@ -178,6 +178,14 @@ export {
   TableRow,
 } from "./data/table.js";
 export {
+  DataGrid,
+  type DataGridClasses,
+  type DataGridColumn,
+  type DataGridLabels,
+  type DataGridProps,
+  type DataGridState,
+} from "./data/grid.js";
+export {
   Cluster,
   SplitPane,
   Stack,

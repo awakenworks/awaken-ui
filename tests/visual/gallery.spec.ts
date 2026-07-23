@@ -58,4 +58,10 @@ for (const theme of ["Awaken", "Oversight"] as const) {
     const scene = page.getByRole("heading", { name: "Secret field" }).locator("..");
     await expect(scene).toHaveScreenshot(`secret-field-${theme.toLowerCase()}.png`);
   });
+
+  test(`Data grid under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    const scene = page.getByRole("heading", { name: "Data grid" }).locator("..");
+    await expect(scene).toHaveScreenshot(`data-grid-${theme.toLowerCase()}.png`);
+  });
 }

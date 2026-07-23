@@ -152,6 +152,34 @@
   color: var(--ui-color-text-muted);
 }
 
+.ui-data-grid__toolbar,
+.ui-data-grid__toolbar-lead,
+.ui-data-grid__pager {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+
+.ui-data-grid__toolbar {
+  justify-content: space-between;
+}
+
+.ui-data-grid__search {
+  width: 15rem;
+}
+
+.ui-data-grid__scroll {
+  overflow: auto;
+}
+
+.ui-data-grid__empty {
+  padding: 0;
+}
+
+.ui-data-grid__pager {
+  justify-content: flex-end;
+}
+
 .ui-button {
   box-sizing: border-box;
   display: inline-flex;

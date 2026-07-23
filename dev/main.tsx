@@ -8,6 +8,7 @@ import {
   ChatThinking,
   ConfirmProvider,
   Dialog,
+  DataGrid,
   Drawer,
   EditorForm,
   IdentityCard,
@@ -39,6 +40,8 @@ function Gallery() {
     enabled: true,
     instructions: "Review every proposed change.",
   });
+  const [gridQuery, setGridQuery] = useState("");
+  const [gridSort, setGridSort] = useState("name");
 
   return (
     <main className="gallery" data-ui-theme={theme} data-product-theme={theme}>
@@ -241,6 +244,39 @@ function Gallery() {
             replace: "Replace",
           }}
           onChange={() => undefined}
+        />
+      </section>
+
+      <section>
+        <h2>Data grid</h2>
+        <DataGrid
+          columns={[
+            { key: "name", header: "Agent", cell: (row) => row.name, sortValue: (row) => row.name },
+            { key: "status", header: "Status", cell: (row) => row.status },
+          ]}
+          filter={(row, query) => row.name.toLowerCase().includes(query.toLowerCase())}
+          labels={{
+            formatRange: ({ from, to, total }) => `${from}–${to} of ${total}`,
+            next: "Next →",
+            previous: "← Previous",
+            searchPlaceholder: "Filter agents",
+          }}
+          renderEmpty={() => <span>No agents</span>}
+          renderLoading={() => <tbody />}
+          rowKey={(row) => row.name}
+          rows={[
+            { name: "Reviewer", status: "Online" },
+            { name: "Planner", status: "Idle" },
+          ]}
+          state={{
+            dir: "asc",
+            page: 1,
+            q: gridQuery,
+            setPage: () => undefined,
+            setQ: setGridQuery,
+            setSort: setGridSort,
+            sort: gridSort,
+          }}
         />
       </section>
 
