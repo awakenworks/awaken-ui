@@ -45,3 +45,44 @@ export {
   type IdentityCardProps,
   type IdentityProps,
 } from "./identity/identity.js";
+export {
+  ChatComposer,
+  isComposerSubmitShortcut,
+  resizeComposerToContent,
+  useAutoGrowingComposer,
+  type ChatComposerProps,
+  type ChatComposerSendMode,
+} from "./chat/composer.js";
+export {
+  ChatMessageList,
+  CHAT_STICK_THRESHOLD,
+  isNearChatBottom,
+  type ChatMessageListProps,
+} from "./chat/message-list.js";
+export {
+  ChatMessage,
+  formatChatTime,
+  type ChatMessageProps,
+} from "./chat/message.js";
+export {
+  ToolCallCard,
+  ToolCallGroup,
+  aggregateToolCallTone,
+  type ToolCallCardProps,
+  type ToolCallGroupProps,
+  type ToolCallLabels,
+} from "./chat/tool-call.js";
+export {
+  ChatThinking,
+  ReasoningBlock,
+  type ChatThinkingProps,
+  type ReasoningBlockProps,
+} from "./chat/status.js";
+export { ChatApproval, type ChatApprovalProps } from "./chat/approval.js";
+export { useChatDraft } from "./chat/draft.js";
+export type {
+  ChatMessageView,
+  ChatRole,
+  ToolCallTone,
+  ToolCallView,
+} from "./chat/model.js";
