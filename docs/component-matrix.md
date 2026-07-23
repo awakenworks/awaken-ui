@@ -27,17 +27,19 @@ parallel generic implementation is not an accepted migration state.
 
 | Bounded context | Shared authority | Awaken | Oversight | Status / required decision |
 | --- | --- | --- | --- | --- |
-| Buttons and clipboard | `Button`, `CopyButton` | variant adapter | variant/icon adapter | shared; remove remaining clipboard implementation |
+| Buttons and clipboard | `Button`, `CopyButton` | variant adapter | variant/icon adapter | complete |
 | Identity | `Avatar`, `Identity`, `IdentityCard` | transcript actor mapping | `EntityIdentity` icon adapter | shared identity; generated `EntityIcon` remains product-owned |
 | Agent conversation | composer, message/list, markdown, thinking, reasoning, tool call, approval, draft/scroll hooks | wire-event/session-log adapter | DTO/i18n/icon adapter | shared |
-| Fields and selection | Field, text/area/select, checkbox, switch, segmented control | Field API adapter; CheckPicker pending | direct/thin exports | partially shared |
-| Data display | Card, badges/chips/status, table atoms, panel, states | DataGrid and mixed primitives pending | direct/thin exports; StatCard pending | partially shared |
+| Fields and selection | Field, text/area/select, checkbox, native switch, segmented control, CheckPicker | class/copy adapters | direct/thin exports | complete; native input is the switch event authority |
+| Schema/configuration | `SchemaForm`, `SecretField` | schema/copy/class adapters | product forms map DTOs into shared fields | shared renderer and secret-state machine complete |
+| Data display | Card, badges/chips/status, table atoms, DataGrid, StatCard/StatGrid, panel, states | class and query-state adapters | direct/thin exports | complete for product-neutral display behavior |
 | Layout | Stack, Cluster, SplitPane, ToolbarRow, Panel, SectionHeader, Toolbar | adoption pending by page | direct exports | shared authority exists |
 | Transient feedback | Toast queue/provider | tone/API adapter | i18n/icon/API adapter | shared |
 | Modal overlays | Dialog, Drawer, AlertDialog, ConfirmProvider, DialogSurface, Popover | thin adapters | thin visual adapters | shared behavior |
-| Authoring/editor chrome | none yet | Trace/editor candidates pending | AuthoringEditor and EditorModal pending | audit before extraction |
-| Schema/configuration | none yet | SchemaForm, SecretField pending | product forms | extract schema renderer only if contracts overlap |
-| Charts/inspectors | none yet | Sparkline, JsonInspector, usage views pending | domain cards | product-neutral candidates pending |
+| Authoring/editor chrome | `EditorForm`, `AuthoringHeader`, `AuthoringGuide`, controlled tab state | product editor composition | thin modal/editor adapters | shared chrome complete; editor domain models remain local |
+| Inspectors | `JsonInspector` | i18n/class adapter | shared inspector available where raw JSON is appropriate | disclosure, serialization and clipboard state shared |
+| Trace views | shared chat/tool/approval/JSON primitives | `session-log` → span projection | run-event → tool/approval/output projection | intentionally separate domain projections; no common DTO |
+| Usage and analytics | display primitives only | Awaken token/cache billing projection | Oversight run/domain analytics | intentionally product-owned calculations |
 | Product identity generation | none | product-owned | `EntityIcon` prompt/hash/rendering | intentionally product-owned |
 | Routing/API/query state | none | product-owned | product-owned | never shared |
 
@@ -58,15 +60,16 @@ error/retry state, while products classify failures and execute retries.
 
 ## Migration priority
 
-### Required next
+### Required maintenance
 
-1. Remove remaining duplicate clipboard/avatar/form/table behavior where a
-   shared authority already exists.
-2. Extract Awaken CheckPicker/DataGrid-compatible product-neutral behavior
-   without importing app state or URL state.
-3. Audit authoring/editor and Trace components for overlapping state machines
-   before defining a shared API.
-4. Add both-token visual scenes for each newly migrated component family.
+1. Reject new product-local behavior when a shared authority already exists;
+   local files may translate classes, copy, icons, routes, or DTOs only.
+2. Add both-token visual scenes for every new shared component family.
+3. Keep Trace projections separate unless both products adopt the same event
+   contract; reuse the shared leaf primitives instead of normalizing domain
+   events into a synthetic common model.
+4. Re-run the duplication search whenever either product adds a generic
+   component or presentation-state hook.
 
 ### Product adapters that remain
 
@@ -80,8 +83,8 @@ error/retry state, while products classify failures and execute retries.
 
 - Generated entity artwork and prompt/hash policy remain in Oversight until a
   second product needs the same identity-generation contract.
-- Schema-driven forms remain under audit; a second schema renderer must not be
-  introduced merely to normalize filenames.
+- Trace event folding and usage accounting remain product-owned because their
+  source events, consistency boundaries, and terminal outcomes differ.
 
 ## Completion gate
 
