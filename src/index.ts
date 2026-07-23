@@ -177,6 +177,13 @@ export {
   type SectionHeaderProps,
 } from "./surfaces/section-header.js";
 export {
+  AuthoringGuide,
+  AuthoringHeader,
+  type AuthoringGuideProps,
+  type AuthoringGuideStep,
+  type AuthoringHeaderProps,
+} from "./surfaces/authoring.js";
+export {
   Toolbar,
   ToolbarLead,
   ToolbarSpacer,
