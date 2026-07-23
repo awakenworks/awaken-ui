@@ -115,6 +115,34 @@
   min-width: 0;
 }
 
+.ui-schema__object,
+.ui-schema__array {
+  display: grid;
+  gap: var(--ui-space-3);
+}
+
+.ui-schema__field {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.ui-schema__boolean,
+.ui-schema__array-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+}
+
+.ui-schema__array-value {
+  min-width: 0;
+  flex: 1;
+}
+
+.ui-schema__error,
+.ui-schema__required {
+  color: var(--ui-color-danger);
+}
+
 .ui-button {
   box-sizing: border-box;
   display: inline-flex;

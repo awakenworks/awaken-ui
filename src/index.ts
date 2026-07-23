@@ -139,6 +139,14 @@ export {
   type EditorFormClasses,
   type EditorFormProps,
 } from "./forms/editor-form.js";
+export {
+  SchemaForm,
+  stringControlForSchema,
+  type JsonSchema,
+  type SchemaFormClasses,
+  type SchemaFormLabels,
+  type SchemaFormProps,
+} from "./forms/schema-form.js";
 export { Switch, type SwitchProps } from "./forms/switch.js";
 export {
   SegmentedControl,

@@ -46,4 +46,10 @@ for (const theme of ["Awaken", "Oversight"] as const) {
       `confirm-${theme.toLowerCase()}.png`,
     );
   });
+
+  test(`Schema form under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    const scene = page.getByRole("heading", { name: "Schema form" }).locator("..");
+    await expect(scene).toHaveScreenshot(`schema-form-${theme.toLowerCase()}.png`);
+  });
 }

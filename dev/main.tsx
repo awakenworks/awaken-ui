@@ -13,6 +13,7 @@ import {
   IdentityCard,
   MenuPopover,
   ReasoningBlock,
+  SchemaForm,
   StatCard,
   StatGrid,
   ToolCallGroup,
@@ -32,6 +33,11 @@ function Gallery() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [theme, setTheme] = useState<"awaken" | "oversight">("awaken");
+  const [schemaValue, setSchemaValue] = useState<unknown>({
+    name: "Reviewer",
+    enabled: true,
+    instructions: "Review every proposed change.",
+  });
 
   return (
     <main className="gallery" data-ui-theme={theme} data-product-theme={theme}>
@@ -196,6 +202,28 @@ function Gallery() {
             <input defaultValue="Release review" />
           </label>
         </EditorForm>
+      </section>
+
+      <section>
+        <h2>Schema form</h2>
+        <SchemaForm
+          labels={{
+            addItem: "Add item",
+            invalidJson: "Invalid JSON",
+            removeItem: "Remove item",
+          }}
+          onChange={setSchemaValue}
+          schema={{
+            type: "object",
+            required: ["name"],
+            properties: {
+              name: { type: "string", title: "Agent name" },
+              enabled: { type: "boolean", title: "Enabled", description: "Available for assignment" },
+              instructions: { type: "string", title: "Instructions", format: "textarea" },
+            },
+          }}
+          value={schemaValue}
+        />
       </section>
 
       <Dialog
