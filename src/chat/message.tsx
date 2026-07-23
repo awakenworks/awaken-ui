@@ -20,6 +20,14 @@ export type ChatMessageProps = {
   readonly children?: ReactNode;
   readonly compact?: boolean;
   readonly className?: string;
+  readonly classes?: {
+    readonly media?: string;
+    readonly content?: string;
+    readonly header?: string;
+    readonly author?: string;
+    readonly time?: string;
+    readonly body?: string;
+  };
 };
 
 export function ChatMessage({
@@ -32,20 +40,21 @@ export function ChatMessage({
   children,
   compact = false,
   className,
+  classes,
 }: ChatMessageProps) {
   const stamp = formatChatTime(timestamp);
   return (
     <article className={cx("ui-chat-message", className)} data-role={role} data-compact={compact || undefined}>
-      <div className="ui-chat-message__media">
+      <div className={cx("ui-chat-message__media", classes?.media)}>
         {media ?? <Avatar label={authorLabel} size="sm" />}
       </div>
-      <div className="ui-chat-message__content">
-        <header className="ui-chat-message__header">
-          <strong>{authorLabel}</strong>
-          {stamp ? <time dateTime={timestamp}>{stamp}</time> : null}
+      <div className={cx("ui-chat-message__content", classes?.content)}>
+        <header className={cx("ui-chat-message__header", classes?.header)}>
+          <strong className={classes?.author}>{authorLabel}</strong>
+          {stamp ? <time className={classes?.time} dateTime={timestamp}>{stamp}</time> : null}
           {actions}
         </header>
-        {body === undefined ? null : <div className="ui-chat-message__body">{body}</div>}
+        {body === undefined ? null : <div className={cx("ui-chat-message__body", classes?.body)}>{body}</div>}
         {children}
       </div>
     </article>

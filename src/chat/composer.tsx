@@ -54,6 +54,16 @@ export type ChatComposerProps = {
   readonly sendIcon?: ReactNode;
   readonly stopIcon?: ReactNode;
   readonly className?: string;
+  readonly classes?: {
+    readonly inputWrapper?: string;
+    readonly input?: string;
+    readonly controls?: string;
+    readonly leading?: string;
+    readonly actions?: string;
+    readonly send?: string;
+    readonly stop?: string;
+    readonly hint?: string;
+  };
 };
 
 export function ChatComposer({
@@ -73,6 +83,7 @@ export function ChatComposer({
   sendIcon,
   stopIcon,
   className,
+  classes,
 }: ChatComposerProps) {
   const { ref } = useAutoGrowingComposer(value);
   const canSubmit = !disabled && !busy && value.trim().length > 0;
@@ -91,31 +102,33 @@ export function ChatComposer({
 
   return (
     <form className={cx("ui-chat-composer", className)} onSubmit={onFormSubmit}>
-      <textarea
-        ref={ref}
-        className="ui-chat-composer__input"
-        rows={1}
-        value={value}
-        disabled={disabled}
-        placeholder={placeholder}
-        aria-label={ariaLabel}
-        onChange={(event) => onChange(event.target.value)}
-        onKeyDown={onKeyDown}
-      />
-      <div className="ui-chat-composer__controls">
-        <div className="ui-chat-composer__leading">{leadingActions}</div>
-        <div className="ui-chat-composer__actions">
+      <div className={cx("ui-chat-composer__input-wrap", classes?.inputWrapper)}>
+        <textarea
+          ref={ref}
+          className={cx("ui-chat-composer__input", classes?.input)}
+          rows={1}
+          value={value}
+          disabled={disabled}
+          placeholder={placeholder}
+          aria-label={ariaLabel}
+          onChange={(event) => onChange(event.target.value)}
+          onKeyDown={onKeyDown}
+        />
+      </div>
+      <div className={cx("ui-chat-composer__controls", classes?.controls)}>
+        <div className={cx("ui-chat-composer__leading", classes?.leading)}>{leadingActions}</div>
+        <div className={cx("ui-chat-composer__actions", classes?.actions)}>
           {onStop && stopLabel ? (
-            <button type="button" disabled={!busy} onClick={onStop} aria-label={stopLabel}>
+            <button className={classes?.stop} type="button" disabled={!busy} onClick={onStop} aria-label={stopLabel} title={stopLabel}>
               {stopIcon ?? <span aria-hidden="true">■</span>}
             </button>
           ) : null}
-          <button type="submit" disabled={!canSubmit} aria-label={sendLabel}>
+          <button className={classes?.send} type="submit" disabled={!canSubmit} aria-label={sendLabel} title={sendLabel}>
             {sendIcon ?? <span aria-hidden="true">↑</span>}
           </button>
         </div>
       </div>
-      {hint === undefined ? null : <div className="ui-chat-composer__hint">{hint}</div>}
+      {hint === undefined ? null : <div className={cx("ui-chat-composer__hint", classes?.hint)}>{hint}</div>}
     </form>
   );
 }

@@ -502,6 +502,10 @@
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--ui-color-focus) 20%, transparent);
 }
 
+.ui-chat-composer__input-wrap {
+  min-width: 0;
+}
+
 .ui-chat-composer__input {
   display: block;
   width: 100%;

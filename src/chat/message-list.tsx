@@ -18,6 +18,9 @@ export type ChatMessageListProps = {
   readonly jumpLabel: string;
   readonly busy?: boolean;
   readonly className?: string;
+  readonly viewportClassName?: string;
+  readonly jumpClassName?: string;
+  readonly jumpIcon?: ReactNode;
 };
 
 /** Follows streaming output only while the reader remains near the bottom. */
@@ -27,6 +30,9 @@ export function ChatMessageList({
   jumpLabel,
   busy = false,
   className,
+  viewportClassName,
+  jumpClassName,
+  jumpIcon,
 }: ChatMessageListProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const followingRef = useRef(true);
@@ -52,7 +58,7 @@ export function ChatMessageList({
     <div className={cx("ui-chat-list", className)}>
       <div
         ref={viewportRef}
-        className="ui-chat-list__viewport"
+        className={cx("ui-chat-list__viewport", viewportClassName)}
         role="log"
         aria-label={ariaLabel}
         aria-busy={busy}
@@ -68,7 +74,7 @@ export function ChatMessageList({
       </div>
       {showJump ? (
         <button
-          className="ui-chat-list__jump"
+          className={cx("ui-chat-list__jump", jumpClassName)}
           type="button"
           onClick={() => {
             followingRef.current = true;
@@ -76,7 +82,7 @@ export function ChatMessageList({
             scrollToBottom("smooth");
           }}
         >
-          <span aria-hidden="true">↓</span> {jumpLabel}
+          <span aria-hidden="true">{jumpIcon ?? "↓"}</span> {jumpLabel}
         </button>
       ) : null}
     </div>

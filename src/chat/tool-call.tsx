@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { cx } from "../internal/cx.js";
 import type { ToolCallTone, ToolCallView } from "./model.js";
 
 export type ToolCallLabels = {
@@ -11,7 +12,20 @@ export type ToolCallLabels = {
 export type ToolCallCardProps = Omit<ToolCallView, "id"> & {
   readonly labels: ToolCallLabels;
   readonly icon?: ReactNode;
+  readonly expandIcon?: ReactNode;
   readonly defaultOpen?: boolean;
+  readonly className?: string;
+  readonly classes?: {
+    readonly header?: string;
+    readonly icon?: string;
+    readonly name?: string;
+    readonly status?: string;
+    readonly chevron?: string;
+    readonly body?: string;
+    readonly label?: string;
+    readonly pre?: string;
+    readonly result?: string;
+  } | undefined;
 };
 
 export function ToolCallCard({
@@ -22,36 +36,39 @@ export function ToolCallCard({
   output,
   labels,
   icon,
+  expandIcon,
   defaultOpen = false,
+  className,
+  classes,
 }: ToolCallCardProps) {
   const hasDetail = Boolean(input || output);
   const [open, setOpen] = useState(defaultOpen && hasDetail);
   return (
-    <div className="ui-chat-tool" data-tone={tone}>
+    <div className={cx("ui-chat-tool", className)} data-tone={tone}>
       <button
-        className="ui-chat-tool__header"
+        className={cx("ui-chat-tool__header", classes?.header)}
         type="button"
         disabled={!hasDetail}
         aria-expanded={hasDetail ? open : undefined}
         onClick={() => setOpen((value) => !value)}
       >
-        <span className="ui-chat-tool__icon" aria-hidden="true">{icon ?? toneMark(tone)}</span>
-        <span className="ui-chat-tool__name">{name}</span>
-        <span className="ui-chat-tool__status">{statusLabel}</span>
-        {hasDetail ? <span aria-hidden="true">{open ? "⌄" : "›"}</span> : null}
+        <span className={cx("ui-chat-tool__icon", classes?.icon)} aria-hidden="true">{icon ?? toneMark(tone)}</span>
+        <span className={cx("ui-chat-tool__name", classes?.name)}>{name}</span>
+        <span className={cx("ui-chat-tool__status", classes?.status)}>{statusLabel}</span>
+        {hasDetail ? <span className={cx(classes?.chevron, open && "is-open")} data-open={open || undefined} aria-hidden="true">{expandIcon ?? (open ? "⌄" : "›")}</span> : null}
       </button>
       {open ? (
-        <div className="ui-chat-tool__body">
-          {input ? <ToolDetail label={labels.input} ariaLabel={labels.inputAriaLabel} value={input} /> : null}
-          {output ? <ToolDetail label={labels.output} ariaLabel={labels.outputAriaLabel} value={output} /> : null}
+        <div className={cx("ui-chat-tool__body", classes?.body)}>
+          {input ? <ToolDetail label={labels.input} ariaLabel={labels.inputAriaLabel} value={input} labelClassName={classes?.label} preClassName={classes?.pre} /> : null}
+          {output ? <ToolDetail label={labels.output} ariaLabel={labels.outputAriaLabel} value={output} labelClassName={classes?.label} preClassName={cx(classes?.pre, classes?.result)} /> : null}
         </div>
       ) : null}
     </div>
   );
 }
 
-function ToolDetail({ label, ariaLabel, value }: { label: string; ariaLabel: string; value: string }) {
-  return <div><span className="ui-chat-tool__label">{label}</span><pre aria-label={ariaLabel}>{value}</pre></div>;
+function ToolDetail({ label, ariaLabel, value, labelClassName, preClassName }: { label: string; ariaLabel: string; value: string; labelClassName?: string | undefined; preClassName?: string | undefined }) {
+  return <div><span className={cx("ui-chat-tool__label", labelClassName)}>{label}</span><pre className={preClassName} aria-label={ariaLabel}>{value}</pre></div>;
 }
 
 function toneMark(tone: ToolCallTone): string {
@@ -66,6 +83,18 @@ export type ToolCallGroupProps = {
   readonly summaryLabel: string;
   readonly labels: ToolCallLabels;
   readonly defaultOpen?: boolean;
+  readonly icon?: ReactNode;
+  readonly expandIcon?: ReactNode;
+  readonly className?: string;
+  readonly classes?: {
+    readonly header?: string;
+    readonly icon?: string;
+    readonly summary?: string;
+    readonly dot?: string;
+    readonly chevron?: string;
+    readonly body?: string;
+  };
+  readonly callClasses?: ToolCallCardProps["classes"] | undefined;
 };
 
 export function aggregateToolCallTone(calls: ReadonlyArray<ToolCallView>): ToolCallTone {
@@ -74,19 +103,21 @@ export function aggregateToolCallTone(calls: ReadonlyArray<ToolCallView>): ToolC
   return "done";
 }
 
-export function ToolCallGroup({ calls, summaryLabel, labels, defaultOpen }: ToolCallGroupProps) {
+export function ToolCallGroup({ calls, summaryLabel, labels, defaultOpen, icon, expandIcon, className, classes, callClasses }: ToolCallGroupProps) {
   const tone = aggregateToolCallTone(calls);
   const [open, setOpen] = useState(defaultOpen ?? tone !== "done");
   const single = calls[0];
-  if (calls.length === 1 && single) return <ToolCallCard {...single} labels={labels} />;
+  if (calls.length === 1 && single) return <ToolCallCard {...single} labels={labels} classes={callClasses} />;
   if (calls.length === 0) return null;
   return (
-    <div className="ui-chat-tool-group" data-tone={tone}>
-      <button type="button" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
-        <span aria-hidden="true">◇</span><span>{summaryLabel}</span><i aria-hidden="true" />
-        <span aria-hidden="true">{open ? "⌄" : "›"}</span>
+    <div className={cx("ui-chat-tool-group", className)} data-tone={tone}>
+      <button className={classes?.header} type="button" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
+        <span className={classes?.icon} aria-hidden="true">{icon ?? "◇"}</span>
+        <span className={classes?.summary}>{summaryLabel}</span>
+        <i className={classes?.dot} aria-hidden="true" />
+        <span className={cx(classes?.chevron, open && "is-open")} data-open={open || undefined} aria-hidden="true">{expandIcon ?? (open ? "⌄" : "›")}</span>
       </button>
-      {open ? <div>{calls.map((call) => <ToolCallCard key={call.id} {...call} labels={labels} />)}</div> : null}
+      {open ? <div className={classes?.body}>{calls.map((call) => <ToolCallCard key={call.id} {...call} labels={labels} classes={callClasses} />)}</div> : null}
     </div>
   );
 }
