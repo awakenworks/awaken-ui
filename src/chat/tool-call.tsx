@@ -13,6 +13,7 @@ export type ToolCallCardProps = Omit<ToolCallView, "id"> & {
   readonly labels: ToolCallLabels;
   readonly icon?: ReactNode;
   readonly expandIcon?: ReactNode;
+  readonly badges?: ReactNode;
   readonly defaultOpen?: boolean;
   readonly className?: string;
   readonly classes?: {
@@ -37,6 +38,7 @@ export function ToolCallCard({
   labels,
   icon,
   expandIcon,
+  badges,
   defaultOpen = false,
   className,
   classes,
@@ -54,6 +56,7 @@ export function ToolCallCard({
       >
         <span className={cx("ui-chat-tool__icon", classes?.icon)} aria-hidden="true">{icon ?? toneMark(tone)}</span>
         <span className={cx("ui-chat-tool__name", classes?.name)}>{name}</span>
+        {badges}
         <span className={cx("ui-chat-tool__status", classes?.status)}>{statusLabel}</span>
         {hasDetail ? <span className={cx(classes?.chevron, open && "is-open")} data-open={open || undefined} aria-hidden="true">{expandIcon ?? (open ? "⌄" : "›")}</span> : null}
       </button>
