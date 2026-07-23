@@ -202,6 +202,11 @@ export {
   type GuardedAction,
 } from "./hooks/use-unsaved-changes-guard.js";
 export {
+  useCommandPalette,
+  type CommandPaletteState,
+  type UseCommandPaletteOptions,
+} from "./hooks/use-command-palette.js";
+export {
   Panel,
   PanelBody,
   PanelHeader,
