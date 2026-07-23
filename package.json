@@ -19,6 +19,8 @@
     },
     "./styles/contract.css": "./dist/styles/contract.css",
     "./styles/components.css": "./dist/styles/components.css",
+    "./styles/themes/awaken.css": "./dist/styles/themes/awaken.css",
+    "./styles/themes/oversight.css": "./dist/styles/themes/oversight.css",
     "./styles.css": "./dist/styles.css"
   },
   "scripts": {
@@ -28,6 +30,8 @@
     "dev": "vite --config vite.dev.config.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots",
     "test:watch": "vitest",
     "boundaries:check": "node scripts/check-boundaries.mjs",
     "prepack": "pnpm check"
@@ -43,6 +47,7 @@
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.0",
     "@testing-library/user-event": "14.6.1",
+    "@playwright/test": "1.61.1",
     "@types/node": "24.10.1",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",

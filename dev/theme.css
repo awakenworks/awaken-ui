@@ -23,6 +23,55 @@
   background: var(--ui-color-canvas);
 }
 
+[data-product-theme="awaken"] {
+  --canvas: #fafafa;
+  --surface: #fff;
+  --soft: #f7f7f7;
+  --fg: #0a0a0a;
+  --fg2: #555;
+  --line: #e6e6e6;
+  --accent: oklch(56% 0.16 265);
+  --accent-hover: oklch(50% 0.16 263);
+  --accent-fg: #fff;
+  --danger: oklch(58% 0.18 25);
+  --ok: oklch(60% 0.12 150);
+  --warn: oklch(70% 0.135 78);
+  --font-sans: "JetBrains Mono", ui-monospace, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --r-sm: 4px;
+  --r-card: 4px;
+  --r-lg: 4px;
+  --row-h: 34px;
+  --shadow-card: 0 0 0 1px rgb(20 20 18 / 8%), 0 1px 1px rgb(26 29 30 / 3%);
+  --shadow-pop: 0 16px 40px rgb(20 16 12 / 16%);
+}
+
+[data-product-theme="oversight"] {
+  --brand-bg-canvas: #fafafa;
+  --brand-bg-elevated: #fff;
+  --brand-bg-hover: #f7f7f7;
+  --brand-overlay: oklch(15% 0 0 / 50%);
+  --brand-text: #0a0a0a;
+  --brand-text-soft: #555;
+  --brand-border: #e6e6e6;
+  --brand-focus: oklch(62% 0.14 78);
+  --brand-accent: oklch(62% 0.14 78);
+  --brand-accent-hover: oklch(56% 0.14 74);
+  --brand-accent-text: #1c1305;
+  --brand-tone-error: oklch(58% 0.18 28);
+  --brand-tone-critical: oklch(54% 0.21 25);
+  --brand-on-solid: #fff;
+  --brand-tone-success: oklch(62% 0.14 150);
+  --brand-tone-warn: oklch(64% 0.12 78);
+  --brand-font-body: Inter, system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --brand-radius-md: 6px;
+  --brand-radius-card: 10px;
+  --brand-radius-xl: 12px;
+  --brand-shadow-card: 0 0 0 1px rgb(20 20 18 / 11%), 0 1px 2px rgb(20 20 18 / 6%);
+  --brand-shadow-popover: 0 14px 36px rgb(20 16 12 / 12%);
+}
+
 body {
   margin: 0;
 }
@@ -87,3 +136,20 @@ body {
   border-radius: var(--ui-radius-control);
 }
 
+.gallery__chat {
+  max-width: 42rem;
+  margin-block-start: var(--ui-space-4);
+}
+
+.gallery__status {
+  color: var(--ui-color-success);
+  font-size: 0.75rem;
+}
+
+.gallery__badge {
+  padding: 2px 6px;
+  color: var(--ui-color-accent);
+  font-size: 0.6875rem;
+  border: 1px solid currentcolor;
+  border-radius: 999px;
+}

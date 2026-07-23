@@ -36,10 +36,11 @@ async function visit(directory) {
     if (![".ts", ".tsx", ".css"].includes(extname(entry.name))) continue;
     const content = await readFile(path, "utf8");
     const displayPath = relative(root, path);
+    const isThemeAdapter = displayPath.startsWith(`styles${join("/", "themes")}`);
     for (const value of forbiddenImports) {
       if (content.includes(value)) violations.push(`${displayPath}: forbidden dependency ${value}`);
     }
-    if (entry.name !== "contract.css") {
+    if (entry.name !== "contract.css" && !isThemeAdapter) {
       for (const token of productTokens) {
         if (content.includes(`var(${token}`)) {
           violations.push(`${displayPath}: product token ${token} bypasses the --ui-* contract`);
