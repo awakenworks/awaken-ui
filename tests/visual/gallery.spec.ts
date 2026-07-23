@@ -33,6 +33,22 @@ for (const theme of ["Awaken", "Oversight"] as const) {
     await expect(scene).toHaveScreenshot(`popover-${theme.toLowerCase()}.png`);
   });
 
+  test(`Dialog under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    await page.getByRole("button", { name: "Open dialog" }).click();
+    await expect(page.getByRole("dialog", { name: "Edit settings" })).toHaveScreenshot(
+      `dialog-${theme.toLowerCase()}.png`,
+    );
+  });
+
+  test(`Drawer under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    await page.getByRole("button", { name: "Open drawer" }).click();
+    await expect(page.getByRole("dialog", { name: "Resource details" })).toHaveScreenshot(
+      `drawer-${theme.toLowerCase()}.png`,
+    );
+  });
+
   test(`Metric cards under ${theme} tokens`, async ({ page }) => {
     await page.getByRole("button", { name: `${theme} tokens` }).click();
     const scene = page.getByRole("heading", { name: "Metric cards" }).locator("..");

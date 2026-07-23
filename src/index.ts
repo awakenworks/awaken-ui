@@ -7,6 +7,7 @@ export {
 export { CopyButton, type CopyButtonProps } from "./primitives/copy-button.js";
 export {
   Dialog,
+  type DialogClasses,
   type DialogProps,
   type OverlaySize,
 } from "./overlays/dialog.js";
@@ -16,6 +17,7 @@ export {
 } from "./overlays/dialog-surface.js";
 export {
   Drawer,
+  type DrawerClasses,
   type DrawerProps,
   type DrawerSide,
   type DrawerSize,
