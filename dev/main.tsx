@@ -12,6 +12,8 @@ import {
   IdentityCard,
   MenuPopover,
   ReasoningBlock,
+  StatCard,
+  StatGrid,
   ToolCallGroup,
   ToastProvider,
   useConfirm,
@@ -167,6 +169,15 @@ function Gallery() {
             Show toast
           </Button>
         </div>
+      </section>
+
+      <section>
+        <h2>Metric cards</h2>
+        <StatGrid>
+          <StatCard label="Active agents" tone="agent" value={12} />
+          <StatCard label="Healthy runs" tone="success" value={38} />
+          <StatCard label="Needs attention" tone="warning" value={3} />
+        </StatGrid>
       </section>
 
       <Dialog

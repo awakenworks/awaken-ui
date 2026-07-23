@@ -175,6 +175,12 @@ export {
 } from "./surfaces/toolbar.js";
 export { StatusDot, type StatusDotProps } from "./data/status-dot.js";
 export {
+  StatCard,
+  StatGrid,
+  type StatCardProps,
+  type StatTone,
+} from "./data/stat-card.js";
+export {
   EmptyState,
   ErrorState,
   LoadingRow,

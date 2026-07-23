@@ -26,4 +26,10 @@ for (const theme of ["Awaken", "Oversight"] as const) {
       .locator("..");
     await expect(scene).toHaveScreenshot(`popover-${theme.toLowerCase()}.png`);
   });
+
+  test(`Metric cards under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    const scene = page.getByRole("heading", { name: "Metric cards" }).locator("..");
+    await expect(scene).toHaveScreenshot(`stat-card-${theme.toLowerCase()}.png`);
+  });
 }

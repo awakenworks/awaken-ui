@@ -56,6 +56,45 @@
   color: var(--ui-color-text-muted);
 }
 
+.ui-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--ui-space-3);
+}
+
+.ui-stat {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  color: var(--ui-color-text);
+  background: var(--ui-color-surface);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-surface);
+}
+
+.ui-stat--tile {
+  padding: var(--ui-space-4);
+}
+
+.ui-stat--metric {
+  padding: var(--ui-space-2) var(--ui-space-3);
+}
+
+.ui-stat__body {
+  display: grid;
+  min-width: 0;
+  gap: var(--ui-space-1);
+}
+
+.ui-stat__value {
+  font-weight: 700;
+}
+
+.ui-stat__label,
+.ui-stat__hint {
+  color: var(--ui-color-text-muted);
+}
+
 .ui-button {
   box-sizing: border-box;
   display: inline-flex;
