@@ -95,6 +95,15 @@
   color: var(--ui-color-text-muted);
 }
 
+.ui-avatar-group {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ui-avatar-group > .ui-avatar + .ui-avatar {
+  margin-inline-start: calc(var(--ui-space-2) * -1);
+}
+
 .ui-button {
   box-sizing: border-box;
   display: inline-flex;

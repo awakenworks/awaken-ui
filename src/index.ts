@@ -50,7 +50,10 @@ export {
 } from "./feedback/toast.js";
 export {
   Avatar,
+  AvatarGroup,
   initialsOf,
+  type AvatarClasses,
+  type AvatarGroupProps,
   type AvatarProps,
   type AvatarSize,
 } from "./identity/avatar.js";

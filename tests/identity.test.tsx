@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { Avatar, IdentityCard, initialsOf } from "../src/index.js";
+import { Avatar, AvatarGroup, IdentityCard, initialsOf } from "../src/index.js";
 
 describe("identity", () => {
   it("derives compact initials", () => {
@@ -26,5 +26,14 @@ describe("identity", () => {
     expect(onActivate).toHaveBeenCalledOnce();
     expect(screen.getByTestId("mark")).toBeInTheDocument();
     expect(screen.getByText("Reviews changes")).toBeInTheDocument();
+  });
+
+  it("renders a labelled overflow avatar for grouped identities", () => {
+    render(
+      <AvatarGroup overflow={3} overflowLabel={(count) => `${count} more`}>
+        <Avatar label="Ada Lovelace" />
+      </AvatarGroup>,
+    );
+    expect(screen.getByLabelText("3 more")).toHaveTextContent("+3");
   });
 });
