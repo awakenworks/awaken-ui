@@ -31,6 +31,8 @@ export {
   ToastProvider,
   useToast,
   type ToastApi,
+  type ToastAction,
+  type ToastProviderProps,
   type ToastRequest,
   type ToastTone,
 } from "./feedback/toast.js";

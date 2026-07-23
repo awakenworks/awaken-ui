@@ -9,12 +9,18 @@ import {
   type ReactNode,
 } from "react";
 
-export type ToastTone = "success" | "danger" | "info" | "warning";
+export type ToastTone = "success" | "danger" | "error" | "info" | "warning";
+
+export type ToastAction = {
+  readonly label: string;
+  readonly onClick: () => void;
+};
 
 export interface ToastRequest {
   readonly message: ReactNode;
   readonly tone?: ToastTone;
   readonly duration?: number;
+  readonly action?: ToastAction;
 }
 
 export interface ToastApi {
@@ -24,88 +30,107 @@ export interface ToastApi {
 
 interface ToastEntry extends ToastRequest {
   readonly id: number;
+  readonly duration: number;
 }
 
 const ToastContext = createContext<ToastApi | null>(null);
+const NOOP_TOAST_API: ToastApi = { push: () => 0, dismiss: () => undefined };
 
-export function useToast(): ToastApi {
+export function useToast({ optional = false }: { readonly optional?: boolean } = {}): ToastApi {
   const api = useContext(ToastContext);
-  if (!api) throw new Error("useToast must be used within ToastProvider");
-  return api;
+  if (api) return api;
+  if (optional) return NOOP_TOAST_API;
+  throw new Error("useToast must be used within ToastProvider");
 }
+
+export type ToastProviderProps = {
+  readonly children: ReactNode;
+  readonly defaultDuration?: number;
+  readonly errorDuration?: number;
+  readonly dismissLabel: string;
+  readonly regionLabel: string;
+  readonly renderIcon?: (tone: ToastTone) => ReactNode;
+};
 
 export function ToastProvider({
   children,
   defaultDuration = 4_000,
+  errorDuration = 7_000,
   dismissLabel,
   regionLabel,
-}: {
-  readonly children: ReactNode;
-  readonly defaultDuration?: number;
-  readonly dismissLabel: string;
-  readonly regionLabel: string;
-}) {
+  renderIcon,
+}: ToastProviderProps) {
   const sequence = useRef(0);
-  const timers = useRef(new Map<number, ReturnType<typeof setTimeout>>());
   const [toasts, setToasts] = useState<ToastEntry[]>([]);
-
   const dismiss = useCallback((id: number) => {
-    const timer = timers.current.get(id);
-    if (timer) clearTimeout(timer);
-    timers.current.delete(id);
     setToasts((current) => current.filter((toast) => toast.id !== id));
   }, []);
-
-  const push = useCallback(
-    (request: ToastRequest) => {
-      const id = ++sequence.current;
-      setToasts((current) => [...current, { ...request, id }]);
-      const duration = request.duration ?? defaultDuration;
-      if (duration > 0) {
-        timers.current.set(id, setTimeout(() => dismiss(id), duration));
-      }
-      return id;
-    },
-    [defaultDuration, dismiss],
-  );
-
-  useEffect(
-    () => () => {
-      for (const timer of timers.current.values()) clearTimeout(timer);
-      timers.current.clear();
-    },
-    [],
-  );
-
+  const push = useCallback((request: ToastRequest) => {
+    const id = ++sequence.current;
+    const tone = request.tone ?? "info";
+    const duration = request.duration ?? (tone === "danger" || tone === "error" ? errorDuration : defaultDuration);
+    setToasts((current) => [...current, { ...request, id, tone, duration }]);
+    return id;
+  }, [defaultDuration, errorDuration]);
   const api = useMemo(() => ({ dismiss, push }), [dismiss, push]);
   return (
     <ToastContext.Provider value={api}>
       {children}
-      <div
-        aria-label={regionLabel}
-        className="ui-toast-region"
-        role="region"
-      >
+      <div aria-label={regionLabel} aria-live="polite" aria-atomic="false" className="ui-toast-region" role="region">
         {toasts.map((toast) => (
-          <div
-            aria-atomic="true"
-            className="ui-toast"
-            data-tone={toast.tone ?? "info"}
+          <ToastItem
             key={toast.id}
-            role={toast.tone === "danger" ? "alert" : "status"}
-          >
-            <div className="ui-toast__message">{toast.message}</div>
-            <button
-              aria-label={dismissLabel}
-              className="ui-toast__dismiss"
-              onClick={() => dismiss(toast.id)}
-              type="button"
-            >
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
+            toast={toast}
+            dismissLabel={dismissLabel}
+            onDismiss={dismiss}
+            icon={renderIcon?.(toast.tone ?? "info")}
+          />
         ))}
       </div>
     </ToastContext.Provider>
+  );
+}
+
+function ToastItem({
+  toast,
+  dismissLabel,
+  onDismiss,
+  icon,
+}: {
+  readonly toast: ToastEntry;
+  readonly dismissLabel: string;
+  readonly onDismiss: (id: number) => void;
+  readonly icon?: ReactNode;
+}) {
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (toast.duration <= 0 || paused) return;
+    const timer = globalThis.setTimeout(() => onDismiss(toast.id), toast.duration);
+    return () => globalThis.clearTimeout(timer);
+  }, [onDismiss, paused, toast.duration, toast.id]);
+  const tone = toast.tone ?? "info";
+  return (
+    <div
+      aria-atomic="true"
+      className="ui-toast"
+      data-tone={tone}
+      role={tone === "danger" || tone === "error" ? "alert" : "status"}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+    >
+      {icon === undefined ? null : <span className="ui-toast__icon" aria-hidden="true">{icon}</span>}
+      <div className="ui-toast__message">{toast.message}</div>
+      {toast.action ? (
+        <button className="ui-toast__action" type="button" onClick={() => {
+          toast.action?.onClick();
+          onDismiss(toast.id);
+        }}>{toast.action.label}</button>
+      ) : null}
+      <button aria-label={dismissLabel} className="ui-toast__dismiss" onClick={() => onDismiss(toast.id)} type="button">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
   );
 }

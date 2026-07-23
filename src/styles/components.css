@@ -59,6 +59,10 @@
   border-color: var(--ui-color-accent);
 }
 
+.ui-button[data-variant="secondary"] {
+  background: var(--ui-color-surface);
+}
+
 .ui-button[data-variant="primary"]:hover:not(:disabled) {
   background: var(--ui-color-accent-hover);
 }
@@ -278,7 +282,8 @@
   pointer-events: auto;
 }
 
-.ui-toast[data-tone="danger"] {
+.ui-toast[data-tone="danger"],
+.ui-toast[data-tone="error"] {
   border-inline-start-color: var(--ui-color-danger);
 }
 
@@ -293,6 +298,22 @@
 .ui-toast__message {
   min-width: 0;
   flex: 1;
+}
+
+.ui-toast__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.ui-toast__action {
+  flex: 0 0 auto;
+  padding: 0;
+  color: var(--ui-color-accent);
+  font: inherit;
+  font-weight: 650;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
 }
 
 .ui-toast__dismiss {

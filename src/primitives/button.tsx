@@ -7,6 +7,7 @@ import { cx } from "../internal/cx.js";
 
 export type ButtonVariant =
   | "default"
+  | "secondary"
   | "primary"
   | "ghost"
   | "danger"
@@ -64,4 +65,3 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     );
   },
 );
-
