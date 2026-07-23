@@ -22,6 +22,7 @@ export {
 } from "./overlays/drawer.js";
 export {
   AlertDialog,
+  type AlertDialogClasses,
   type AlertDialogImpact,
   type AlertDialogProps,
 } from "./overlays/alert-dialog.js";

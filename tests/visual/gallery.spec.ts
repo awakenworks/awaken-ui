@@ -38,4 +38,12 @@ for (const theme of ["Awaken", "Oversight"] as const) {
     const scene = page.getByRole("heading", { name: "Editor form" }).locator("..");
     await expect(scene).toHaveScreenshot(`editor-form-${theme.toLowerCase()}.png`);
   });
+
+  test(`Confirmation under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    await page.getByRole("button", { name: "Confirm action" }).click();
+    await expect(page.getByRole("alertdialog")).toHaveScreenshot(
+      `confirm-${theme.toLowerCase()}.png`,
+    );
+  });
 }
