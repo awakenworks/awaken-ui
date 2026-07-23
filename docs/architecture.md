@@ -5,6 +5,8 @@ primitives shared by Awaken products.
 
 Engineering rules that realize these boundaries are owned by
 [development-standards.md](development-standards.md).
+The live cross-repository inventory is
+[component-matrix.md](component-matrix.md).
 
 ## Static boundary
 
