@@ -16,8 +16,11 @@ import {
   ReasoningBlock,
   SchemaForm,
   SecretField,
+  SelectField,
   StatCard,
   StatGrid,
+  TextAreaField,
+  TextField,
   ToolCallGroup,
   ToastProvider,
   useConfirm,
@@ -206,6 +209,31 @@ function Gallery() {
             <input defaultValue="Release review" />
           </label>
         </EditorForm>
+      </section>
+
+      <section>
+        <h2>Form fields</h2>
+        <div className="gallery__fields">
+          <TextField
+            defaultValue="Reviewer Agent"
+            help="Shown to workspace members"
+            label="Display name"
+          />
+          <TextField
+            action={<Button variant="ghost">Generate</Button>}
+            defaultValue="reviewer-agent"
+            label="Slug"
+          />
+          <SelectField defaultValue="review" label="Default role">
+            <option value="review">Reviewer</option>
+            <option value="execute">Executor</option>
+          </SelectField>
+          <TextAreaField
+            defaultValue="Review every proposed change before execution."
+            error="Instructions must be more specific."
+            label="Instructions"
+          />
+        </div>
       </section>
 
       <section>

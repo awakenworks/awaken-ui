@@ -39,6 +39,12 @@ for (const theme of ["Awaken", "Oversight"] as const) {
     await expect(scene).toHaveScreenshot(`editor-form-${theme.toLowerCase()}.png`);
   });
 
+  test(`Form fields under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    const scene = page.getByRole("heading", { name: "Form fields" }).locator("..");
+    await expect(scene).toHaveScreenshot(`form-fields-${theme.toLowerCase()}.png`);
+  });
+
   test(`Confirmation under ${theme} tokens`, async ({ page }) => {
     await page.getByRole("button", { name: `${theme} tokens` }).click();
     await page.getByRole("button", { name: "Confirm action" }).click();

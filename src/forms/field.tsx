@@ -15,21 +15,24 @@ export type FieldContext = {
 
 export type FieldProps = {
   readonly children: (context: FieldContext) => ReactNode;
-  readonly label: ReactNode;
+  readonly label?: ReactNode;
+  readonly action?: ReactNode;
   readonly error?: ReactNode;
   readonly help?: ReactNode;
   readonly info?: string | undefined;
   readonly required?: boolean | undefined;
-  readonly className?: string;
-  readonly labelClassName?: string;
-  readonly helpClassName?: string;
-  readonly errorClassName?: string;
+  readonly className?: string | undefined;
+  readonly labelClassName?: string | undefined;
+  readonly helpClassName?: string | undefined;
+  readonly errorClassName?: string | undefined;
   readonly labelAs?: "label" | "div";
+  readonly controlId?: string | undefined;
 };
 
 export function Field({
   children,
   label,
+  action,
   error,
   help,
   info,
@@ -39,15 +42,22 @@ export function Field({
   helpClassName,
   errorClassName,
   labelAs = "label",
+  controlId,
 }: FieldProps) {
-  const id = useId();
+  const generatedId = useId();
+  const id = controlId ?? generatedId;
   const helpId = help ? `${id}-help` : undefined;
   const errorId = error ? `${id}-error` : undefined;
   const describedBy = [helpId, errorId].filter(Boolean).join(" ") || undefined;
-  const labelContent = <>{label}{info ? <span aria-label={info} className="ui-field__info" role="img" title={info}>ⓘ</span> : null}</>;
+  const labelContent = (
+    <>
+      <span>{label}{info ? <span aria-label={info} className="ui-field__info" role="img" title={info}>ⓘ</span> : null}</span>
+      {action}
+    </>
+  );
   return (
     <div className={cx("ui-field", error !== undefined && "ui-field--invalid", className)}>
-      {labelAs === "label" ? (
+      {label === undefined ? null : labelAs === "label" ? (
         <label className={cx("ui-field__label", labelClassName)} data-required={required || undefined} htmlFor={id}>{labelContent}</label>
       ) : <div className={cx("ui-field__label", labelClassName)} data-required={required || undefined}>{labelContent}</div>}
       {children({ describedBy, id, invalid: error !== undefined })}
@@ -58,26 +68,30 @@ export function Field({
 }
 
 type CommonFieldProps = {
-  readonly label: ReactNode;
+  readonly label?: ReactNode;
+  readonly action?: ReactNode;
   readonly error?: ReactNode;
   readonly help?: ReactNode;
   readonly info?: string | undefined;
+  readonly fieldClassName?: string | undefined;
+  readonly labelClassName?: string | undefined;
+  readonly helpClassName?: string | undefined;
 };
 
-export function TextField({ label, error, help, info, className, ...props }: InputHTMLAttributes<HTMLInputElement> & CommonFieldProps) {
-  return <Field label={label} error={error} help={help} info={info} required={props.required}>
+export function TextField({ label, action, error, help, info, fieldClassName, labelClassName, helpClassName, className, id, ...props }: InputHTMLAttributes<HTMLInputElement> & CommonFieldProps) {
+  return <Field className={fieldClassName} labelClassName={labelClassName} helpClassName={helpClassName} label={label} action={action} error={error} help={help} info={info} required={props.required} controlId={id}>
     {({ describedBy, id, invalid }) => <input {...props} id={id} className={cx("ui-input", className)} aria-describedby={describedBy} aria-invalid={invalid} />}
   </Field>;
 }
 
-export function TextAreaField({ label, error, help, info, className, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement> & CommonFieldProps) {
-  return <Field label={label} error={error} help={help} info={info} required={props.required}>
+export function TextAreaField({ label, action, error, help, info, fieldClassName, labelClassName, helpClassName, className, id, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement> & CommonFieldProps) {
+  return <Field className={fieldClassName} labelClassName={labelClassName} helpClassName={helpClassName} label={label} action={action} error={error} help={help} info={info} required={props.required} controlId={id}>
     {({ describedBy, id, invalid }) => <textarea {...props} id={id} className={cx("ui-input", "ui-input--area", className)} aria-describedby={describedBy} aria-invalid={invalid} />}
   </Field>;
 }
 
-export function SelectField({ label, error, help, info, className, children, ...props }: SelectHTMLAttributes<HTMLSelectElement> & CommonFieldProps) {
-  return <Field label={label} error={error} help={help} info={info} required={props.required}>
+export function SelectField({ label, action, error, help, info, fieldClassName, labelClassName, helpClassName, className, children, id, ...props }: SelectHTMLAttributes<HTMLSelectElement> & CommonFieldProps) {
+  return <Field className={fieldClassName} labelClassName={labelClassName} helpClassName={helpClassName} label={label} action={action} error={error} help={help} info={info} required={props.required} controlId={id}>
     {({ describedBy, id, invalid }) => <select {...props} id={id} className={cx("ui-input", className)} aria-describedby={describedBy} aria-invalid={invalid}>{children}</select>}
   </Field>;
 }
