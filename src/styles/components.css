@@ -1007,6 +1007,34 @@
   border-radius: var(--ui-radius-control);
 }
 
+.ui-json-inspector {
+  min-width: 0;
+}
+
+.ui-json-inspector__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+}
+
+.ui-json-inspector__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.ui-json-inspector__body {
+  overflow: auto;
+  margin: var(--ui-space-2) 0 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .ui-segmented__btn {
   min-height: var(--ui-control-height-sm);
   padding-inline: var(--ui-space-3);

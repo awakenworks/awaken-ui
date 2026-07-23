@@ -12,6 +12,7 @@ import {
   Drawer,
   EditorForm,
   IdentityCard,
+  JsonInspector,
   MenuPopover,
   ReasoningBlock,
   SchemaForm,
@@ -311,6 +312,17 @@ function Gallery() {
             setQ: setGridQuery,
             setSort: setGridSort,
             sort: gridSort,
+          }}
+        />
+      </section>
+
+      <section>
+        <h2>JSON inspector</h2>
+        <JsonInspector
+          value={{
+            agent: "Reviewer",
+            status: "ready",
+            capabilities: ["review", "approve"],
           }}
         />
       </section>

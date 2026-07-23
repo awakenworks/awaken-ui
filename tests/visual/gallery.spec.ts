@@ -76,4 +76,10 @@ for (const theme of ["Awaken", "Oversight"] as const) {
     const scene = page.getByRole("heading", { name: "Data grid" }).locator("..");
     await expect(scene).toHaveScreenshot(`data-grid-${theme.toLowerCase()}.png`);
   });
+
+  test(`JSON inspector under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    const scene = page.getByRole("heading", { name: "JSON inspector" }).locator("..");
+    await expect(scene).toHaveScreenshot(`json-inspector-${theme.toLowerCase()}.png`);
+  });
 }

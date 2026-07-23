@@ -186,6 +186,12 @@ export {
   type DataGridState,
 } from "./data/grid.js";
 export {
+  JsonInspector,
+  type JsonInspectorClasses,
+  type JsonInspectorLabels,
+  type JsonInspectorProps,
+} from "./data/json-inspector.js";
+export {
   Cluster,
   SplitPane,
   Stack,
