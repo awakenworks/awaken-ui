@@ -982,6 +982,146 @@
   border-radius: var(--ui-radius-control);
 }
 
+.ui-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+}
+
+.ui-cluster,
+.ui-toolbar,
+.surface-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+}
+
+.ui-split-pane {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--ui-space-4);
+}
+
+.ui-panel {
+  color: var(--ui-color-text);
+  background: var(--ui-color-surface);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-surface);
+}
+
+.ui-panel--agent {
+  border-block-start: 3px solid var(--ui-color-accent);
+}
+
+.ui-panel__header,
+.ui-panel__body {
+  padding: var(--ui-space-3) var(--ui-space-4);
+}
+
+.ui-panel__header {
+  border-block-end: 1px solid var(--ui-color-border);
+}
+
+.ui-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.ui-section-head__title,
+.ui-section-head__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+
+.ui-section-head__title {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.ui-section-head__count {
+  color: var(--ui-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.surface-toolbar-lead,
+.surface-toolbar__spacer {
+  flex: 1;
+}
+
+.ui-state {
+  display: grid;
+  justify-items: center;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-6);
+  color: var(--ui-color-text-muted);
+  text-align: center;
+}
+
+.ui-state--danger {
+  color: var(--ui-color-danger);
+}
+
+.ui-state--loading,
+.ui-state--neutral {
+  display: flex;
+  justify-content: flex-start;
+  padding: var(--ui-space-3);
+  text-align: start;
+}
+
+.ui-state h2,
+.ui-state p {
+  margin: 0;
+}
+
+.ui-skeleton {
+  display: grid;
+  gap: var(--ui-space-3);
+}
+
+.ui-skeleton-row,
+.ui-skeleton-lines {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+
+.ui-skeleton-lines {
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.ui-skeleton-bar {
+  height: 0.625rem;
+  background: var(--ui-color-surface-hover);
+  border-radius: 999px;
+}
+
+.ui-skeleton-bar--dot {
+  width: 2rem;
+  height: 2rem;
+}
+
+.ui-skeleton-bar--wide {
+  width: 80%;
+}
+
+.ui-skeleton-bar--narrow {
+  width: 45%;
+}
+
+@media (max-width: 40rem) {
+  .ui-split-pane {
+    grid-template-columns: 1fr;
+  }
+}
+
 @keyframes ui-spin {
   to {
     transform: rotate(1turn);

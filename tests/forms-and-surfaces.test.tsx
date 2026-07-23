@@ -3,6 +3,8 @@ import {
   Card,
   CardBody,
   CardHeader,
+  EmptyState,
+  SectionHeader,
   SegmentedControl,
   Switch,
   TextField,
@@ -50,5 +52,18 @@ describe("forms and surfaces", () => {
   it("composes one canonical card skeleton", () => {
     render(<Card><CardHeader>Header</CardHeader><CardBody>Body</CardBody></Card>);
     expect(screen.getByText("Header").closest(".ui-card")).toBe(screen.getByText("Body").closest(".ui-card"));
+  });
+
+  it("keeps section structure and empty-state actions accessible", () => {
+    const action = vi.fn();
+    render(
+      <>
+        <SectionHeader title="Agents" count={3} actions={<button>New</button>} />
+        <EmptyState title="No agents" body="Create one" action={{ label: "Create", onClick: action }} />
+      </>,
+    );
+    expect(screen.getByRole("heading", { name: /Agents\s*3/ })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Create" }));
+    expect(action).toHaveBeenCalledOnce();
   });
 });

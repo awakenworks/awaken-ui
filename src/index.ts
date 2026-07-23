@@ -134,3 +134,38 @@ export {
   TableHeaderCell,
   TableRow,
 } from "./data/table.js";
+export {
+  Cluster,
+  SplitPane,
+  Stack,
+  ToolbarRow,
+} from "./layout/layout.js";
+export {
+  Panel,
+  PanelBody,
+  PanelHeader,
+  type PanelProps,
+} from "./surfaces/panel.js";
+export {
+  SectionHeader,
+  type SectionHeaderProps,
+} from "./surfaces/section-header.js";
+export {
+  Toolbar,
+  ToolbarLead,
+  ToolbarSpacer,
+} from "./surfaces/toolbar.js";
+export { StatusDot, type StatusDotProps } from "./data/status-dot.js";
+export {
+  EmptyState,
+  ErrorState,
+  LoadingRow,
+  LoadingState,
+  Skeleton,
+  SkeletonList,
+  SurfaceGate,
+  type GateQuery,
+  type StateAction,
+  type StateProps,
+  type SurfaceGateProps,
+} from "./feedback/state.js";
