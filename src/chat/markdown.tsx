@@ -1,6 +1,6 @@
 import DOMPurify from "dompurify";
 import { Renderer, marked } from "marked";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, type RefObject } from "react";
 import { cx } from "../internal/cx.js";
 
 const MARKDOWN_HINT = /[`*_#>|~\n]|\]\(|https?:\/\//;
@@ -54,6 +54,14 @@ export type ChatMarkdownProps = {
   readonly copiedCodeLabel: string;
   readonly copyFailedLabel: string;
   readonly className?: string;
+  /**
+   * Product-rendered HTML that has already passed the product's sanitizer.
+   * This exists for domain link resolvers and diagram placeholders; when
+   * omitted, the shared safe Markdown renderer is authoritative.
+   */
+  readonly sanitizedHtml?: string | null;
+  /** Optional product ref for post-render enhancements such as Mermaid. */
+  readonly rootRef?: RefObject<HTMLDivElement | null>;
 };
 
 export function ChatMarkdown({
@@ -62,21 +70,25 @@ export function ChatMarkdown({
   copiedCodeLabel,
   copyFailedLabel,
   className,
+  sanitizedHtml,
+  rootRef,
 }: ChatMarkdownProps) {
   const rich = hasMarkdown(body);
-  const html = useMemo(() => rich ? renderSafeMarkdown(body) : null, [body, rich]);
-  const rootRef = useRef<HTMLDivElement>(null);
+  const defaultHtml = useMemo(() => rich ? renderSafeMarkdown(body) : null, [body, rich]);
+  const html = sanitizedHtml === undefined ? defaultHtml : sanitizedHtml;
+  const internalRootRef = useRef<HTMLDivElement>(null);
+  const resolvedRootRef = rootRef ?? internalRootRef;
   useEffect(() => {
-    const root = rootRef.current;
+    const root = resolvedRootRef.current;
     if (!root) return;
     const cleanups = Array.from(root.querySelectorAll("pre")).map((pre) =>
       attachCodeCopy(pre as HTMLPreElement, { copyCodeLabel, copiedCodeLabel, copyFailedLabel }),
     );
     return () => cleanups.forEach((cleanup) => cleanup());
-  }, [copyCodeLabel, copiedCodeLabel, copyFailedLabel, html]);
+  }, [copyCodeLabel, copiedCodeLabel, copyFailedLabel, html, resolvedRootRef]);
   const classes = cx("ui-chat-markdown", className);
-  if (!html) return <div ref={rootRef} className={classes}><p>{body}</p></div>;
-  return <div ref={rootRef} className={classes} dangerouslySetInnerHTML={{ __html: html }} />;
+  if (!html) return <div ref={resolvedRootRef} className={classes}><p>{body}</p></div>;
+  return <div ref={resolvedRootRef} className={classes} dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 function attachCodeCopy(
@@ -98,12 +110,25 @@ function attachCodeCopy(
   let timer: ReturnType<typeof setTimeout> | undefined;
   const click = () => {
     const value = pre.querySelector("code")?.textContent ?? pre.textContent ?? "";
-    void globalThis.navigator?.clipboard?.writeText(value).then(
-      () => { button.textContent = labels.copiedCodeLabel; },
-      () => { button.textContent = labels.copyFailedLabel; },
+    const clipboard = globalThis.navigator?.clipboard;
+    const result = clipboard
+      ? clipboard.writeText(value)
+      : Promise.reject(new Error("Clipboard unavailable"));
+    void result.then(
+      () => {
+        button.textContent = labels.copiedCodeLabel;
+        button.classList.add("is-copied");
+      },
+      () => {
+        button.textContent = labels.copyFailedLabel;
+        button.classList.remove("is-copied");
+      },
     ).finally(() => {
       if (timer) clearTimeout(timer);
-      timer = setTimeout(() => { button.textContent = labels.copyCodeLabel; }, 1500);
+      timer = setTimeout(() => {
+        button.textContent = labels.copyCodeLabel;
+        button.classList.remove("is-copied");
+      }, 1500);
     });
   };
   button.addEventListener("click", click);
