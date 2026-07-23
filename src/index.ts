@@ -147,6 +147,14 @@ export {
   type SchemaFormLabels,
   type SchemaFormProps,
 } from "./forms/schema-form.js";
+export {
+  SecretField,
+  type SecretFieldClasses,
+  type SecretFieldLabels,
+  type SecretFieldProps,
+  type SecretIntent,
+  type SecretMode,
+} from "./forms/secret-field.js";
 export { Switch, type SwitchProps } from "./forms/switch.js";
 export {
   SegmentedControl,

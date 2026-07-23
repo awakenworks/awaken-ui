@@ -14,6 +14,7 @@ import {
   MenuPopover,
   ReasoningBlock,
   SchemaForm,
+  SecretField,
   StatCard,
   StatGrid,
   ToolCallGroup,
@@ -223,6 +224,23 @@ function Gallery() {
             },
           }}
           value={schemaValue}
+        />
+      </section>
+
+      <section>
+        <h2>Secret field</h2>
+        <SecretField
+          hasStored
+          label="API token"
+          labels={{
+            clear: "Clear",
+            cleared: "Stored secret will be removed.",
+            keep: "Keep",
+            kept: "Stored secret unchanged.",
+            placeholder: "Enter a new token",
+            replace: "Replace",
+          }}
+          onChange={() => undefined}
         />
       </section>
 

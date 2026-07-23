@@ -15,6 +15,7 @@ export type SegmentedControlProps<T extends string | number | boolean> = {
   readonly className?: string;
   readonly buttonClassName?: string;
   readonly activeClassName?: string;
+  readonly inactiveClassName?: string;
   readonly buttonStyle?: CSSProperties;
   readonly as?: "div" | "span";
   readonly role?: "group" | "tablist";
@@ -31,6 +32,7 @@ export function SegmentedControl<T extends string | number | boolean>({
   className,
   buttonClassName,
   activeClassName,
+  inactiveClassName,
   buttonStyle,
   as: Container = "div",
   role,
@@ -68,7 +70,11 @@ export function SegmentedControl<T extends string | number | boolean>({
           type="button"
           ref={(node) => { buttonsRef.current[index] = node; }}
           role={buttonRole}
-          className={cx("ui-segmented__btn", buttonClassName, active && "is-active", active && activeClassName)}
+          className={cx(
+            "ui-segmented__btn",
+            buttonClassName,
+            active ? cx("is-active", activeClassName) : inactiveClassName,
+          )}
           style={buttonStyle}
           aria-pressed={selectionAria === "pressed" ? active : undefined}
           aria-selected={selectionAria === "selected" ? active : undefined}

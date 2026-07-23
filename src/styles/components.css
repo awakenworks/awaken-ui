@@ -143,6 +143,15 @@
   color: var(--ui-color-danger);
 }
 
+.ui-secret-field {
+  display: grid;
+  gap: var(--ui-space-2);
+}
+
+.ui-secret-field__status {
+  color: var(--ui-color-text-muted);
+}
+
 .ui-button {
   box-sizing: border-box;
   display: inline-flex;
