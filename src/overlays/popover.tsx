@@ -26,6 +26,9 @@ export interface PopoverProps {
   readonly contentId?: string;
   readonly rootProps?: Omit<HTMLAttributes<HTMLDivElement>, "children" | "className">;
   readonly closeOnMouseLeave?: boolean;
+  readonly open?: boolean | undefined;
+  readonly defaultOpen?: boolean | undefined;
+  readonly onOpenChange?: ((open: boolean) => void) | undefined;
 }
 
 export type MenuPopoverProps = Omit<PopoverProps, "role" | "aria-label"> & {
@@ -53,8 +56,16 @@ export function Popover({
   contentId,
   rootProps,
   closeOnMouseLeave = false,
+  open: controlledOpen,
+  defaultOpen = false,
+  onOpenChange,
 }: PopoverProps) {
-  const [open, setOpen] = useState(false);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const open = controlledOpen ?? uncontrolledOpen;
+  const setOpen = (nextOpen: boolean) => {
+    if (controlledOpen === undefined) setUncontrolledOpen(nextOpen);
+    onOpenChange?.(nextOpen);
+  };
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -131,21 +142,23 @@ export function Popover({
             sideOffset={8}
           >
             <HeadlessPopover.Popup
-            aria-label={ariaLabel}
-            className={cx(
-              "ui-popover__content",
-              `ui-popover__content--${placement}`,
-              contentClassName,
-            )}
+              aria-label={ariaLabel}
+              className={cx(
+                "ui-popover__content",
+                `ui-popover__content--${placement}`,
+                contentClassName,
+              )}
               id={contentId}
               initialFocus
-            onClick={
-              closeOnContentClick
-                ? (((event) => {
-                    if ((event.target as HTMLElement).closest("button")) setOpen(false);
-                  }) as MouseEventHandler<HTMLDivElement>)
-                : undefined
-            }
+              onClick={
+                closeOnContentClick
+                  ? (((event) => {
+                      if ((event.target as HTMLElement).closest("button")) {
+                        setOpen(false);
+                      }
+                    }) as MouseEventHandler<HTMLDivElement>)
+                  : undefined
+              }
               onKeyDown={onPanelKeyDown}
               ref={setPanelRef}
               role={role}
