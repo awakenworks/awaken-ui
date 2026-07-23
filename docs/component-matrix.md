@@ -43,6 +43,40 @@ parallel generic implementation is not an accepted migration state.
 | Product identity generation | none | product-owned | `EntityIcon` prompt/hash/rendering | intentionally product-owned |
 | Routing/API/query state | none | product-owned | product-owned | never shared |
 
+## Current audit evidence
+
+The 2026-07-24 completion audit re-read every production file under both
+consumer `web/src` trees and every public shared export. It also searched the
+consumer trees for direct clipboard access, headless-library imports, portals,
+native confirmation APIs, and raw dialog implementations.
+
+The remaining same-name cross-product components are deliberately split as
+follows:
+
+| Same-name surface | Decision |
+| --- | --- |
+| `Button`, `Card`, `Badge`, `CopyButton`, `StatusPill` | Shared authority with product class/icon/copy adapters only. |
+| `TopChrome`, `AppShell` | Product-owned information architecture, routes, session/scope state, and responsive shell composition; shared leaf layout, Popover, Dialog, and command-palette behavior are reused. |
+| `HomeSurface`, `EnvironmentsSurface` | Same generic page names but different product DTOs, operations, permissions, and terminal states; only their neutral fields, cards, states, tables, overlays, and drawers are shared. |
+
+No consumer production source imports Base UI, Radix, Headless UI, or another
+headless implementation. No consumer production source writes to the
+clipboard directly. The one remaining textual `role="dialog"` occurrence is an
+explicit role passed to shared `AlertDialog` by Oversight's consequence-preview
+adapter; it is not a product-owned dialog implementation.
+
+Notable consolidations discovered during the audit:
+
+- Oversight Markdown now delegates detection, code-block wrapping, clipboard
+  status, failure handling, and timer cleanup to shared `ChatMarkdown`; it keeps
+  only its sanitized link renderer and Mermaid enhancement.
+- Oversight Modal and Drawer now delegate semantic DOM, focus, dismissal,
+  portal, title, close control, body, and footer structure to the shared
+  components. Product adapters supply class slots, Lucide icons, translations,
+  and the product-only drawer/FAB collision flag.
+- Both products use the shared Command/Ctrl+K listener; command construction,
+  execution, navigation, and copy remain product-owned.
+
 ## Dynamic behavior
 
 1. A feature maps its DTO and permissions into product-neutral props.
@@ -54,6 +88,11 @@ parallel generic implementation is not an accepted migration state.
    terminal state back into shared presentation props.
 5. Visual verification runs the same shared scene under both product token
    maps; consumer interaction tests verify adapter contracts.
+
+For overlays, consumer validation additionally opens the real product surface:
+Awaken's workspace menu and environment create dialog, and Oversight's
+environment create dialog and environment detail drawer. This verifies the
+product CSS adapter in addition to the isolated token scene.
 
 Failure ownership follows the same boundary: the shared layer renders a typed
 error/retry state, while products classify failures and execute retries.
@@ -92,3 +131,7 @@ A row becomes complete only after both products have been searched for
 overlapping implementations, all relevant callers use the authority or a thin
 adapter, obsolete code/CSS is removed, interaction/build checks pass, and the
 same scene has browser screenshots under Awaken and Oversight token maps.
+
+The repeatable gallery currently contains 26 browser comparisons: 13 shared
+scenes under each token map. Dialog and Drawer have independent focused
+baselines in addition to Popover and confirmation.
