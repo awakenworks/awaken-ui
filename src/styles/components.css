@@ -35,6 +35,27 @@
   display: contents;
 }
 
+.ui-check-picker {
+  display: grid;
+  gap: var(--ui-space-2);
+}
+
+.ui-check-picker__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--ui-space-2);
+}
+
+.ui-check-picker__description {
+  grid-column: 2;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-check-picker__empty {
+  color: var(--ui-color-text-muted);
+}
+
 .ui-button {
   box-sizing: border-box;
   display: inline-flex;

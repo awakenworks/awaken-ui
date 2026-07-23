@@ -124,6 +124,12 @@ export {
   type FieldContext,
   type FieldProps,
 } from "./forms/field.js";
+export {
+  CheckPicker,
+  type CheckPickerClasses,
+  type CheckPickerOption,
+  type CheckPickerProps,
+} from "./forms/check-picker.js";
 export { Switch, type SwitchProps } from "./forms/switch.js";
 export {
   SegmentedControl,
