@@ -10,6 +10,26 @@
   border: 0;
 }
 
+.ui-popover {
+  position: relative;
+  display: inline-flex;
+}
+
+.ui-popover__positioner {
+  z-index: var(--ui-z-overlay);
+}
+
+.ui-popover__content {
+  box-sizing: border-box;
+  min-width: 12.5rem;
+  padding: var(--ui-space-3);
+  color: var(--ui-color-text);
+  background: var(--ui-color-surface);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-surface);
+  box-shadow: var(--ui-shadow-overlay);
+}
+
 .ui-button {
   box-sizing: border-box;
   display: inline-flex;

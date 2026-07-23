@@ -16,3 +16,14 @@ test("Agent conversation under Oversight tokens", async ({ page }) => {
   const scene = page.getByRole("heading", { name: "Identity and Agent conversation" }).locator("..");
   await expect(scene).toHaveScreenshot("agent-chat-oversight.png");
 });
+
+for (const theme of ["Awaken", "Oversight"] as const) {
+  test(`Popover under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    await page.getByRole("button", { name: "Open actions" }).click();
+    const scene = page
+      .getByRole("heading", { name: "Overlays and transient feedback" })
+      .locator("..");
+    await expect(scene).toHaveScreenshot(`popover-${theme.toLowerCase()}.png`);
+  });
+}

@@ -10,6 +10,7 @@ import {
   Dialog,
   Drawer,
   IdentityCard,
+  MenuPopover,
   ReasoningBlock,
   ToolCallGroup,
   ToastProvider,
@@ -119,6 +120,17 @@ function Gallery() {
         <div className="gallery__row">
           <Button onClick={() => setDialogOpen(true)}>Open dialog</Button>
           <Button onClick={() => setDrawerOpen(true)}>Open drawer</Button>
+          <MenuPopover
+            aria-label="Resource actions"
+            content={
+              <>
+                <Button variant="ghost">Open resource</Button>
+                <Button variant="ghost">Duplicate resource</Button>
+              </>
+            }
+          >
+            <Button>Open actions</Button>
+          </MenuPopover>
           <Button
             onClick={() => {
               void confirm({

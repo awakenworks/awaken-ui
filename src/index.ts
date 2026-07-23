@@ -28,6 +28,14 @@ export {
   type ConfirmRequest,
 } from "./overlays/confirm-provider.js";
 export {
+  MenuPopover,
+  Popover,
+  type MenuPopoverProps,
+  type PopoverPlacement,
+  type PopoverProps,
+  type PopoverRole,
+} from "./overlays/popover.js";
+export {
   ToastProvider,
   useToast,
   type ToastApi,
