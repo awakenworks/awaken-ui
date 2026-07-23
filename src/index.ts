@@ -33,4 +33,15 @@ export {
   type ToastRequest,
   type ToastTone,
 } from "./feedback/toast.js";
-
+export {
+  Avatar,
+  initialsOf,
+  type AvatarProps,
+  type AvatarSize,
+} from "./identity/avatar.js";
+export {
+  Identity,
+  IdentityCard,
+  type IdentityCardProps,
+  type IdentityProps,
+} from "./identity/identity.js";
