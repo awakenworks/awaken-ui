@@ -198,6 +198,10 @@ export {
   ToolbarRow,
 } from "./layout/layout.js";
 export {
+  useUnsavedChangesGuard,
+  type GuardedAction,
+} from "./hooks/use-unsaved-changes-guard.js";
+export {
   Panel,
   PanelBody,
   PanelHeader,
