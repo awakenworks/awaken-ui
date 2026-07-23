@@ -21,6 +21,7 @@ export type SegmentedControlProps<T extends string | number | boolean> = {
   readonly buttonRole?: "tab";
   readonly selectionAria?: "pressed" | "selected";
   readonly ariaLabel?: string;
+  readonly activeDataAttribute?: `data-${string}`;
 };
 
 export function SegmentedControl<T extends string | number | boolean>({
@@ -36,6 +37,7 @@ export function SegmentedControl<T extends string | number | boolean>({
   buttonRole,
   selectionAria = "pressed",
   ariaLabel,
+  activeDataAttribute,
 }: SegmentedControlProps<T>) {
   const buttonsRef = useRef<Array<HTMLButtonElement | null>>([]);
   const onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
@@ -57,7 +59,11 @@ export function SegmentedControl<T extends string | number | boolean>({
     <Container className={cx("ui-segmented", className)} role={role} aria-label={ariaLabel} onKeyDown={onKeyDown}>
       {options.map((option, index) => {
         const active = option.value === value;
+        const activeData = activeDataAttribute
+          ? { [activeDataAttribute]: active || undefined }
+          : {};
         return <button
+          {...activeData}
           key={String(option.value)}
           type="button"
           ref={(node) => { buttonsRef.current[index] = node; }}
