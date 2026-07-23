@@ -28,6 +28,39 @@ export type CommandPaletteState<Item> = {
   readonly onInputKeyDown: KeyboardEventHandler<HTMLInputElement>;
 };
 
+export type UseCommandPaletteShortcutOptions = {
+  readonly open: boolean;
+  readonly onOpenChange: (open: boolean) => void;
+  /** Optional product event that requests opening the palette. */
+  readonly openEventName?: string;
+  readonly enabled?: boolean;
+};
+
+/** Owns the cross-platform Command/Ctrl+K shortcut and optional product event. */
+export function useCommandPaletteShortcut({
+  enabled = true,
+  open,
+  openEventName,
+  onOpenChange,
+}: UseCommandPaletteShortcutOptions): void {
+  useEffect(() => {
+    if (!enabled) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        onOpenChange(!open);
+      }
+    };
+    const onOpen = () => onOpenChange(true);
+    window.addEventListener("keydown", onKeyDown);
+    if (openEventName) window.addEventListener(openEventName, onOpen);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      if (openEventName) window.removeEventListener(openEventName, onOpen);
+    };
+  }, [enabled, onOpenChange, open, openEventName]);
+}
+
 /**
  * Product-neutral command collection state. Consumers own command creation,
  * filtering vocabulary, rendering, execution, status copy, and routing.

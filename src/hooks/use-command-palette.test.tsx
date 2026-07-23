@@ -1,5 +1,8 @@
 import { act, renderHook } from "@testing-library/react";
-import { useCommandPalette } from "./use-command-palette.js";
+import {
+  useCommandPalette,
+  useCommandPaletteShortcut,
+} from "./use-command-palette.js";
 
 const items = ["Agents", "Settings"];
 const filterItems = (values: readonly string[], query: string) =>
@@ -29,5 +32,29 @@ describe("useCommandPalette", () => {
     act(() => result.current.setQuery("agent"));
     expect(result.current.filteredItems).toEqual(["Agents"]);
     expect(result.current.selectedIndex).toBe(0);
+  });
+
+  it("owns the global Command/Ctrl+K and product open-event contract", () => {
+    const onOpenChange = vi.fn();
+    renderHook(() =>
+      useCommandPaletteShortcut({
+        onOpenChange,
+        open: false,
+        openEventName: "product:open-palette",
+      }),
+    );
+
+    const shortcut = new KeyboardEvent("keydown", {
+      bubbles: true,
+      cancelable: true,
+      ctrlKey: true,
+      key: "k",
+    });
+    act(() => window.dispatchEvent(shortcut));
+    expect(shortcut.defaultPrevented).toBe(true);
+    expect(onOpenChange).toHaveBeenCalledWith(true);
+
+    act(() => window.dispatchEvent(new Event("product:open-palette")));
+    expect(onOpenChange).toHaveBeenLastCalledWith(true);
   });
 });

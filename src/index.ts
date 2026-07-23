@@ -205,8 +205,10 @@ export {
 } from "./hooks/use-unsaved-changes-guard.js";
 export {
   useCommandPalette,
+  useCommandPaletteShortcut,
   type CommandPaletteState,
   type UseCommandPaletteOptions,
+  type UseCommandPaletteShortcutOptions,
 } from "./hooks/use-command-palette.js";
 export {
   Panel,
