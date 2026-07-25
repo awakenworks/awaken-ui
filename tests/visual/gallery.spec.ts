@@ -1,3 +1,4 @@
+import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
@@ -55,6 +56,38 @@ for (const theme of ["Awaken", "Oversight"] as const) {
     await expect(scene).toHaveScreenshot(`stat-card-${theme.toLowerCase()}.png`);
   });
 
+  test(`Navigation and structured information under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    const scene = page.getByRole("heading", { name: "Navigation and structured information" }).locator("..");
+    await expect(scene).toHaveScreenshot(`navigation-information-${theme.toLowerCase()}.png`);
+  });
+
+  test(`Navigation information is accessible under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    const results = await new AxeBuilder({ page })
+      .include("main")
+      .analyze();
+    expect(results.violations).toEqual([]);
+  });
+
+  test(`Navigation information handles mobile long content under ${theme} tokens`, async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    const scene = page.getByRole("heading", { name: "Navigation and structured information" }).locator("..");
+    await scene.getByRole("link", { name: "Platform" }).evaluate((node) => {
+      node.textContent = "A-very-long-localized-workspace-name-without-break-opportunities";
+    });
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await expect(scene).toHaveScreenshot(`navigation-information-mobile-${theme.toLowerCase()}.png`);
+  });
+
+  test(`Navigation information supports RTL under ${theme} tokens`, async ({ page }) => {
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    await page.locator("html").evaluate((node) => node.setAttribute("dir", "rtl"));
+    const scene = page.getByRole("heading", { name: "Navigation and structured information" }).locator("..");
+    await expect(scene).toHaveScreenshot(`navigation-information-rtl-${theme.toLowerCase()}.png`);
+  });
+
   test(`Editor form under ${theme} tokens`, async ({ page }) => {
     await page.getByRole("button", { name: `${theme} tokens` }).click();
     const scene = page.getByRole("heading", { name: "Editor form" }).locator("..");
@@ -99,3 +132,21 @@ for (const theme of ["Awaken", "Oversight"] as const) {
     await expect(scene).toHaveScreenshot(`json-inspector-${theme.toLowerCase()}.png`);
   });
 }
+
+test("Navigation information remains distinguishable in forced colors", async ({ page }) => {
+  await page.emulateMedia({ forcedColors: "active" });
+  const scene = page.getByRole("heading", { name: "Navigation and structured information" }).locator("..");
+  await expect(scene).toHaveScreenshot("navigation-information-forced-colors.png");
+});
+
+test("Navigation information exposes the expected accessibility tree and keyboard path", async ({ page }) => {
+  const scene = page.getByRole("heading", { name: "Navigation and structured information" }).locator("..");
+  const accessibilityTree = await scene.ariaSnapshot();
+  expect(accessibilityTree).toContain('navigation "Location"');
+  expect(accessibilityTree).toContain('navigation "Resource pages"');
+  expect(accessibilityTree).toContain('tablist "Agent editor sections"');
+  await page.getByRole("tab", { name: "Overview" }).focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByRole("tab", { name: "Tools" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tabpanel")).toContainText("Product-owned tool configuration");
+});

@@ -1,7 +1,7 @@
 # Component authority and migration matrix
 
 This document is the inventory and migration source of truth for
-`awaken-1.0.0-dev`, `oversight-next`, and `@awaken/ui`. It records ownership;
+`awaken-1.0.0-dev`, `oversight-next`, `awaken-cloud`, and `@awaken/ui`. It records ownership;
 the normative boundary rules remain in [architecture.md](architecture.md) and
 [development-standards.md](development-standards.md).
 
@@ -35,6 +35,12 @@ parallel generic implementation is not an accepted migration state.
 | Data display | Card, badges/chips/status, table atoms, DataGrid, StatCard/StatGrid, panel, states | class and query-state adapters | direct/thin exports | complete for product-neutral display behavior |
 | Layout | Stack, Cluster, SplitPane, ToolbarRow, Panel, SectionHeader, Toolbar | adoption pending by page | direct exports | shared authority exists |
 | Transient feedback | Toast queue/provider | tone/API adapter | i18n/icon/API adapter | shared |
+| Contextual notices | `InlineNotice` structure, tone, actions and caller-selected live-region semantics | migrate `.banner` variants through product copy/action adapters | migrate reason-code and setup-handoff presentation through domain adapters | shared authority; announcement delivery and dismissal persistence remain product-owned |
+| Description metadata | native `DescriptionList` composition | adopt for neutral metadata where present | migrate repeated `dl` and key/value recipes | shared authority; Cloud billing/subscription metadata is also a consumer |
+| In-page tabs | `Tabs`, `TabList`, `Tab`, `TabPanel` | migrate agent-editor sections | migrate controlled panel tabs | shared authority; `SegmentedControl` is value selection only |
+| Addressable tab navigation | `TabNav`, `TabNavItem` | adopt when page sections become addressable | migrate `SurfaceTabs` presentation; retain route matching | shared presentation; product owns URL state and Router links |
+| Hierarchy navigation | `Breadcrumbs`, `BreadcrumbItem` | workspace hierarchy adapter | org/workspace/project adapter | shared presentation; Cloud has no current breadcrumb requirement |
+| Event sequences | `EventList`, `EventItem`, `EventTime` | trace-span adapter | run/issue/activity adapters | shared leaf structure only; sorting, folding, streaming and domain event models stay local |
 | Modal overlays | Dialog, Drawer, AlertDialog, ConfirmProvider, DialogSurface, Popover | thin adapters | thin visual adapters | shared behavior |
 | Authoring/editor chrome | `EditorForm`, `AuthoringHeader`, `AuthoringGuide`, controlled tab state | product editor composition | thin modal/editor adapters | shared chrome complete; editor domain models remain local |
 | Inspectors | `JsonInspector` | i18n/class adapter | shared inspector available where raw JSON is appropriate | disclosure, serialization and clipboard state shared |
@@ -42,6 +48,12 @@ parallel generic implementation is not an accepted migration state.
 | Usage and analytics | display primitives only | Awaken token/cache billing projection | Oversight run/domain analytics | intentionally product-owned calculations |
 | Product identity generation | none | product-owned | `EntityIcon` prompt/hash/rendering | intentionally product-owned |
 | Routing/API/query state | none | product-owned | product-owned | never shared |
+
+`awaken-cloud` is the third consumer. Its console keeps OAuth/session state,
+operator and tenant authorization, Billing/Organization/Operations DTOs and API
+calls, navigation, copy, and Cloud token mapping. Shared Button, Card, Badge,
+Table, loading/error state, and neutral layout primitives are authoritative;
+the former inline-style implementations were removed during adoption.
 
 ## Current audit evidence
 
@@ -124,6 +136,15 @@ error/retry state, while products classify failures and execute retries.
   second product needs the same identity-generation contract.
 - Trace event folding and usage accounting remain product-owned because their
   source events, consistency boundaries, and terminal outcomes differ.
+- `ProgressList` remains product-owned until a second consumer demonstrates the
+  same readiness-state contract. Oversight's current onboarding state is
+  `complete | active | pending` and is not a generic linear stepper.
+- `Combobox` remains deferred until a second product needs the same searchable
+  selection contract; command palettes, catalog pickers, and remote relation
+  search are not treated as interchangeable widgets.
+- A standalone `Stepper` and announcement system are not shared primitives.
+  Products may compose `InlineNotice` for announcement presentation while
+  retaining delivery, targeting, expiry, priority, and persistence.
 
 ## Completion gate
 

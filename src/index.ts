@@ -164,6 +164,29 @@ export {
   type SegmentedControlProps,
 } from "./forms/segmented-control.js";
 export {
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  type TabsProps,
+  type TabsActivationMode,
+  type TabsOrientation,
+  type TabProps,
+  type TabPanelProps,
+} from "./navigation/tabs.js";
+export {
+  TabNav,
+  TabNavItem,
+  type TabNavProps,
+  type TabNavItemProps,
+} from "./navigation/tab-nav.js";
+export {
+  Breadcrumbs,
+  BreadcrumbItem,
+  type BreadcrumbsProps,
+  type BreadcrumbItemProps,
+} from "./navigation/breadcrumbs.js";
+export {
   Badge,
   Chip,
   StatusPill,
@@ -171,6 +194,20 @@ export {
   type ChipProps,
   type UiTone,
 } from "./data/badge.js";
+export {
+  DescriptionList,
+  DescriptionItem,
+  DescriptionTerm,
+  DescriptionDetails,
+  type DescriptionListProps,
+} from "./data/description-list.js";
+export {
+  EventList,
+  EventItem,
+  EventTime,
+  type EventListProps,
+  type EventItemProps,
+} from "./data/event-list.js";
 export {
   DataTable,
   TableBody,
@@ -252,3 +289,8 @@ export {
   type StateProps,
   type SurfaceGateProps,
 } from "./feedback/state.js";
+export {
+  InlineNotice,
+  type InlineNoticeProps,
+  type InlineNoticeTone,
+} from "./feedback/inline-notice.js";

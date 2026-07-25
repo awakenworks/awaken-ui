@@ -5,7 +5,10 @@ import {
   CardHeader,
   EmptyState,
   SectionHeader,
-  SegmentedControl,
+  Tab,
+  TabList,
+  TabPanel,
+  Tabs,
   Switch,
   TextField,
 } from "../src/index.js";
@@ -27,25 +30,17 @@ describe("forms and surfaces", () => {
     expect(change).toHaveBeenCalledWith(true);
   });
 
-  it("supports roving tab selection by arrow key", () => {
+  it("uses Tabs as the canonical roving tab implementation", () => {
     const change = vi.fn();
     render(
-      <SegmentedControl
-        role="tablist"
-        buttonRole="tab"
-        selectionAria="selected"
-        ariaLabel="View"
-        value="one"
-        onChange={change}
-        options={[
-          { value: "one", label: "One" },
-          { value: "two", label: "Two" },
-        ]}
-      />,
+      <Tabs value="one" onValueChange={change}>
+        <TabList aria-label="View"><Tab value="one">One</Tab><Tab value="two">Two</Tab></TabList>
+        <TabPanel value="one">First</TabPanel><TabPanel value="two">Second</TabPanel>
+      </Tabs>,
     );
     const first = screen.getByRole("tab", { name: "One" });
     first.focus();
-    fireEvent.keyDown(screen.getByRole("tablist"), { key: "ArrowRight" });
+    fireEvent.keyDown(first, { key: "ArrowRight" });
     expect(change).toHaveBeenCalledWith("two");
   });
 

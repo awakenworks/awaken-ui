@@ -2,6 +2,8 @@ import { StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Button,
+  BreadcrumbItem,
+  Breadcrumbs,
   ChatApproval,
   ChatComposer,
   ChatMessage,
@@ -9,9 +11,17 @@ import {
   ConfirmProvider,
   Dialog,
   DataGrid,
+  DescriptionDetails,
+  DescriptionItem,
+  DescriptionList,
+  DescriptionTerm,
   Drawer,
   EditorForm,
+  EventItem,
+  EventList,
+  EventTime,
   IdentityCard,
+  InlineNotice,
   JsonInspector,
   MenuPopover,
   ReasoningBlock,
@@ -20,6 +30,12 @@ import {
   SelectField,
   StatCard,
   StatGrid,
+  Tab,
+  TabList,
+  TabNav,
+  TabNavItem,
+  TabPanel,
+  Tabs,
   Switch,
   TextAreaField,
   TextField,
@@ -48,6 +64,7 @@ function Gallery() {
   const [gridQuery, setGridQuery] = useState("");
   const [gridSort, setGridSort] = useState("name");
   const [switchEnabled, setSwitchEnabled] = useState(true);
+  const [activeTab, setActiveTab] = useState("overview");
 
   return (
     <main className="gallery" data-ui-theme={theme} data-product-theme={theme}>
@@ -200,6 +217,39 @@ function Gallery() {
           <StatCard label="Healthy runs" tone="success" value={38} />
           <StatCard label="Needs attention" tone="warning" value={3} />
         </StatGrid>
+      </section>
+
+      <section>
+        <h2>Navigation and structured information</h2>
+        <Breadcrumbs label="Location">
+          <BreadcrumbItem href="#organization">Awaken</BreadcrumbItem>
+          <BreadcrumbItem href="#workspace">Platform</BreadcrumbItem>
+          <BreadcrumbItem current>Reviewer</BreadcrumbItem>
+        </Breadcrumbs>
+        <TabNav label="Resource pages">
+          <TabNavItem href="#activity" current>Activity</TabNavItem>
+          <TabNavItem href="#settings">Settings</TabNavItem>
+        </TabNav>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabList aria-label="Agent editor sections">
+            <Tab value="overview">Overview</Tab>
+            <Tab value="tools">Tools</Tab>
+          </TabList>
+          <TabPanel value="overview">
+            <InlineNotice tone="warning" title="Repository access required" actions={<Button size="sm">Configure</Button>}>
+              Connect a repository before starting a run.
+            </InlineNotice>
+            <DescriptionList columns={2}>
+              <DescriptionItem><DescriptionTerm>Type</DescriptionTerm><DescriptionDetails>Reviewer agent</DescriptionDetails></DescriptionItem>
+              <DescriptionItem><DescriptionTerm>Revision</DescriptionTerm><DescriptionDetails>7c3b18a</DescriptionDetails></DescriptionItem>
+            </DescriptionList>
+            <EventList aria-label="Recent events">
+              <EventItem title="Configuration updated" timestamp={<EventTime dateTime="2026-07-25T08:00:00Z">08:00</EventTime>}>Tools and instructions changed.</EventItem>
+              <EventItem title="Readiness checked" timestamp={<EventTime dateTime="2026-07-25T08:02:00Z">08:02</EventTime>}>Repository access is still required.</EventItem>
+            </EventList>
+          </TabPanel>
+          <TabPanel value="tools">Product-owned tool configuration.</TabPanel>
+        </Tabs>
       </section>
 
       <section>

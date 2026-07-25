@@ -11,8 +11,9 @@ Before designing or editing:
 
 1. Read [docs/architecture.md](docs/architecture.md).
 2. Read [docs/development-standards.md](docs/development-standards.md).
-3. Search the package and both known consumers for an existing implementation:
-   `../awaken-1.0.0-dev/web` and `../oversight-next/web`.
+3. Search the package and all known consumers for an existing implementation:
+   `../awaken-1.0.0-dev/web`, `../oversight-next/web`, and
+   `../awaken-cloud/web/awaken-cloud-console`.
 4. Identify the authoritative implementation and its callers. Do not create a
    second component, state owner, token vocabulary, compatibility path, or
    headless mechanism for the same responsibility.
@@ -45,4 +46,3 @@ Documentation ownership:
   and release rules:
   [docs/development-standards.md](docs/development-standards.md)
 - Consumer installation and minimal usage: [README.md](README.md)
-

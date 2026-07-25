@@ -40,6 +40,7 @@ export function Avatar({
   return (
     <span
       {...props}
+      role="img"
       aria-label={label}
       className={cx("ui-avatar", className)}
       data-size={size}
