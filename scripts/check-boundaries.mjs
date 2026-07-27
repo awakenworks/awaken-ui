@@ -36,6 +36,12 @@ async function visit(directory) {
     if (![".ts", ".tsx", ".css"].includes(extname(entry.name))) continue;
     const content = await readFile(path, "utf8");
     const displayPath = relative(root, path);
+    const lineCount = content === ""
+      ? 0
+      : content.split(/\r?\n/).length - (content.endsWith("\n") ? 1 : 0);
+    if (lineCount > 500) {
+      violations.push(`${displayPath}: ${lineCount} lines exceeds the 500-line source limit`);
+    }
     const isThemeAdapter = displayPath.startsWith(`styles${join("/", "themes")}`);
     for (const value of forbiddenImports) {
       if (content.includes(value)) violations.push(`${displayPath}: forbidden dependency ${value}`);
