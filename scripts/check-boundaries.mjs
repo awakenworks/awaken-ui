@@ -1,7 +1,10 @@
 import { readFile, readdir } from "node:fs/promises";
-import { extname, join, relative, resolve } from "node:path";
+import { extname, join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = resolve(new URL("../src", import.meta.url).pathname);
+// URL.pathname is `/C:/...` on Windows; converting it as a filesystem path
+// first avoids `resolve` incorrectly producing `C:\C:\...`.
+const root = fileURLToPath(new URL("../src/", import.meta.url));
 const forbiddenImports = [
   "@tanstack/",
   "react-router",

@@ -11,7 +11,7 @@ const forms = readFileSync(resolve(root, "components-forms-data.css"), "utf8");
 
 describe("shared browser styling", () => {
   it("keeps the public component stylesheet as the single ordered entry point", () => {
-    expect(aggregate.trim().split("\n")).toEqual([
+    expect(aggregate.trim().split(/\r?\n/)).toEqual([
       '@import "./components-core.css";',
       '@import "./components-feedback-identity.css";',
       '@import "./components-chat.css";',
