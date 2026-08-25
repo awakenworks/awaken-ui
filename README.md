@@ -62,9 +62,15 @@ in the consuming product.
 The icon and event-marker slots are decorative; repeat their meaning in text.
 Before releasing or migrating these primitives, follow the automated and
 manual gates in [docs/accessibility-validation.md](docs/accessibility-validation.md).
+
+`DataGrid` keeps its native table at wider viewports. Consumers may opt into a
+mobile label-value card view with `mobileCards`; when rows navigate, provide a
+localized `mobileRowActionLabel` so the card uses a real accessible button.
+
 ## Suite navigation
 
 `SuiteSwitcher` provides the shared accessible product/destination menu. The
 consumer supplies its product labels, current Workspace description,
 Cloud-projected URLs, icons, and authorized destination list; `@awaken/ui`
 does not construct routes or infer access.
+

@@ -54,6 +54,12 @@ export interface DataGridProps<Row> {
   readonly pageSize?: number;
   readonly loading?: boolean;
   readonly toolbar?: ReactNode;
+  /** Render a label-value card view below 760px while retaining the native table
+   * for wider viewports. Products opt in after checking their cell content. */
+  readonly mobileCards?: boolean;
+  /** Accessible label for the per-card action when `onRowClick` is present. */
+  readonly mobileRowActionLabel?: ReactNode | ((row: Row) => ReactNode);
+  readonly renderMobileLoading?: () => ReactNode;
   readonly renderLoading: (columns: number) => ReactNode;
   readonly renderEmpty: () => ReactNode;
   readonly classes?: DataGridClasses;
@@ -70,6 +76,9 @@ export function DataGrid<Row>({
   pageSize = 20,
   loading = false,
   toolbar,
+  mobileCards = false,
+  mobileRowActionLabel,
+  renderMobileLoading,
   renderLoading,
   renderEmpty,
   classes,
@@ -117,7 +126,10 @@ export function DataGrid<Row>({
           })}
         </span>
       </div>
-      <div className={cx("ui-data-grid__scroll", classes?.scroll)}>
+      <div
+        className={cx("ui-data-grid__scroll", classes?.scroll)}
+        data-mobile-cards={mobileCards ? "true" : undefined}
+      >
         <table className={classes?.table}>
           <thead>
             <tr>
@@ -165,6 +177,38 @@ export function DataGrid<Row>({
           )}
         </table>
       </div>
+      {mobileCards ? (
+        <div className="ui-data-grid__cards">
+          {loading ? renderMobileLoading?.() : (
+            <>
+              {pageRows.map((row) => (
+                <article className="ui-data-grid__card" key={rowKey(row)}>
+                  <dl className="ui-data-grid__card-fields">
+                    {columns.map((column) => (
+                      <div className="ui-data-grid__card-field" key={column.key}>
+                        <dt>{column.header}</dt>
+                        <dd style={{ textAlign: column.align ?? "left" }}>{column.cell(row)}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  {onRowClick && mobileRowActionLabel ? (
+                    <button
+                      className={classes?.button}
+                      onClick={() => onRowClick(row)}
+                      type="button"
+                    >
+                      {typeof mobileRowActionLabel === "function"
+                        ? mobileRowActionLabel(row)
+                        : mobileRowActionLabel}
+                    </button>
+                  ) : null}
+                </article>
+              ))}
+              {pageRows.length === 0 ? renderEmpty() : null}
+            </>
+          )}
+        </div>
+      ) : null}
       {pages > 1 ? (
         <div className={cx("ui-data-grid__pager", classes?.pager)}>
           <button className={classes?.button} disabled={page <= 1}
