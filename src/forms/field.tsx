@@ -1,4 +1,5 @@
 import {
+  forwardRef,
   useId,
   type InputHTMLAttributes,
   type ReactNode,
@@ -78,23 +79,29 @@ type CommonFieldProps = {
   readonly helpClassName?: string | undefined;
 };
 
-export function TextField({ label, action, error, help, info, fieldClassName, labelClassName, helpClassName, className, id, ...props }: InputHTMLAttributes<HTMLInputElement> & CommonFieldProps) {
-  return <Field className={fieldClassName} labelClassName={labelClassName} helpClassName={helpClassName} label={label} action={action} error={error} help={help} info={info} required={props.required} controlId={id}>
-    {({ describedBy, id, invalid }) => <input {...props} id={id} className={cx("ui-input", className)} aria-describedby={describedBy} aria-invalid={invalid} />}
-  </Field>;
-}
+export const TextField = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement> & CommonFieldProps>(
+  function TextField({ label, action, error, help, info, fieldClassName, labelClassName, helpClassName, className, id, ...props }, ref) {
+    return <Field className={fieldClassName} labelClassName={labelClassName} helpClassName={helpClassName} label={label} action={action} error={error} help={help} info={info} required={props.required} controlId={id}>
+      {({ describedBy, id, invalid }) => <input {...props} ref={ref} id={id} className={cx("ui-input", className)} aria-describedby={describedBy} aria-invalid={invalid} />}
+    </Field>;
+  },
+);
 
-export function TextAreaField({ label, action, error, help, info, fieldClassName, labelClassName, helpClassName, className, id, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement> & CommonFieldProps) {
-  return <Field className={fieldClassName} labelClassName={labelClassName} helpClassName={helpClassName} label={label} action={action} error={error} help={help} info={info} required={props.required} controlId={id}>
-    {({ describedBy, id, invalid }) => <textarea {...props} id={id} className={cx("ui-input", "ui-input--area", className)} aria-describedby={describedBy} aria-invalid={invalid} />}
-  </Field>;
-}
+export const TextAreaField = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement> & CommonFieldProps>(
+  function TextAreaField({ label, action, error, help, info, fieldClassName, labelClassName, helpClassName, className, id, ...props }, ref) {
+    return <Field className={fieldClassName} labelClassName={labelClassName} helpClassName={helpClassName} label={label} action={action} error={error} help={help} info={info} required={props.required} controlId={id}>
+      {({ describedBy, id, invalid }) => <textarea {...props} ref={ref} id={id} className={cx("ui-input", "ui-input--area", className)} aria-describedby={describedBy} aria-invalid={invalid} />}
+    </Field>;
+  },
+);
 
-export function SelectField({ label, action, error, help, info, fieldClassName, labelClassName, helpClassName, className, children, id, ...props }: SelectHTMLAttributes<HTMLSelectElement> & CommonFieldProps) {
-  return <Field className={fieldClassName} labelClassName={labelClassName} helpClassName={helpClassName} label={label} action={action} error={error} help={help} info={info} required={props.required} controlId={id}>
-    {({ describedBy, id, invalid }) => <select {...props} id={id} className={cx("ui-input", className)} aria-describedby={describedBy} aria-invalid={invalid}>{children}</select>}
-  </Field>;
-}
+export const SelectField = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSelectElement> & CommonFieldProps>(
+  function SelectField({ label, action, error, help, info, fieldClassName, labelClassName, helpClassName, className, children, id, ...props }, ref) {
+    return <Field className={fieldClassName} labelClassName={labelClassName} helpClassName={helpClassName} label={label} action={action} error={error} help={help} info={info} required={props.required} controlId={id}>
+      {({ describedBy, id, invalid }) => <select {...props} ref={ref} id={id} className={cx("ui-input", className)} aria-describedby={describedBy} aria-invalid={invalid}>{children}</select>}
+    </Field>;
+  },
+);
 
 export function CheckboxField({
   label,

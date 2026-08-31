@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { createRef } from "react";
 import {
   Card,
   CardBody,
@@ -10,6 +11,8 @@ import {
   TabPanel,
   Tabs,
   Switch,
+  SelectField,
+  TextAreaField,
   TextField,
 } from "../src/index.js";
 
@@ -21,6 +24,23 @@ describe("forms and surfaces", () => {
     const describedBy = input.getAttribute("aria-describedby") ?? "";
     expect(describedBy).toContain("-help");
     expect(describedBy).toContain("-error");
+  });
+
+  it("forwards field refs to the stable native controls", () => {
+    const input = createRef<HTMLInputElement>();
+    const area = createRef<HTMLTextAreaElement>();
+    const select = createRef<HTMLSelectElement>();
+    render(<>
+      <TextField aria-label="Input" ref={input} />
+      <TextAreaField aria-label="Area" ref={area} />
+      <SelectField aria-label="Select" ref={select}><option>One</option></SelectField>
+    </>);
+
+    expect(input.current).toBe(screen.getByRole("textbox", { name: "Input" }));
+    expect(area.current).toBe(screen.getByRole("textbox", { name: "Area" }));
+    expect(select.current).toBe(screen.getByRole("combobox", { name: "Select" }));
+    input.current?.focus();
+    expect(input.current).toHaveFocus();
   });
 
   it("exposes switch state and delegates changes", () => {
