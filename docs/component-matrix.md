@@ -42,6 +42,7 @@ parallel generic implementation is not an accepted migration state.
 | Hierarchy navigation | `Breadcrumbs`, `BreadcrumbItem` | workspace hierarchy adapter | org/workspace/project adapter | shared presentation; Cloud has no current breadcrumb requirement |
 | Event sequences | `EventList`, `EventItem`, `EventTime` | trace-span adapter | run/issue/activity adapters | shared leaf structure only; sorting, folding, streaming and domain event models stay local |
 | Modal overlays | Dialog, Drawer, AlertDialog, ConfirmProvider, DialogSurface, Popover | thin adapters | thin visual adapters | shared behavior |
+| Suite navigation | `SuiteSwitcher` product/destination menu semantics and layout | labels/icons/Cloud URLs adapter | labels/icons/Cloud URLs adapter | shared; Cloud remains the only route and authorization authority |
 | Authoring/editor chrome | `EditorForm`, `AuthoringHeader`, `AuthoringGuide`, controlled tab state | product editor composition | thin modal/editor adapters | shared chrome complete; editor domain models remain local |
 | Inspectors | `JsonInspector` | i18n/class adapter | shared inspector available where raw JSON is appropriate | disclosure, serialization and clipboard state shared |
 | Trace views | shared chat/tool/approval/JSON primitives | `session-log` → span projection | run-event → tool/approval/output projection | intentionally separate domain projections; no common DTO |
@@ -68,7 +69,7 @@ follows:
 | Same-name surface | Decision |
 | --- | --- |
 | `Button`, `Card`, `Badge`, `CopyButton`, `StatusPill` | Shared authority with product class/icon/copy adapters only. |
-| `TopChrome`, `AppShell` | Product-owned information architecture, routes, session/scope state, and responsive shell composition; shared leaf layout, Popover, Dialog, and command-palette behavior are reused. |
+| `TopChrome`, `AppShell` | Product-owned information architecture, routes, session/scope state, and responsive shell composition; the duplicated suite menu is replaced by shared `SuiteSwitcher`, while each shell supplies its labels, icons and Cloud-projected URLs. |
 | `HomeSurface`, `EnvironmentsSurface` | Same generic page names but different product DTOs, operations, permissions, and terminal states; only their neutral fields, cards, states, tables, overlays, and drawers are shared. |
 
 No consumer production source imports Base UI, Radix, Headless UI, or another

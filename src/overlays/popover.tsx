@@ -153,7 +153,11 @@ export function Popover({
               onClick={
                 closeOnContentClick
                   ? (((event) => {
-                      if ((event.target as HTMLElement).closest("button")) {
+                      if (
+                        (event.target as HTMLElement).closest(
+                          'button, a[href], [role="menuitem"], [role="option"]',
+                        )
+                      ) {
                         setOpen(false);
                       }
                     }) as MouseEventHandler<HTMLDivElement>)
