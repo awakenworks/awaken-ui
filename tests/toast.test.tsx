@@ -8,7 +8,7 @@ function ToastTrigger() {
     <button
       onClick={() =>
         toast.push({
-          duration: 20,
+          duration: 0,
           message: "Saved",
           tone: "success",
         })
