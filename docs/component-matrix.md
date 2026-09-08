@@ -37,7 +37,7 @@ parallel generic implementation is not an accepted migration state.
 | Transient feedback | Toast queue/provider | tone/API adapter | i18n/icon/API adapter | shared |
 | Contextual notices | `InlineNotice` structure, tone, actions and caller-selected live-region semantics | all former `.banner` variants use `InlineNotice`; product supplies copy, icons, actions and urgency | migrate reason-code and setup-handoff presentation through domain adapters | shared authority; announcement delivery and dismissal persistence remain product-owned |
 | Description metadata | native `DescriptionList` composition | adopt for neutral metadata where present | migrate repeated `dl` and key/value recipes | shared authority; Cloud billing/subscription metadata is also a consumer |
-| In-page tabs | `Tabs`, `TabList`, `Tab`, `TabPanel` | migrate agent-editor sections | migrate controlled panel tabs | shared authority; `SegmentedControl` is value selection only |
+| In-page tabs | `Tabs`, `TabList`, `Tab`, `TabPanel` | agent-editor stages and nested panels use shared Tabs; draft state stays in the product | migrate controlled panel tabs | shared authority; `SegmentedControl` is value selection only |
 | Addressable tab navigation | `TabNav`, `TabNavItem` | Session views use Router-backed `TabNavItem`; URL owns selection and history | migrate `SurfaceTabs` presentation; retain route matching | shared presentation; product owns URL state and Router links |
 | Hierarchy navigation | `Breadcrumbs`, `BreadcrumbItem` | workspace hierarchy adapter | org/workspace/project adapter | shared presentation; Cloud has no current breadcrumb requirement |
 | Event sequences | `EventList`, `EventItem`, `EventTime` | trace-span adapter | run/issue/activity adapters | shared leaf structure only; sorting, folding, streaming and domain event models stay local |
@@ -188,3 +188,23 @@ mobile cards, Markdown lifecycle and product domain owners. Modified: shared
 recipes, package exports and the three consumer integrations. Newly added source
 is limited to the recovered SuiteSwitcher authority and regression coverage;
 no new domain service, theme system or parallel component framework is introduced.
+
+## Awaken family consolidation (0.5.0)
+
+The optional `brand` exports own the geometry and palettes migrated from
+`awakenworks.com`. React consumers render `BrandMark`, Astro consumes the pure
+brand API, and Vite injects a generated adaptive favicon. Agents uses A,
+Workforce uses W (including directory and suite entrances), and Cloud uses the
+Works master A with its own name. Product-local paths, text-A marks and favicon
+sources are removed; the website's downloadable SVGs remain generated outputs.
+
+The earlier static matrix's second product column is **Oversight**, not Workforce.
+Workforce already uses shared `Tabs` in PackStudio and `TabNav` in
+IssueViewNavigation; there is no Workforce `SurfaceTabs` implementation.
+Workforce's remaining metadata recipes are recorded by their actual source
+callers rather than inherited from the Oversight migration list.
+
+The remaining family work is theme selection/token alignment, function-icon
+consolidation, repeated metadata/layout recipes, consumer visual coverage and
+refreshing website screenshots with exact new capture provenance. Brand package
+validation does not by itself complete those consumer acceptance requirements.
