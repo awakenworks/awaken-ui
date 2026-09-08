@@ -1,3 +1,4 @@
+import { BrandGallery } from "./brand-gallery.js";
 import { StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -422,6 +423,7 @@ function Gallery() {
       >
         Product-owned detail content.
       </Drawer>
+    <BrandGallery />
     </main>
   );
 }

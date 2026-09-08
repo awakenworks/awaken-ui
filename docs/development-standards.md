@@ -45,7 +45,7 @@ then resume.
 - authentication, authorization, and capability decisions;
 - Workspace, Project, Issue, Session, Agent, Workflow, and other domain terms;
 - localization, product copy, date/number formatting, and icon choices;
-- raw design tokens, brand themes, and token-to-`--ui-*` mappings;
+- raw design tokens, brand theme selection, and token-to-`--ui-*` mappings;
 - domain DTO-to-view-model adapters.
 
 Shared components may display a permission or error state supplied by a
@@ -183,6 +183,9 @@ Automated assertions are necessary but do not replace keyboard and screen
 reader-oriented behavior tests.
 
 ## 7. Styling and token contract
+
+The optional `brand` exports own Awaken marks and their palettes. Brand constants
+are permitted only there; product-neutral component recipes never consume them.
 
 ### Token ownership
 

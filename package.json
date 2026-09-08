@@ -1,6 +1,6 @@
 {
   "name": "@awaken/ui",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Shared, product-neutral React UI primitives for Awaken products.",
   "license": "MIT",
   "type": "module",
@@ -21,7 +21,20 @@
     "./styles/components.css": "./dist/styles/components.css",
     "./styles/themes/awaken.css": "./dist/styles/themes/awaken.css",
     "./styles/themes/oversight.css": "./dist/styles/themes/oversight.css",
-    "./styles.css": "./dist/styles.css"
+    "./styles.css": "./dist/styles.css",
+    "./brand": {
+      "types": "./dist/brand/marks.d.ts",
+      "import": "./dist/brand/marks.js"
+    },
+    "./brand/react": {
+      "types": "./dist/brand/react.d.ts",
+      "import": "./dist/brand/react.js"
+    },
+    "./brand/styles.css": "./dist/styles/brand.css",
+    "./brand/vite": {
+      "types": "./dist/brand/vite.d.ts",
+      "import": "./dist/brand/vite.js"
+    }
   },
   "scripts": {
     "build": "pnpm clean && tsc -p tsconfig.build.json && node scripts/copy-styles.mjs",

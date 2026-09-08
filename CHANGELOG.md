@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0
+
+- Move the existing Awaken brand geometry and palettes from the website into
+  optional framework-independent brand exports, with React and Vite adapters.
+- All product marks, suite entries, downloads and favicons consume one source.
+  Cloud uses the company master mark with its product name.
+- Brand renderers support explicit/automatic surfaces, decorative/named images,
+  system color schemes and forced colors without importing product state.
+
 ## 0.4.0
 
 - Consolidate SuiteSwitcher and link dismissal from existing consumer distributions.

@@ -1,0 +1,34 @@
+/* Optional brand rendering. No global reset or component theme injection. */
+.aw-brand-mark {
+  --mark-primary: var(--mark-light-primary);
+  --mark-decision: var(--mark-light-decision);
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: 0 0 auto;
+  vertical-align: middle;
+}
+
+@media (prefers-color-scheme: dark) {
+  .aw-brand-mark[data-mark-scheme="auto"] {
+    --mark-primary: var(--mark-dark-primary);
+    --mark-decision: var(--mark-dark-decision);
+  }
+}
+
+[data-theme="light"] .aw-brand-mark[data-mark-scheme="auto"] {
+  --mark-primary: var(--mark-light-primary);
+  --mark-decision: var(--mark-light-decision);
+}
+
+[data-theme="dark"] .aw-brand-mark[data-mark-scheme="auto"] {
+  --mark-primary: var(--mark-dark-primary);
+  --mark-decision: var(--mark-dark-decision);
+}
+
+@media (forced-colors: active) {
+  :root .aw-brand-mark {
+    --mark-primary: CanvasText;
+    --mark-decision: CanvasText;
+  }
+}

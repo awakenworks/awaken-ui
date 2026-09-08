@@ -80,3 +80,23 @@ into an existing offline workspace dependency). Record the source commit and
 archive hash alongside the dependency. Never patch distribution files or pack
 individual modules from multiple revisions. Registry publication remains a
 separate release step; a local archive is not a published release.
+
+## Awaken brand assets (optional)
+
+Use `@awaken/ui/brand` from Astro or build scripts for the canonical family SVG
+body, palette and favicon. In React:
+
+```tsx
+import { BrandMark } from "@awaken/ui/brand/react";
+import "@awaken/ui/brand/styles.css";
+
+<BrandMark mark="workforce" />
+<BrandMark mark="works" label="Awaken Cloud" scheme="on-dark" />
+```
+
+Automatic marks follow `data-theme="light|dark"`, then the system preference.
+Supply `scheme` for a surface with a fixed background. Omit `label` when visible
+adjacent text already supplies the name. Never copy geometry into a component.
+Vite consumers add `brandFaviconPlugin("agents")` from `@awaken/ui/brand/vite`
+to their existing plugins and remove local favicon links/files. The plugin
+inlines the canonical adaptive SVG in development and production HTML.
