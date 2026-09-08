@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.1
+
+- Render a supplied EventItem marker without a second default dot, including
+  forced colors. Empty markers retain the existing timeline dot and rail.
+
 ## 0.8.0
 
 - Keep optional-icon notice actions inside narrow layouts.

@@ -207,7 +207,8 @@
 .ui-event-list__rail { position: relative; align-self: stretch; width: var(--ui-space-4); display: flex; justify-content: center; }
 .ui-event-list__rail::after { position: absolute; inset-block: var(--ui-space-4) 0; width: 1px; content: ""; background: var(--ui-color-border); }
 .ui-event-list__item:last-child .ui-event-list__rail::after { display: none; }
-.ui-event-list__marker { position: relative; z-index: 1; width: var(--ui-space-2); height: var(--ui-space-2); margin-block-start: var(--ui-space-1); background: var(--ui-color-accent); border-radius: 999px; }
+.ui-event-list__marker { position: relative; z-index: 1; display: grid; place-items: center; min-width: var(--ui-space-4); min-height: var(--ui-space-4); }
+.ui-event-list__marker:empty { min-width: 0; min-height: 0; width: var(--ui-space-2); height: var(--ui-space-2); margin-block-start: var(--ui-space-1); background: var(--ui-color-accent); border-radius: 999px; }
 .ui-event-list__content { display: grid; min-width: 0; gap: var(--ui-space-1); padding-block-end: var(--ui-space-4); }
 .ui-event-list[data-density="compact"] .ui-event-list__content { padding-block-end: var(--ui-space-2); }
 .ui-event-list__header { display: flex; justify-content: space-between; gap: var(--ui-space-3); }
@@ -293,7 +294,7 @@
     border-block-end-color: Highlight;
   }
 
-  .ui-event-list__marker {
+  .ui-event-list__marker:empty {
     background: CanvasText;
   }
 }

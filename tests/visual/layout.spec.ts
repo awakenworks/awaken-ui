@@ -96,3 +96,39 @@ for (const hasIcon of [false, true]) {
     });
   }
 }
+
+// E1-E6: empty/icon/text marker x ordinary/forced colors. Only an empty marker
+// owns the default dot; supplied content has a full-size transparent slot.
+// Both paths retain one rail and decorative semantics; no event state changes.
+for (const markerKind of ["empty", "icon", "text"]) {
+  for (const forcedColors of ["none", "active"] as const) {
+    test(`event marker ${markerKind} in ${forcedColors} colors has one visual owner`, async ({ page }) => {
+      await page.setViewportSize({ width: 360, height: 900 });
+      await page.emulateMedia({ forcedColors });
+      await page.goto("/");
+      const marker = page.locator(".ui-event-list__marker").first();
+      await marker.evaluate((node, kind) => {
+        if (kind === "icon") {
+          const icon = document.querySelector('svg[viewBox="0 0 24 24"]')!;
+          node.replaceChildren(icon.cloneNode(true));
+        } else if (kind === "text") node.textContent = "1";
+      }, markerKind);
+      const shape = await marker.evaluate((node) => {
+        const style = getComputedStyle(node);
+        return { width: node.getBoundingClientRect().width, background: style.backgroundColor };
+      });
+      if (markerKind === "empty") {
+        expect(shape.width).toBe(8);
+        expect(shape.background).not.toMatch(/^rgba\([^,]+,[^,]+,[^,]+,\s*0\)$/);
+      } else {
+        expect(shape.width).toBeGreaterThanOrEqual(16);
+        // Forced colors changes RGB channels even for transparent pixels.
+        expect(shape.background).toMatch(/^rgba\([^,]+,[^,]+,[^,]+,\s*0\)$/);
+      }
+      await expect(marker.locator("..")).toHaveAttribute("aria-hidden", "true");
+      const list = page.getByRole("list", { name: "Recent events" });
+      await expect(list.getByRole("listitem")).toHaveCount(2);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    });
+  }
+}
