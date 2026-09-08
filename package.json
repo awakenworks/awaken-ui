@@ -1,6 +1,6 @@
 {
   "name": "@awaken/ui",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Shared, product-neutral React UI primitives for Awaken products.",
   "license": "MIT",
   "type": "module",
@@ -34,7 +34,12 @@
     "./brand/vite": {
       "types": "./dist/brand/vite.d.ts",
       "import": "./dist/brand/vite.js"
-    }
+    },
+    "./brand/appearance": {
+      "types": "./dist/brand/appearance.d.ts",
+      "import": "./dist/brand/appearance.js"
+    },
+    "./brand/family.css": "./dist/styles/family.css"
   },
   "scripts": {
     "build": "pnpm clean && tsc -p tsconfig.build.json && node scripts/copy-styles.mjs",

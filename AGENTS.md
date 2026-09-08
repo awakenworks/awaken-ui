@@ -4,9 +4,10 @@
 
 `@awaken/ui` is the single product-neutral React UI implementation shared by
 Awaken products. It owns interaction behavior and the `--ui-*` semantic token
-contract; consuming products own brand tokens, domain adapters, routes, API
+contract; consuming products choose brand tokens and own domain adapters, routes, API
 state, permissions, and copy. Optional `brand` exports own the shared Awaken
-mark geometry and palettes independently of the product-neutral component core.
+mark geometry, family palettes and appearance preferences independently of the
+product-neutral component core.
 
 Before designing or editing:
 

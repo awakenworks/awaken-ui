@@ -74,7 +74,7 @@ to retain explicit grid columns. DataGrid, SchemaForm, SecretField and
 JsonInspector no longer require consumer control-class adapters.
 
 For an unpublished local integration, build one immutable package using
-`pnpm pack --out /absolute/path/awaken-ui-0.4.0.tgz` from the committed UI tree.
+`pnpm pack --out /absolute/path/awaken-ui-0.6.0.tgz` from the committed UI tree.
 Consumers pin that built archive with lockfile integrity (or unpack it unchanged
 into an existing offline workspace dependency). Record the source commit and
 archive hash alongside the dependency. Never patch distribution files or pack
@@ -100,3 +100,18 @@ adjacent text already supplies the name. Never copy geometry into a component.
 Vite consumers add `brandFaviconPlugin("agents")` from `@awaken/ui/brand/vite`
 to their existing plugins and remove local favicon links/files. The plugin
 inlines the canonical adaptive SVG in development and production HTML.
+
+Family products import `@awaken/ui/brand/family.css` after core styles. Select
+`data-brand="works|agents|objects|workforce"`; map any existing product vocabulary
+to its `--aw-*` values instead of copying palettes. Vite can set the identity and
+install the shared prepaint policy with `brandAppearancePlugin("agents",
+{ legacyStorageKeys: ["awaken.console.theme"] })`. Astro emits
+`appearanceBootstrap()` from `@awaken/ui/brand/appearance` in an inline head script.
+
+React callers use `AppearanceSelect` from `@awaken/ui/brand/react` with a `labels`
+object containing `label`, `system`, `light`, and `dark` strings. Astro supplies a
+native `select[data-appearance-select]` with those three values. Both project the
+same controller. Only the canonical `awaken.theme` key is live; default system
+mode is not persisted on mount. Preferences are shared by tabs on one origin,
+not by unrelated product domains. See [architecture](docs/architecture.md) for
+ownership and blocked-storage behavior.

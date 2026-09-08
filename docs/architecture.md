@@ -20,7 +20,8 @@ product tokens  ---------------------> --ui-* semantic token contract
 - Base UI is an internal implementation detail and is imported only through
   `src/internal/headless`.
 - Components consume only the `--ui-*` semantic token contract.
-- Each product owns its raw design tokens and maps them to `--ui-*`.
+- Products choose their visual identity and map it to `--ui-*`. Awaken family
+  products reuse the optional family palette; other consumers keep their own tokens.
 
 ## Dynamic boundary
 
@@ -52,3 +53,24 @@ outputs derive from the same geometry; unsupported input fails rather than
 silently displaying another product. An explicit surface overrides the document
 theme; automatic rendering follows document light/dark state, then system state
 when the document has no selection. This introduces no persisted UI state.
+
+## Family appearance
+
+The optional `brand/family.css` owns the shared Awaken light/dark palette, local
+font stacks, radii, status colors and density. It exposes `--aw-*` values and the
+`--ui-*` mapping; product CSS owns page placement and domain-specific aliases.
+The website maps the same values to its Tailwind vocabulary. Brand marks retain
+their own identity palettes; action and status colors serve different purposes.
+
+`brand/appearance` consolidates the former website and Agents theme decisions.
+One controller per browser window owns the resolved mode and explicit preference.
+A blocking head script initializes that same controller before paint; React
+subscribes with `useSyncExternalStore`, and Astro uses native delegated controls.
+System preference changes apply only in system mode. Explicit changes persist to
+`awaken.theme`; storage events update other tabs on the same origin. Browser
+storage cannot synchronize unrelated origins. Existing product keys migrate once
+on initialization, only after the canonical write succeeds. Blocked storage
+keeps a working in-memory preference and never prevents rendering.
+
+No API, account, route, or authentication state enters this controller. Products
+supply translated labels and choose where the native appearance control lives.

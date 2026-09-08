@@ -1,0 +1,129 @@
+/* Optional Awaken family foundation. Components still consume only --ui-*.
+ * light-dark() follows color-scheme, including the OS before script startup. */
+:root,
+[data-brand] {
+  color-scheme: light dark;
+  --aw-bg: light-dark(oklch(99.2% 0.003 80), oklch(14.5% 0 0));
+  --aw-canvas: light-dark(oklch(98% 0.004 75), oklch(12% 0 0));
+  --aw-surface: light-dark(#ffffff, oklch(18.5% 0 0));
+  --aw-soft: light-dark(oklch(96.5% 0.005 80), oklch(22.5% 0 0));
+  --aw-border: light-dark(oklch(91.5% 0.006 80), oklch(28% 0 0));
+  --aw-border-strong: light-dark(oklch(86% 0.008 80), oklch(40% 0 0));
+  --aw-text: light-dark(oklch(18% 0.02 260), oklch(94% 0 0));
+  --aw-strong: light-dark(oklch(12% 0.02 260), #ffffff);
+  --aw-muted: light-dark(oklch(48% 0.01 260), oklch(68% 0 0));
+  --aw-faint: light-dark(oklch(55% 0.008 260), oklch(60% 0 0));
+  --aw-accent: light-dark(oklch(54% 0.14 252), oklch(70% 0.15 240));
+  --aw-accent-hover: light-dark(oklch(48% 0.14 255), oklch(76% 0.14 240));
+  --aw-on-accent: light-dark(#ffffff, #080d12);
+  --aw-agents-accent: light-dark(#0f7d8c, #3fb3c2);
+  --aw-agents-hover: light-dark(#0b626f, #57c3d1);
+  --aw-workforce-accent: light-dark(#a8470d, #e0954a);
+  --aw-workforce-hover: light-dark(#783006, #e9a850);
+  --aw-objects-accent: light-dark(#b45309, #f59e0b);
+  --aw-objects-hover: light-dark(#92400e, #fbbf24);
+  --aw-success: light-dark(#2c704f, #80c79b);
+  --aw-warning: light-dark(#784003, #f0c572);
+  --aw-danger: light-dark(#a33a32, #fa8c86);
+  --aw-danger-hover: light-dark(#7e2924, #ffaaa5);
+  --aw-on-danger: light-dark(#ffffff, #240b09);
+  --aw-info: light-dark(#28668f, #80b9e2);
+  --aw-edge: light-dark(rgb(8 13 18 / 9%), rgb(255 255 255 / 9%));
+  --aw-overlay: light-dark(rgb(23 19 15 / 46%), rgb(0 0 0 / 65%));
+  --aw-shadow-surface: 0 0 0 1px var(--aw-edge), 0 1px 2px light-dark(rgb(20 16 12 / 5%), rgb(0 0 0 / 30%));
+  --aw-shadow-overlay: 0 0 0 1px var(--aw-border-strong), 0 16px 40px light-dark(rgb(20 16 12 / 16%), rgb(0 0 0 / 55%));
+  --aw-font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei",
+    "Hiragino Sans GB", Roboto, sans-serif;
+  --aw-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --aw-radius-control: 4px;
+  --aw-radius-surface: 4px;
+  --aw-radius-overlay: 4px;
+  --aw-control-sm: 28px;
+  --aw-control-md: 34px;
+  --aw-control-lg: 40px;
+
+  --ui-color-canvas: var(--aw-canvas);
+  --ui-color-surface: var(--aw-surface);
+  --ui-color-surface-muted: var(--aw-soft);
+  --ui-color-surface-raised: var(--aw-surface);
+  --ui-color-surface-hover: var(--aw-soft);
+  --ui-color-text: var(--aw-text);
+  --ui-color-text-muted: var(--aw-muted);
+  --ui-color-border: var(--aw-border);
+  --ui-color-border-strong: var(--aw-border-strong);
+  --ui-color-overlay: var(--aw-overlay);
+  --ui-color-focus: var(--aw-accent);
+  --ui-color-accent: var(--aw-accent);
+  --ui-color-accent-hover: var(--aw-accent-hover);
+  --ui-color-accent-soft: color-mix(in srgb, var(--aw-accent) 13%, var(--aw-surface));
+  --ui-color-on-accent: var(--aw-on-accent);
+  --ui-color-warning: var(--aw-warning);
+  --ui-color-warning-text: var(--aw-warning);
+  --ui-color-danger: var(--aw-danger);
+  --ui-color-danger-hover: var(--aw-danger-hover);
+  --ui-color-on-danger: var(--aw-on-danger);
+  --ui-color-success: var(--aw-success);
+  --ui-font-body: var(--aw-font-body);
+  --ui-font-mono: var(--aw-font-mono);
+  --ui-radius-control: var(--aw-radius-control);
+  --ui-radius-surface: var(--aw-radius-surface);
+  --ui-radius-overlay: var(--aw-radius-overlay);
+  --ui-control-height-sm: var(--aw-control-sm);
+  --ui-control-height-md: var(--aw-control-md);
+  --ui-control-height-lg: var(--aw-control-lg);
+  --ui-shadow-surface: var(--aw-shadow-surface);
+  --ui-shadow-overlay: var(--aw-shadow-overlay);
+}
+[data-brand="agents"] {
+  --aw-bg: light-dark(#f4f6f7, #0b1216);
+  --aw-canvas: light-dark(#eef1f3, #0e171c);
+  --aw-surface: light-dark(#ffffff, #131e23);
+  --aw-soft: light-dark(#f0f2f4, #1d2b32);
+  --aw-border: light-dark(#e0e4e8, #28373e);
+  --aw-border-strong: light-dark(#c4ccd3, #3c4d55);
+  --aw-text: light-dark(#161d24, #d6dde1);
+  --aw-strong: light-dark(#080d12, #f1f6f8);
+  --aw-muted: light-dark(#565f68, #93a0a7);
+  --aw-faint: light-dark(#66727c, #87959e);
+  --aw-accent: var(--aw-agents-accent);
+  --aw-accent-hover: var(--aw-agents-hover);
+  --aw-on-accent: light-dark(#ffffff, #03161a);
+}
+[data-brand="workforce"] {
+  --aw-bg: light-dark(#f8f5ef, #1a1612);
+  --aw-canvas: light-dark(#f4f1eb, #231e18);
+  --aw-surface: light-dark(#fffdfa, #2b251d);
+  --aw-soft: light-dark(#ece7df, #332c22);
+  --aw-border: light-dark(#d8d0c4, #3a3328);
+  --aw-border-strong: light-dark(#b9ad9e, #655a48);
+  --aw-text: light-dark(#17130f, #f4eedf);
+  --aw-strong: light-dark(#17130f, #ffffff);
+  --aw-muted: light-dark(#675f56, #bcb3a1);
+  --aw-faint: light-dark(#72695e, #a79c86);
+  --aw-accent: var(--aw-workforce-accent);
+  --aw-accent-hover: var(--aw-workforce-hover);
+  --aw-on-accent: light-dark(#ffffff, #1a1612);
+}
+[data-brand="objects"] {
+  --aw-accent: var(--aw-objects-accent);
+  --aw-accent-hover: var(--aw-objects-hover);
+  --aw-on-accent: light-dark(#fffaf0, #1c1202);
+}
+[data-theme="light"] { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+
+/* Coarse-pointer controls use the same touch target across the family. */
+@media (pointer: coarse) {
+  :root, [data-brand] {
+    --aw-control-sm: 44px;
+    --aw-control-md: 44px;
+    --aw-control-lg: 48px;
+  }
+}
+.aw-appearance-select {
+  width: auto;
+  max-width: 11rem;
+  min-height: var(--ui-control-height-sm);
+  font-family: var(--ui-font-body);
+}

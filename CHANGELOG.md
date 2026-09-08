@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0
+
+- Add optional family palettes and shared system/light/dark appearance control,
+  consolidating website and Agents persistence with one prepaint implementation.
+- Family consumers reuse local font stacks, status colors, 4px radii and compact
+  desktop / comfortable touch metrics while retaining route and domain ownership.
+- Existing origin-local theme preferences migrate once; blocked storage preserves
+  usable live selection, and React and native Astro controls share one controller.
+
 ## 0.5.0
 
 - Move the existing Awaken brand geometry and palettes from the website into

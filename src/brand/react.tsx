@@ -1,3 +1,5 @@
+import { useSyncExternalStore, type SelectHTMLAttributes } from "react";
+import { initializeAppearance, type AppearancePreference, type AppearanceSnapshot } from "./appearance.js";
 import type { CSSProperties, SVGProps } from "react";
 import { brandMarkBody, brandMarkPalette, canonicalBrandMark, type BrandMarkScheme } from "./marks.js";
 
@@ -32,4 +34,38 @@ export function BrandMark({ mark, scheme = "auto", label, className, style, ...p
     } as CSSProperties}
     dangerouslySetInnerHTML={{ __html: brandMarkBody(canonical) }}
   />;
+}
+
+const serverAppearance: AppearanceSnapshot = { preference: "system", mode: "light" };
+const serverSnapshot = () => serverAppearance;
+const noSubscribe = () => () => {};
+
+/** React is a subscriber to the prepaint controller, never a second state owner. */
+export function useAppearance() {
+  const controller = typeof window === "undefined" ? undefined : initializeAppearance();
+  const snapshot = useSyncExternalStore(
+    controller?.subscribe ?? noSubscribe,
+    controller?.getSnapshot ?? serverSnapshot,
+    serverSnapshot,
+  );
+  return { ...snapshot, setPreference: controller?.setPreference };
+}
+
+type AppearanceSelectProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, "value" | "defaultValue" | "onChange" | "children" | "aria-label"> & {
+  readonly labels: Readonly<Record<AppearancePreference | "label", string>>;
+};
+
+/** Native select keeps the three choices keyboard accessible; copy is caller-owned. */
+export function AppearanceSelect({ labels, className, ...props }: AppearanceSelectProps) {
+  const appearance = useAppearance();
+  return <select {...props}
+    className={["ui-input", "aw-appearance-select", className].filter(Boolean).join(" ")}
+    aria-label={labels.label}
+    value={appearance.preference}
+    onChange={(event) => appearance.setPreference?.(event.target.value as AppearancePreference)}
+  >
+    <option value="system">{labels.system}</option>
+    <option value="light">{labels.light}</option>
+    <option value="dark">{labels.dark}</option>
+  </select>;
 }
