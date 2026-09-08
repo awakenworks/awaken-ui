@@ -1,5 +1,5 @@
 import { BrandGallery } from "./brand-gallery.js";
-import { StrictMode, useState } from "react";
+import { StrictMode, useLayoutEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Button,
@@ -48,8 +48,8 @@ import {
   useToast,
 } from "../src/index.js";
 import "../src/styles.css";
-import "../src/styles/themes/awaken.css";
-import "../src/styles/themes/oversight.css";
+import familyTheme from "../src/styles/family.css?raw";
+import oversightTheme from "../src/styles/themes/oversight.css?raw";
 import "./theme.css";
 
 function Gallery() {
@@ -59,6 +59,13 @@ function Gallery() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [theme, setTheme] = useState<"awaken" | "oversight">("awaken");
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.dataset.productTheme = theme;
+    root.dataset.uiTheme = theme;
+    if (theme === "awaken") root.dataset.brand = "agents";
+    else delete root.dataset.brand;
+  }, [theme]);
   const [schemaValue, setSchemaValue] = useState<unknown>({
     name: "Reviewer",
     enabled: true,
@@ -70,13 +77,14 @@ function Gallery() {
   const [activeTab, setActiveTab] = useState("overview");
 
   return (
-    <main className="gallery" data-ui-theme={theme} data-product-theme={theme}>
+    <main className="gallery">
+      <style>{theme === "awaken" ? familyTheme : oversightTheme}</style>
       <header>
         <p className="gallery__eyebrow">Shared behavior · product-owned tokens</p>
         <h1>@awaken/ui</h1>
         <p>
-          This development surface exercises only the public package API. Change
-          the variables in <code>dev/theme.css</code> to simulate a product theme.
+          This development surface exercises the public package API with the shared
+          Awaken family theme or the existing Oversight token adapter.
         </p>
         <div className="gallery__row">
           <Button variant={theme === "awaken" ? "primary" : "ghost"} onClick={() => setTheme("awaken")}>

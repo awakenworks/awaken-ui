@@ -16,6 +16,8 @@ test.beforeEach(async ({ page }, testInfo) => {
 
 test("Agent conversation under Awaken tokens", async ({ page }) => {
   await page.getByRole("button", { name: "Awaken tokens" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-brand", "agents");
+  await expect(page.locator("body")).toHaveCSS("font-family", /system-ui/);
   const scene = page.getByRole("heading", { name: "Identity and Agent conversation" }).locator("..");
   await expect(scene).toHaveScreenshot("agent-chat-awaken.png");
 });
@@ -44,7 +46,11 @@ for (const theme of ["Awaken", "Oversight"] as const) {
 
   test(`Dialog under ${theme} tokens`, async ({ page }) => {
     await page.getByRole("button", { name: `${theme} tokens` }).click();
+    // T1 selected profile applies at document scope, so portals inherit the same
+    // body font and surface color as the page; no demo-only fallback palette.
     await page.getByRole("button", { name: "Open dialog" }).click();
+    const bodyFont = await page.locator("body").evaluate((node) => getComputedStyle(node).fontFamily);
+    await expect(page.getByRole("dialog", { name: "Edit settings" })).toHaveCSS("font-family", bodyFont);
     await expect(page.getByRole("dialog", { name: "Edit settings" })).toHaveScreenshot(
       `dialog-${theme.toLowerCase()}.png`,
     );

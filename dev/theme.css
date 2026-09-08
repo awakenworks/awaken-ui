@@ -1,49 +1,9 @@
+/* Awaken uses the canonical family stylesheet; only the external consumer
+ * fixture supplies local tokens. The whole document includes portal surfaces. */
 :root {
-  --demo-canvas: #f5f3ff;
-  --demo-surface: #ffffff;
-  --demo-text: #171327;
-  --demo-muted: #686178;
-  --demo-border: #ded8eb;
-  --demo-accent: #6750a4;
-
-  --ui-color-canvas: var(--demo-canvas);
-  --ui-color-surface: var(--demo-surface);
-  --ui-color-surface-hover: #eee9f8;
-  --ui-color-text: var(--demo-text);
-  --ui-color-text-muted: var(--demo-muted);
-  --ui-color-border: var(--demo-border);
-  --ui-color-focus: var(--demo-accent);
-  --ui-color-accent: var(--demo-accent);
-  --ui-color-accent-hover: #57428e;
-  --ui-radius-control: 0.25rem;
-  --ui-radius-overlay: 0.5rem;
-
   color: var(--ui-color-text);
   font-family: var(--ui-font-body);
   background: var(--ui-color-canvas);
-}
-
-[data-product-theme="awaken"] {
-  --canvas: #fafafa;
-  --surface: #fff;
-  --soft: #f7f7f7;
-  --fg: #0a0a0a;
-  --fg2: #555;
-  --line: #e6e6e6;
-  --accent: oklch(56% 0.16 265);
-  --accent-hover: oklch(50% 0.16 263);
-  --accent-fg: #fff;
-  --danger: oklch(58% 0.18 25);
-  --ok: oklch(60% 0.12 150);
-  --warn: oklch(70% 0.135 78);
-  --font-sans: "JetBrains Mono", ui-monospace, monospace;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
-  --r-sm: 4px;
-  --r-card: 4px;
-  --r-lg: 4px;
-  --row-h: 34px;
-  --shadow-card: 0 0 0 1px rgb(20 20 18 / 8%), 0 1px 1px rgb(26 29 30 / 3%);
-  --shadow-pop: 0 16px 40px rgb(20 16 12 / 16%);
 }
 
 [data-product-theme="oversight"] {
