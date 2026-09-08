@@ -74,7 +74,7 @@ to retain explicit grid columns. DataGrid, SchemaForm, SecretField and
 JsonInspector no longer require consumer control-class adapters.
 
 For an unpublished local integration, build one immutable package using
-`pnpm pack --out /absolute/path/awaken-ui-0.7.0.tgz` from the committed UI tree.
+`pnpm pack --out /absolute/path/awaken-ui-0.8.0.tgz` from the committed UI tree.
 Consumers pin that built archive with lockfile integrity (or unpack it unchanged
 into an existing offline workspace dependency). Record the source commit and
 archive hash alongside the dependency. Never patch distribution files or pack

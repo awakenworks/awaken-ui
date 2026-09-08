@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0
+
+- Keep optional-icon notice actions inside narrow layouts.
+- Fix multi-column DescriptionList collapsing at the 40rem breakpoint.
+- Keep long tab labels inside a horizontally scrollable strip with visible
+  keyboard focus, preserving product-owned selection and panel state.
+
 ## 0.7.0
 
 - Add shared Lucide functional icon nodes and thin React renderers for React and
