@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.0
+
+- Add shared Lucide functional icon nodes and thin React renderers for React and
+  Astro consumers, preserving Workforce geometry while standardizing size, stroke
+  and accessibility defaults.
+- Replace character-based default icons in shared chat, feedback, navigation,
+  overlays and forms; controls retain caller-owned names and actions.
+- Loading icons honor reduced motion.
+
 ## 0.6.0
 
 - Add optional family palettes and shared system/light/dark appearance control,

@@ -262,7 +262,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-button__spinner {
+  .ui-button__spinner,
+  .ui-icon--spin,
+  .ui-chat-thinking__icon {
     animation-duration: 1400ms;
   }
 

@@ -1,3 +1,4 @@
+import { X } from "../icons/index.js";
 import { useId, useState } from "react";
 import { Button } from "../primitives/button.js";
 import { cx } from "../internal/cx.js";
@@ -158,7 +159,7 @@ function SchemaNode(props: NodeProps) {
                   currentIndex === index ? next : current))} />
             </div>
             <Button aria-label={labels.removeItem} className={classes?.button} type="button"
-              onClick={() => onChange(array.filter((_, currentIndex) => currentIndex !== index))}>✕</Button>
+              onClick={() => onChange(array.filter((_, currentIndex) => currentIndex !== index))}><X /></Button>
           </div>
         ))}
         <Button className={classes?.button} type="button"

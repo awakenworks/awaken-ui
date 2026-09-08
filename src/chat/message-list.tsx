@@ -1,3 +1,4 @@
+import { ArrowDown } from "../icons/index.js";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { cx } from "../internal/cx.js";
 
@@ -82,7 +83,7 @@ export function ChatMessageList({
             scrollToBottom("smooth");
           }}
         >
-          <span aria-hidden="true">{jumpIcon ?? "↓"}</span> {jumpLabel}
+          <span aria-hidden="true">{jumpIcon ?? <ArrowDown />}</span> {jumpLabel}
         </button>
       ) : null}
     </div>

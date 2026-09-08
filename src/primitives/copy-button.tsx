@@ -1,3 +1,4 @@
+import { Check, Copy } from "../icons/index.js";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { cx } from "../internal/cx.js";
 import { Button } from "./button.js";
@@ -47,7 +48,7 @@ export function CopyButton({
       title={currentLabel}
       onClick={() => void copy()}
     >
-      {copied ? copiedIcon ?? <span aria-hidden="true">✓</span> : icon ?? <span aria-hidden="true">□</span>}
+      {copied ? copiedIcon ?? <Check /> : icon ?? <Copy />}
     </Button>
   );
 }

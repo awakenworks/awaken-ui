@@ -1,3 +1,4 @@
+import { X } from "../icons/index.js";
 import {
   forwardRef,
   useId,
@@ -101,7 +102,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
                   aria-label={closeLabel}
                   render={<Button className={classes?.closeButton} variant="icon" size="sm" />}
                 >
-                  {closeIcon ?? <span aria-hidden="true">×</span>}
+                  {closeIcon ?? <X />}
                 </HeadlessDialog.Close>
               </header>
               <div className={cx("ui-dialog__body", classes?.body)}>{children}</div>

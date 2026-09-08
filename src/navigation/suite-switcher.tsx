@@ -1,3 +1,4 @@
+import { ArrowRight } from "../icons/index.js";
 import type { ReactElement, ReactNode } from "react";
 import { MenuPopover, type PopoverPlacement } from "../overlays/popover.js";
 
@@ -56,13 +57,13 @@ export function SuiteSwitcher({
                 </div>
               : <a className="ui-suite-switcher__item" href={product.href} key={product.id} role="menuitem">
                   <SuiteItemContent icon={product.icon} label={product.label} description={product.description} />
-                  <span aria-hidden="true" className="ui-suite-switcher__arrow">→</span>
+                  <ArrowRight className="ui-suite-switcher__arrow" />
                 </a>)}
           </div>
           {destinations.length > 0 ? <div className="ui-suite-switcher__destinations">
             {destinations.map((destination) => <a className="ui-suite-switcher__item" href={destination.href} key={destination.id} role="menuitem">
               <SuiteItemContent icon={destination.icon} label={destination.label} description={destination.description} />
-              <span aria-hidden="true" className="ui-suite-switcher__arrow">→</span>
+              <ArrowRight className="ui-suite-switcher__arrow" />
             </a>)}
           </div> : null}
         </div>

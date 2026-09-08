@@ -1,3 +1,4 @@
+import { Info } from "../icons/index.js";
 import {
   forwardRef,
   useId,
@@ -52,7 +53,7 @@ export function Field({
   const describedBy = [helpId, errorId].filter(Boolean).join(" ") || undefined;
   const labelContent = (
     <>
-      <span>{label}{info ? <span aria-label={info} className="ui-field__info" role="img" title={info}>ⓘ</span> : null}</span>
+      <span>{label}{info ? <span className="ui-field__info" title={info}><Info label={info} /></span> : null}</span>
       {action}
     </>
   );

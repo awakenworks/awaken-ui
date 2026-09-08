@@ -59,6 +59,8 @@ domain state.
 
 - React and React DOM are peer dependencies.
 - Base UI is the one headless implementation dependency.
+- Lucide SVG nodes are the one functional-icon geometry dependency. Use the
+  package icon exports; do not add another renderer package or copy SVG paths.
 - Add a runtime dependency only when it removes a substantial, difficult,
   product-neutral responsibility and is safer than maintaining it here.
 - Do not add a second headless, positioning, focus-management, toast, form, or

@@ -1,3 +1,4 @@
+import { X } from "../icons/index.js";
 import {
   createContext,
   useCallback,
@@ -129,7 +130,7 @@ function ToastItem({
         }}>{toast.action.label}</button>
       ) : null}
       <button aria-label={dismissLabel} className="ui-toast__dismiss" onClick={() => onDismiss(toast.id)} type="button">
-        <span aria-hidden="true">×</span>
+        <X />
       </button>
     </div>
   );

@@ -74,3 +74,17 @@ keeps a working in-memory preference and never prevents rendering.
 
 No API, account, route, or authentication state enters this controller. Products
 supply translated labels and choose where the native appearance control lives.
+
+## Functional icons
+
+Lucide 0.468.0 SVG nodes are the single functional geometry source, preserving
+the icon set already used by Workforce. `icons/data` exports the admitted nodes
+plus shared SVG attributes without React or DOM execution. `icons` exposes thin
+React renderers of those same nodes. Astro renders the data directly. No local
+path copies, icon font, emoji-based control, or second icon dependency is needed.
+
+The package owns 16px defaults, 24-unit viewBox, 2-unit round strokes, decoration
+semantics and ref forwarding. Consumers own icon choices, labels, placement and
+state. A named icon is an image; an unnamed icon is hidden from assistive
+technology. Icon-only controls still need a name on the control. Rendering is
+pure: no requests, durable state, retries or command side effects occur.

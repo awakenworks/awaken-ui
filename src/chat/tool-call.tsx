@@ -1,3 +1,4 @@
+import { Check, X, LoaderCircle, Wrench, ChevronDown, ChevronRight } from "../icons/index.js";
 import { useState, type ReactNode } from "react";
 import { cx } from "../internal/cx.js";
 import type { ToolCallTone, ToolCallView } from "./model.js";
@@ -58,7 +59,7 @@ export function ToolCallCard({
         <span className={cx("ui-chat-tool__name", classes?.name)}>{name}</span>
         {badges}
         <span className={cx("ui-chat-tool__status", classes?.status)}>{statusLabel}</span>
-        {hasDetail ? <span className={cx(classes?.chevron, open && "is-open")} data-open={open || undefined} aria-hidden="true">{expandIcon ?? (open ? "⌄" : "›")}</span> : null}
+        {hasDetail ? <span className={cx(classes?.chevron, open && "is-open")} data-open={open || undefined} aria-hidden="true">{expandIcon ?? (open ? <ChevronDown /> : <ChevronRight />)}</span> : null}
       </button>
       {open ? (
         <div className={cx("ui-chat-tool__body", classes?.body)}>
@@ -74,11 +75,11 @@ function ToolDetail({ label, ariaLabel, value, labelClassName, preClassName }: {
   return <div><span className={cx("ui-chat-tool__label", labelClassName)}>{label}</span><pre className={preClassName} aria-label={ariaLabel}>{value}</pre></div>;
 }
 
-function toneMark(tone: ToolCallTone): string {
-  if (tone === "done") return "✓";
-  if (tone === "error") return "×";
-  if (tone === "running") return "◌";
-  return "◇";
+function toneMark(tone: ToolCallTone): ReactNode {
+  if (tone === "done") return <Check />;
+  if (tone === "error") return <X />;
+  if (tone === "running") return <LoaderCircle className="ui-icon--spin" />;
+  return <Wrench />;
 }
 
 export type ToolCallGroupProps = {
@@ -115,10 +116,10 @@ export function ToolCallGroup({ calls, summaryLabel, labels, defaultOpen, icon, 
   return (
     <div className={cx("ui-chat-tool-group", className)} data-tone={tone}>
       <button className={classes?.header} type="button" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
-        <span className={classes?.icon} aria-hidden="true">{icon ?? "◇"}</span>
+        <span className={classes?.icon} aria-hidden="true">{icon ?? <Wrench />}</span>
         <span className={classes?.summary}>{summaryLabel}</span>
         <i className={classes?.dot} aria-hidden="true" />
-        <span className={cx(classes?.chevron, open && "is-open")} data-open={open || undefined} aria-hidden="true">{expandIcon ?? (open ? "⌄" : "›")}</span>
+        <span className={cx(classes?.chevron, open && "is-open")} data-open={open || undefined} aria-hidden="true">{expandIcon ?? (open ? <ChevronDown /> : <ChevronRight />)}</span>
       </button>
       {open ? <div className={classes?.body}>{calls.map((call) => <ToolCallCard key={call.id} {...call} labels={labels} classes={callClasses} />)}</div> : null}
     </div>

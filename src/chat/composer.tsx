@@ -1,3 +1,4 @@
+import { ArrowUp, Square } from "../icons/index.js";
 import {
   useCallback,
   useLayoutEffect,
@@ -120,11 +121,11 @@ export function ChatComposer({
         <div className={cx("ui-chat-composer__actions", classes?.actions)}>
           {onStop && stopLabel ? (
             <button className={classes?.stop} type="button" disabled={!busy} onClick={onStop} aria-label={stopLabel} title={stopLabel}>
-              {stopIcon ?? <span aria-hidden="true">■</span>}
+              {stopIcon ?? <Square />}
             </button>
           ) : null}
           <button className={classes?.send} type="submit" disabled={!canSubmit} aria-label={sendLabel} title={sendLabel}>
-            {sendIcon ?? <span aria-hidden="true">↑</span>}
+            {sendIcon ?? <ArrowUp />}
           </button>
         </div>
       </div>

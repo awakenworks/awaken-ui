@@ -74,7 +74,7 @@ to retain explicit grid columns. DataGrid, SchemaForm, SecretField and
 JsonInspector no longer require consumer control-class adapters.
 
 For an unpublished local integration, build one immutable package using
-`pnpm pack --out /absolute/path/awaken-ui-0.6.0.tgz` from the committed UI tree.
+`pnpm pack --out /absolute/path/awaken-ui-0.7.0.tgz` from the committed UI tree.
 Consumers pin that built archive with lockfile integrity (or unpack it unchanged
 into an existing offline workspace dependency). Record the source commit and
 archive hash alongside the dependency. Never patch distribution files or pack
@@ -115,3 +115,12 @@ same controller. Only the canonical `awaken.theme` key is live; default system
 mode is not persisted on mount. Preferences are shared by tabs on one origin,
 not by unrelated product domains. See [architecture](docs/architecture.md) for
 ownership and blocked-storage behavior.
+
+## Functional icons
+
+Import named React icons from `@awaken/ui/icons`, for example `Search` or `X`.
+They use Lucide geometry with 16px defaults and 2-unit strokes; `size` and native
+SVG props control presentation. Unnamed icons are decorative. Name icon-only
+buttons on the button; use `label` only for a standalone meaningful image.
+Astro uses the same named nodes and `iconAttributes` from `@awaken/ui/icons/data`.
+Do not install a second icon package or copy paths into product components.

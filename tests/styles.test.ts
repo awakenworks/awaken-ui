@@ -10,8 +10,11 @@ const chat = readFileSync(resolve(root, "components-chat.css"), "utf8");
 const forms = readFileSync(resolve(root, "components-forms-data.css"), "utf8");
 
 describe("shared browser styling", () => {
+  // Cause/effect: consumers import one stylesheet; every shared recipe must be
+  // reachable once in cascade order, including icon layout before controls.
   it("keeps the public component stylesheet as the single ordered entry point", () => {
     expect(aggregate.trim().split(/\r?\n/)).toEqual([
+      '@import "./icons.css";',
       '@import "./components-core.css";',
       '@import "./components-feedback-identity.css";',
       '@import "./components-chat.css";',

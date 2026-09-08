@@ -1,3 +1,4 @@
+import { LoaderCircle, Lightbulb, ChevronDown, ChevronRight } from "../icons/index.js";
 import { useEffect, useState, type ReactNode } from "react";
 import { cx } from "../internal/cx.js";
 
@@ -17,7 +18,7 @@ export function ChatThinking({ label, formatElapsed, icon, className, classes }:
   }, []);
   return (
     <div className={cx("ui-chat-thinking", className)} role="status" aria-live="polite">
-      <span className={cx("ui-chat-thinking__icon", classes?.icon)} aria-hidden="true">{icon ?? "◌"}</span>
+      <span className={cx("ui-chat-thinking__icon", classes?.icon)} aria-hidden="true">{icon ?? <LoaderCircle />}</span>
       <span className={classes?.label}>{label}{elapsed > 0 && formatElapsed ? ` · ${formatElapsed(elapsed)}` : ""}</span>
       <span className={cx("ui-chat-thinking__dots", classes?.dots)} aria-hidden="true"><i /><i /><i /></span>
     </div>
@@ -49,8 +50,8 @@ export function ReasoningBlock({
   return (
     <section className={cx("ui-chat-reasoning", className)}>
       <button className={classes?.header} type="button" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
-        <span className={classes?.icon} aria-hidden="true">{icon ?? "◇"}</span><span>{label}</span>
-        <span className={cx(classes?.chevron, open && "is-open")} data-open={open || undefined} aria-hidden="true">{expandIcon ?? (open ? "⌄" : "›")}</span>
+        <span className={classes?.icon} aria-hidden="true">{icon ?? <Lightbulb />}</span><span>{label}</span>
+        <span className={cx(classes?.chevron, open && "is-open")} data-open={open || undefined} aria-hidden="true">{expandIcon ?? (open ? <ChevronDown /> : <ChevronRight />)}</span>
       </button>
       {open ? <div className={classes?.body}>{children}{streaming ? <span className={classes?.caret} aria-hidden="true">▍</span> : null}</div> : null}
     </section>

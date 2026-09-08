@@ -1,3 +1,4 @@
+import { ChevronDown, ChevronRight } from "../icons/index.js";
 import { useState } from "react";
 import { Button } from "../primitives/button.js";
 import { cx } from "../internal/cx.js";
@@ -52,7 +53,7 @@ export function JsonInspector({
           className={cx("ui-json-inspector__toggle", classes?.toggle)}
           onClick={() => setOpen((current) => !current)}
         >
-          <span aria-hidden="true">{open ? "▾" : "▸"}</span>
+          {open ? <ChevronDown /> : <ChevronRight />}
           {resolvedLabels.summary}
         </Button>
         <CopyButton

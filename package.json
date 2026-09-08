@@ -1,6 +1,6 @@
 {
   "name": "@awaken/ui",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Shared, product-neutral React UI primitives for Awaken products.",
   "license": "MIT",
   "type": "module",
@@ -39,7 +39,15 @@
       "types": "./dist/brand/appearance.d.ts",
       "import": "./dist/brand/appearance.js"
     },
-    "./brand/family.css": "./dist/styles/family.css"
+    "./brand/family.css": "./dist/styles/family.css",
+    "./icons": {
+      "types": "./dist/icons/index.d.ts",
+      "import": "./dist/icons/index.js"
+    },
+    "./icons/data": {
+      "types": "./dist/icons/data.d.ts",
+      "import": "./dist/icons/data.js"
+    }
   },
   "scripts": {
     "build": "pnpm clean && tsc -p tsconfig.build.json && node scripts/copy-styles.mjs",
@@ -57,6 +65,7 @@
   "dependencies": {
     "@base-ui/react": "1.6.0",
     "dompurify": "3.3.0",
+    "lucide": "0.468.0",
     "marked": "18.0.4"
   },
   "peerDependencies": {

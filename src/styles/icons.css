@@ -1,0 +1,9 @@
+.ui-icon {
+  display: inline-block;
+  flex: none;
+  vertical-align: -0.125em;
+}
+
+.ui-icon--spin {
+  animation: ui-spin 1s linear infinite;
+}
