@@ -204,7 +204,30 @@ IssueViewNavigation; there is no Workforce `SurfaceTabs` implementation.
 Workforce's remaining metadata recipes are recorded by their actual source
 callers rather than inherited from the Oversight migration list.
 
-The remaining family work is theme selection/token alignment, function-icon
-consolidation, repeated metadata/layout recipes, consumer visual coverage and
-refreshing website screenshots with exact new capture provenance. Brand package
-validation does not by itself complete those consumer acceptance requirements.
+## Family appearance consolidation (0.6.0)
+
+`brand/family.css` is the shared light/dark palette, font, radius, status and
+control-density owner. All four consumers map or directly use that contract.
+`brand/appearance` is the single document-lifetime state owner: prepaint bootstrap,
+React subscribers and native Astro selectors all use the same implementation.
+Agents and website legacy preferences migrate into the canonical origin-local
+key; Cloud and Workforce gain system/light/dark selection.
+
+The immutable integration artifact is `awaken-ui-0.6.0.tgz`, built from UI source
+commit `5d25055`. Its SHA-256 is
+`a1223f3bdf9536076ccce83fafc96a1f59099bf6062aa5e6a34b8c36f959b049`.
+Agents, Workforce, Cloud and website pin this same archive; no distribution
+module is patched after packaging.
+
+Shared acceptance covers all four identities in both modes, long Chinese copy,
+narrow layout, native controls, contrast, keyboard focus, storage failures and
+cross-tab changes. Product browser checks cover actual control placement,
+refresh and route continuity. The Chinese website docs header now wraps at narrow
+widths; its search keeps an accessible name when visible text is hidden.
+
+Remaining required family work: function-icon consolidation, repeated
+metadata/layout recipes, residual product-local density/focus/radius overrides,
+updating the old demo gallery token profile, broader consumer visual coverage,
+and refreshing website screenshots with exact new capture provenance. The
+package tests and theme integrations do not complete those remaining requirements.
+Final main integration also remains pending.
