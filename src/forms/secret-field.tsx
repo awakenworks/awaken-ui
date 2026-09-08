@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { cx } from "../internal/cx.js";
 import { SegmentedControl } from "./segmented-control.js";
 
@@ -10,6 +10,7 @@ export interface SecretIntent {
 }
 
 export interface SecretFieldLabels {
+  readonly modeLabel?: string;
   readonly keep: ReactNode;
   readonly replace: ReactNode;
   readonly clear: ReactNode;
@@ -47,6 +48,7 @@ export function SecretField({
   placeholder,
   classes,
 }: SecretFieldProps) {
+  const inputId = useId();
   const [mode, setMode] = useState<SecretMode>(hasStored ? "keep" : "replace");
   const [value, setValue] = useState("");
   const pick = (nextMode: SecretMode) => {
@@ -61,10 +63,11 @@ export function SecretField({
     ? ["keep", "replace", "clear"]
     : ["replace"]) as SecretMode[];
   return (
-    <div className={cx("ui-secret-field", classes?.root)}>
-      <label className={classes?.label}>{label}</label>
+    <div className={cx("ui-field", "ui-secret-field", classes?.root)}>
+      <label className={cx("ui-field__label", classes?.label)} htmlFor={inputId}>{label}</label>
       {hasStored ? (
         <SegmentedControl
+          {...(labels.modeLabel ? { ariaLabel: labels.modeLabel } : {})}
           onChange={pick}
           options={options.map((value) => ({ value, label: labels[value] }))}
           value={mode}
@@ -76,8 +79,9 @@ export function SecretField({
       ) : null}
       {mode === "replace" ? (
         <input
+          id={inputId}
           autoComplete="off"
-          className={cx("ui-secret-field__input", classes?.input)}
+          className={cx("ui-input", "ui-secret-field__input", classes?.input)}
           onChange={(event) => {
             setValue(event.target.value);
             onChange({ mode: "replace", value: event.target.value });

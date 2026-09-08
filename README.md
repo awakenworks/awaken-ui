@@ -67,10 +67,16 @@ manual gates in [docs/accessibility-validation.md](docs/accessibility-validation
 mobile label-value card view with `mobileCards`; when rows navigate, provide a
 localized `mobileRowActionLabel` so the card uses a real accessible button.
 
-## Suite navigation
+`SuiteSwitcher` accepts caller-authorized destinations, current product labels,
+icons and exact hrefs; it owns menu keyboard behavior and dismissal only.
+`DataTable layout="auto"` aligns intrinsic columns across rows; omit `layout`
+to retain explicit grid columns. DataGrid, SchemaForm, SecretField and
+JsonInspector no longer require consumer control-class adapters.
 
-`SuiteSwitcher` provides the shared accessible product/destination menu. The
-consumer supplies its product labels, current Workspace description,
-Cloud-projected URLs, icons, and authorized destination list; `@awaken/ui`
-does not construct routes or infer access.
-
+For an unpublished local integration, build one immutable package using
+`pnpm pack --out /absolute/path/awaken-ui-0.4.0.tgz` from the committed UI tree.
+Consumers pin that built archive with lockfile integrity (or unpack it unchanged
+into an existing offline workspace dependency). Record the source commit and
+archive hash alongside the dependency. Never patch distribution files or pack
+individual modules from multiple revisions. Registry publication remains a
+separate release step; a local archive is not a published release.

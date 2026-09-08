@@ -16,7 +16,7 @@ describe("SuiteSwitcher", () => {
       ]}
       products={[
         { id: "agents", label: "Awaken Agents", description: "Agent Workspace", isCurrent: true },
-        { id: "flow", label: "Awaken Flow", description: "Product Delivery", href: "https://cloud.test/entry?product=flow" },
+        { id: "flow", label: "Awaken Workforce", description: "Workforce", href: "https://cloud.test/entry?product=flow" },
       ]}
       trigger={<button type="button">Awaken Agents</button>}
     />);
@@ -26,12 +26,13 @@ describe("SuiteSwitcher", () => {
     expect(current).toHaveAttribute("aria-current", "page");
     expect(current).toHaveAttribute("aria-disabled", "true");
     expect(current).not.toHaveAttribute("href");
-    expect(screen.getByRole("menuitem", { name: /Awaken Flow/ })).toHaveAttribute("href", "https://cloud.test/entry?product=flow");
+    expect(screen.getByRole("menuitem", { name: /Awaken Workforce/ })).toHaveAttribute("href", "https://cloud.test/entry?product=flow");
     expect(screen.getByRole("menuitem", { name: "Usage & Billing" })).toHaveAttribute("href", "https://cloud.test/usage-billing");
     expect(screen.queryByText("Cloud settings")).not.toBeInTheDocument();
   });
 
   it("inherits keyboard navigation and closes after selecting a destination", async () => {
+    // R2: End selects the final authorized destination; activation closes the menu.
     render(<SuiteSwitcher
       aria-label="Products"
       currentLabel="Current"

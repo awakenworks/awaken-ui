@@ -5,6 +5,11 @@
 :root {
   --ui-color-canvas: #f7f7f8;
   --ui-color-surface: #ffffff;
+  --ui-color-surface-muted: var(--ui-color-canvas);
+  --ui-color-surface-raised: var(--ui-color-surface);
+  --ui-color-border-strong: var(--ui-color-border);
+  --ui-color-accent-soft: color-mix(in srgb, var(--ui-color-accent) 12%, var(--ui-color-surface));
+  --ui-color-warning-text: var(--ui-color-warning);
   --ui-color-surface-hover: #f2f2f4;
   --ui-color-overlay: rgb(0 0 0 / 45%);
   --ui-color-text: #161618;
@@ -20,6 +25,8 @@
   --ui-color-success: #258044;
   --ui-color-warning: #a05a00;
 
+  --ui-font-size-xs: 0.75rem;
+  --ui-font-size-control: 0.875rem;
   --ui-font-body: ui-sans-serif, system-ui, sans-serif;
   --ui-font-mono: ui-monospace, monospace;
 

@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -34,4 +34,16 @@ describe("shared browser styling", () => {
     expect(forms).toMatch(/\.ui-input:read-only:not\(:disabled\)\s*\{/);
     expect(forms).toMatch(/input\[type="checkbox"\][^{]*\{[^}]*accent-color:\s*var\(--ui-color-accent\)/s);
   });
+});
+
+// Cause/effect: any component token without a contract declaration computes to
+// an invalid value in a consumer with only contract.css. Exhaustive reference
+// coverage is the smallest sufficient design (no interacting runtime states).
+it("declares every shared recipe token or documents its local fallback", () => {
+  const contract = readFileSync(resolve(root, "contract.css"), "utf8");
+  const defined = new Set([...contract.matchAll(/(--ui-[\w-]+)\s*:/g)].map((match) => match[1]));
+  const sources = readdirSync(root).filter((file) => file.startsWith("components") && file.endsWith(".css"));
+  const missing = sources.flatMap((file) => [...readFileSync(resolve(root, file), "utf8").matchAll(/var\((--ui-[\w-]+)\s*\)/g)]
+    .map((match) => match[1]).filter((name) => !defined.has(name)));
+  expect([...new Set(missing)]).toEqual([]);
 });

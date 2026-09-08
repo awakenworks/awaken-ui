@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Button } from "../primitives/button.js";
 import { cx } from "../internal/cx.js";
 
 export interface DataGridColumn<Row> {
@@ -110,7 +111,7 @@ export function DataGrid<Row>({
         <div className={cx("ui-data-grid__toolbar-lead", classes?.toolbarLead)}>
           {filter ? (
             <input
-              className={cx("ui-data-grid__search", classes?.search)}
+              className={cx("ui-input", "ui-data-grid__search", classes?.search)}
               placeholder={labels.searchPlaceholder}
               value={state.q}
               onChange={(event) => state.setQ(event.target.value)}
@@ -130,7 +131,7 @@ export function DataGrid<Row>({
         className={cx("ui-data-grid__scroll", classes?.scroll)}
         data-mobile-cards={mobileCards ? "true" : undefined}
       >
-        <table className={classes?.table}>
+        <table className={cx("ui-data-grid__table", classes?.table)}>
           <thead>
             <tr>
               {columns.map((column) => (
@@ -192,7 +193,7 @@ export function DataGrid<Row>({
                     ))}
                   </dl>
                   {onRowClick && mobileRowActionLabel ? (
-                    <button
+                    <Button
                       className={classes?.button}
                       onClick={() => onRowClick(row)}
                       type="button"
@@ -200,7 +201,7 @@ export function DataGrid<Row>({
                       {typeof mobileRowActionLabel === "function"
                         ? mobileRowActionLabel(row)
                         : mobileRowActionLabel}
-                    </button>
+                    </Button>
                   ) : null}
                 </article>
               ))}
@@ -211,15 +212,15 @@ export function DataGrid<Row>({
       ) : null}
       {pages > 1 ? (
         <div className={cx("ui-data-grid__pager", classes?.pager)}>
-          <button className={classes?.button} disabled={page <= 1}
+          <Button className={classes?.button} disabled={page <= 1}
             onClick={() => state.setPage(page - 1)} type="button">
             {labels.previous}
-          </button>
+          </Button>
           <span className={classes?.muted}>{page} / {pages}</span>
-          <button className={classes?.button} disabled={page >= pages}
+          <Button className={classes?.button} disabled={page >= pages}
             onClick={() => state.setPage(page + 1)} type="button">
             {labels.next}
-          </button>
+          </Button>
         </div>
       ) : null}
     </>

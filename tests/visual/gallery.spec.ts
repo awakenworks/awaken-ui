@@ -150,3 +150,22 @@ test("Navigation information exposes the expected accessibility tree and keyboar
   await expect(page.getByRole("tab", { name: "Tools" })).toHaveAttribute("aria-selected", "true");
   await expect(page.getByRole("tabpanel")).toContainText("Product-owned tool configuration");
 });
+
+for (const theme of ["Awaken", "Oversight"] as const) {
+  test(`Shared navigation and intrinsic table under ${theme} tokens`, async ({ page }) => {
+    // Rules: R1 both token maps -> aligned intrinsic columns with no product CSS;
+    // R2 current row disabled -> menu remains; R3 authorized link -> menu closes.
+    await page.getByRole("button", { name: `${theme} tokens` }).click();
+    const scene = page.getByRole("heading", { name: "Shared product navigation and intrinsic table" }).locator("..");
+    const header = await scene.getByRole("columnheader", { name: "Status" }).boundingBox();
+    const cell = await scene.getByRole("cell", { name: "Ready", exact: true }).boundingBox();
+    expect(Math.abs(header!.x - cell!.x)).toBeLessThan(1);
+    await expect(scene).toHaveScreenshot(`shared-navigation-table-${theme.toLowerCase()}.png`);
+    await scene.getByRole("button", { name: "Products" }).click();
+    await page.getByRole("menuitem", { name: /Current/ }).dispatchEvent("click");
+    await expect(page.getByRole("menu")).toBeVisible();
+    await expect(page.getByRole("menu")).toHaveScreenshot(`suite-menu-${theme.toLowerCase()}.png`);
+    await page.getByRole("menuitem", { name: "Account", exact: true }).click();
+    await expect(page.getByRole("menu")).toHaveCount(0);
+  });
+}

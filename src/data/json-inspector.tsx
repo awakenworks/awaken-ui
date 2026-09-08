@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button } from "../primitives/button.js";
 import { cx } from "../internal/cx.js";
 import { CopyButton } from "../primitives/copy-button.js";
 
@@ -44,7 +45,8 @@ export function JsonInspector({
   return (
     <div className={cx("ui-json-inspector", classes?.root)}>
       <div className={cx("ui-json-inspector__header", classes?.header)}>
-        <button
+        <Button
+          variant="ghost"
           type="button"
           aria-expanded={open}
           className={cx("ui-json-inspector__toggle", classes?.toggle)}
@@ -52,7 +54,7 @@ export function JsonInspector({
         >
           <span aria-hidden="true">{open ? "▾" : "▸"}</span>
           {resolvedLabels.summary}
-        </button>
+        </Button>
         <CopyButton
           className={cx("ui-json-inspector__copy", classes?.copy)}
           copiedIcon={resolvedLabels.copied}

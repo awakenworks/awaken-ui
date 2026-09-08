@@ -153,11 +153,8 @@ export function Popover({
               onClick={
                 closeOnContentClick
                   ? (((event) => {
-                      if (
-                        (event.target as HTMLElement).closest(
-                          'button, a[href], [role="menuitem"], [role="option"]',
-                        )
-                      ) {
+                      const action = (event.target as HTMLElement).closest('button, a[href], [role="menuitem"], [role="option"]');
+                      if (!event.defaultPrevented && action && !action.matches(':disabled, [aria-disabled="true"]')) {
                         setOpen(false);
                       }
                     }) as MouseEventHandler<HTMLDivElement>)

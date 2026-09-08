@@ -157,3 +157,26 @@ same scene has browser screenshots under Awaken and Oversight token maps.
 The repeatable gallery currently contains 26 browser comparisons: 13 shared
 scenes under each token map. Dialog and Drawer have independent focused
 baselines in addition to Popover and confirmation.
+
+## Agents, Workforce and Cloud consolidation (0.4.0)
+
+Flow is the Workforce product; its repository/package identifiers remain stable.
+All three consumers use one source-built UI distribution. Agents removes its
+local button, switch, segmented control, card-body and skeleton wrappers and its
+secret editor state machine. Copy, tone, schema localization, grid query state,
+CardHeader composition and usage projections remain product adapters. Workforce
+removes its input, field, selector and generic state CSS recipes. Cloud uses
+shared SelectField and the intrinsic DataTable layout, retaining its accessible
+scroll region, organization switching, permissions and command state.
+
+Static: features -> product adapters -> @awaken/ui -> private headless primitives;
+product themes -> semantic tokens. Runtime: user input -> shared presentation
+state/callback -> product mutation -> pending/error/success props. Shared controls
+never persist credentials or run/retry product commands. Disabled/cancelled menu
+actions remain open; enabled navigation closes. Secret modes emit intent only.
+
+Reused unchanged: headless overlays, fields, field refs, grid state algorithms,
+mobile cards, Markdown lifecycle and product domain owners. Modified: shared
+recipes, package exports and the three consumer integrations. Newly added source
+is limited to the recovered SuiteSwitcher authority and regression coverage;
+no new domain service, theme system or parallel component framework is introduced.

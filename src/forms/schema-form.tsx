@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import { Button } from "../primitives/button.js";
 import { cx } from "../internal/cx.js";
 
 export interface JsonSchema {
@@ -85,7 +86,7 @@ function JsonFallback({ value, onChange, controlId, labels, classes }: NodeProps
     <div>
       <textarea
         id={controlId}
-        className={cx("ui-schema__input", classes?.input, classes?.mono)}
+        className={cx("ui-input", "ui-schema__input", classes?.input, classes?.mono)}
         rows={4}
         value={text}
         onChange={(event) => {
@@ -107,7 +108,7 @@ function SchemaNode(props: NodeProps) {
   const { schema, value, onChange, controlId, labels, classes } = props;
   if (!isStructurallyRenderable(schema)) return <JsonFallback {...props} />;
   const type = firstType(schema);
-  const inputClass = cx("ui-schema__input", classes?.input);
+  const inputClass = cx("ui-input", "ui-schema__input", classes?.input);
   if (schema.enum) {
     return (
       <select id={controlId} className={inputClass} value={String(value ?? "")}
@@ -156,12 +157,12 @@ function SchemaNode(props: NodeProps) {
                 onChange={(next) => onChange(array.map((current, currentIndex) =>
                   currentIndex === index ? next : current))} />
             </div>
-            <button aria-label={labels.removeItem} className={classes?.button} type="button"
-              onClick={() => onChange(array.filter((_, currentIndex) => currentIndex !== index))}>✕</button>
+            <Button aria-label={labels.removeItem} className={classes?.button} type="button"
+              onClick={() => onChange(array.filter((_, currentIndex) => currentIndex !== index))}>✕</Button>
           </div>
         ))}
-        <button className={classes?.button} type="button"
-          onClick={() => onChange([...array, defaultFor(items)])}>{labels.addItem}</button>
+        <Button className={classes?.button} type="button"
+          onClick={() => onChange([...array, defaultFor(items)])}>{labels.addItem}</Button>
       </div>
     );
   }

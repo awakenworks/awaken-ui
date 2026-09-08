@@ -43,12 +43,6 @@ export {
   type PopoverRole,
 } from "./overlays/popover.js";
 export {
-  SuiteSwitcher,
-  type SuiteSwitcherDestination,
-  type SuiteSwitcherProduct,
-  type SuiteSwitcherProps,
-} from "./navigation/suite-switcher.js";
-export {
   ToastProvider,
   useToast,
   type ToastApi,
@@ -300,3 +294,5 @@ export {
   type InlineNoticeProps,
   type InlineNoticeTone,
 } from "./feedback/inline-notice.js";
+
+export { SuiteSwitcher, type SuiteSwitcherProduct, type SuiteSwitcherDestination, type SuiteSwitcherProps } from "./navigation/suite-switcher.js";

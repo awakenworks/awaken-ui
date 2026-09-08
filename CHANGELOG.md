@@ -1,6 +1,18 @@
 # Changelog
 
-## Unreleased
+## 0.4.0
+
+- Consolidate SuiteSwitcher and link dismissal from existing consumer distributions.
+- Shared DataGrid, SchemaForm, SecretField and JsonInspector now apply their own
+  input/button recipes. SecretField associates unique labels with password inputs.
+- Add opt-in intrinsic column layout (`DataTable layout="auto"`), consolidating
+  Cloud's table recipe while preserving the default grid-column contract.
+- Consolidate native grid tables, bare cards, responsive toolbar layout and field
+  typography. Optional tokens add xs/control font sizes, raised/muted surfaces,
+  strong borders, soft accent backgrounds and warning text with neutral fallbacks.
+- Consumers remove local generic recipes and no-op wrappers; keep product copy,
+  state, routes and token values in the product.
+
 
 - Keep fenced-code copy controls working after parent rerenders, label changes
   and React Strict Mode effect replay; dispose pending clipboard feedback when

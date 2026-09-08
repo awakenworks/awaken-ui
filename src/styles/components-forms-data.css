@@ -37,11 +37,13 @@
   font-family: var(--ui-font-body);
 }
 
-.ui-field__label {
+.ui-field__label,
+.ui-field > label {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--ui-space-1);
-  font-size: 0.75rem;
+  font-size: var(--ui-font-size-xs);
   font-weight: 600;
 }
 
@@ -54,7 +56,7 @@
 .ui-field__help,
 .ui-field__error {
   color: var(--ui-color-text-muted);
-  font-size: 0.6875rem;
+  font-size: var(--ui-font-size-xs);
 }
 
 .ui-field__error {
@@ -67,7 +69,7 @@
   min-height: var(--ui-control-height-md);
   padding: var(--ui-space-2) var(--ui-space-3);
   color: var(--ui-color-text);
-  font: 0.875rem/1.4 var(--ui-font-body);
+  font: var(--ui-font-size-control)/1.4 var(--ui-font-body);
   background: var(--ui-color-surface);
   border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-control);
@@ -190,15 +192,7 @@
   gap: var(--ui-space-2);
 }
 
-.ui-json-inspector__toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ui-space-1);
-  border: 0;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-}
+.ui-json-inspector__toggle { gap: var(--ui-space-1); }
 
 .ui-json-inspector__body {
   overflow: auto;
@@ -230,7 +224,8 @@
   align-items: center;
   gap: var(--ui-space-1);
   color: var(--ui-color-text-muted);
-  font: 600 0.6875rem/1 var(--ui-font-body);
+  font: 600 var(--ui-font-size-xs)/1.2 var(--ui-font-body);
+  white-space: nowrap;
   background: var(--ui-color-canvas);
   border: 1px solid var(--ui-color-border);
   border-radius: 999px;
@@ -257,7 +252,7 @@
 .ui-badge--warning,
 .ui-status-pill--warning,
 .ui-chip--warning {
-  color: var(--ui-color-warning);
+  color: var(--ui-color-warning-text);
 }
 
 .ui-badge--danger,
@@ -281,7 +276,7 @@
 .ui-badge--priority,
 .ui-status-pill--priority,
 .ui-chip--priority {
-  color: var(--ui-color-warning);
+  color: var(--ui-color-warning-text);
 }
 
 .ui-table {
@@ -309,7 +304,7 @@
 
 .ui-table__th {
   color: var(--ui-color-text-muted);
-  font-size: 0.6875rem;
+  font-size: var(--ui-font-size-xs);
   font-weight: 650;
 }
 
@@ -369,3 +364,20 @@
   border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-control);
 }
+
+.ui-data-grid__table { width: 100%; border-collapse: collapse; }
+.ui-data-grid__table th { text-align: start; padding: var(--ui-space-2) var(--ui-space-3); border-block-end: 1px solid var(--ui-color-border); color: var(--ui-color-text-muted); font-size: var(--ui-font-size-xs); font-weight: 600; }
+.ui-data-grid__table td { padding: var(--ui-space-2) var(--ui-space-3); border-block-end: 1px solid var(--ui-color-border); font-size: var(--ui-font-size-control); }
+.ui-data-grid__table tr:last-child td { border-block-end: 0; }
+.ui-data-grid__table tr[data-click="true"] { cursor: pointer; }
+.ui-data-grid__table tr[data-click="true"]:hover td { background: var(--ui-color-surface-hover); }
+/* Bare card content and slotted card content share one surface owner. */
+.ui-card:not(:has(> .ui-card__header, > .ui-card__body, > .ui-card__footer)) { padding: var(--ui-space-3) var(--ui-space-4); }
+.ui-card > h2, .ui-card__header > h2 { margin: 0 0 var(--ui-space-3); font-size: var(--ui-font-size-control); font-weight: 600; }
+
+/* Intrinsic columns align across ARIA table rows without consumer recipes. */
+.ui-table[data-layout="auto"] { display: table; width: 100%; border-collapse: collapse; }
+.ui-table[data-layout="auto"] > .ui-table__head { display: table-header-group; }
+.ui-table[data-layout="auto"] > .ui-table__body { display: table-row-group; }
+.ui-table[data-layout="auto"] .ui-table__row { display: table-row; }
+.ui-table[data-layout="auto"] :is(.ui-table__th, .ui-table__td) { display: table-cell; vertical-align: top; }

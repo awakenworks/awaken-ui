@@ -2,6 +2,8 @@ import { StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Button,
+  SuiteSwitcher,
+  DataTable, TableHead, TableBody, TableRow, TableHeaderCell, TableCell,
   BreadcrumbItem,
   Breadcrumbs,
   ChatApproval,
@@ -400,6 +402,17 @@ function Gallery() {
         </label>
       </Dialog>
 
+      <section>
+        <h2>Shared product navigation and intrinsic table</h2>
+        <SuiteSwitcher aria-label="Products" currentLabel="Current product" trigger={<Button>Products</Button>}
+          products={[{ id: "current", label: "Current", isCurrent: true }, { id: "other", label: "Another product", href: "#other" }]}
+          destinations={[{ id: "account", label: "Account", href: "#account" }]} />
+        <DataTable aria-label="Resources" layout="auto">
+          <TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Status</TableHeaderCell></TableRow></TableHead>
+          <TableBody><TableRow><TableCell>A long localized resource name</TableCell><TableCell>Ready</TableCell></TableRow>
+            <TableRow><TableCell>Short</TableCell><TableCell>Waiting for approval</TableCell></TableRow></TableBody>
+        </DataTable>
+      </section>
       <Drawer
         closeLabel="Close details"
         description="A modal side panel with the same focus contract."

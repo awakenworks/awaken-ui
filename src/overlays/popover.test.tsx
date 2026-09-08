@@ -93,4 +93,21 @@ describe("Popover", () => {
     fireEvent.click(screen.getByRole("button", { name: "Select" }));
     expect(screen.queryByRole("dialog", { name: "Workspace" })).not.toBeInTheDocument();
   });
+  it("keeps disabled and cancelled actions open and closes an enabled nested action", async () => {
+    // Decision table: closeOnContentClick + R1 disabled/R2 prevented -> open;
+    // R3 enabled nested target -> closed. Caller cancellation has precedence.
+    render(<MenuPopover aria-label="Actions" closeOnContentClick content={<>
+      <a role="menuitem" aria-disabled="true">Unavailable</a>
+      <a href="#cancel" onClick={(event) => event.preventDefault()}>Cancelled</a>
+      <a href="#done"><span>Continue</span></a>
+    </>}><button type="button">Open</button></MenuPopover>);
+    fireEvent.click(screen.getByRole("button", { name: "Open" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Unavailable" }));
+    await waitFor(() => expect(screen.getByRole("menu")).toBeVisible());
+    fireEvent.click(screen.getByRole("link", { name: "Cancelled" }));
+    await waitFor(() => expect(screen.getByRole("menu")).toBeVisible());
+    fireEvent.click(screen.getByText("Continue"));
+    expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+  });
+
 });
