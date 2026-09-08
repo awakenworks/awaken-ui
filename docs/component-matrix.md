@@ -35,10 +35,10 @@ parallel generic implementation is not an accepted migration state.
 | Data display | Card, badges/chips/status, table atoms, DataGrid, StatCard/StatGrid, panel, states | class and query-state adapters | direct/thin exports | complete for product-neutral display behavior |
 | Layout | Stack, Cluster, SplitPane, ToolbarRow, Panel, SectionHeader, Toolbar | adoption pending by page | direct exports | shared authority exists |
 | Transient feedback | Toast queue/provider | tone/API adapter | i18n/icon/API adapter | shared |
-| Contextual notices | `InlineNotice` structure, tone, actions and caller-selected live-region semantics | migrate `.banner` variants through product copy/action adapters | migrate reason-code and setup-handoff presentation through domain adapters | shared authority; announcement delivery and dismissal persistence remain product-owned |
+| Contextual notices | `InlineNotice` structure, tone, actions and caller-selected live-region semantics | all former `.banner` variants use `InlineNotice`; product supplies copy, icons, actions and urgency | migrate reason-code and setup-handoff presentation through domain adapters | shared authority; announcement delivery and dismissal persistence remain product-owned |
 | Description metadata | native `DescriptionList` composition | adopt for neutral metadata where present | migrate repeated `dl` and key/value recipes | shared authority; Cloud billing/subscription metadata is also a consumer |
 | In-page tabs | `Tabs`, `TabList`, `Tab`, `TabPanel` | migrate agent-editor sections | migrate controlled panel tabs | shared authority; `SegmentedControl` is value selection only |
-| Addressable tab navigation | `TabNav`, `TabNavItem` | adopt when page sections become addressable | migrate `SurfaceTabs` presentation; retain route matching | shared presentation; product owns URL state and Router links |
+| Addressable tab navigation | `TabNav`, `TabNavItem` | Session views use Router-backed `TabNavItem`; URL owns selection and history | migrate `SurfaceTabs` presentation; retain route matching | shared presentation; product owns URL state and Router links |
 | Hierarchy navigation | `Breadcrumbs`, `BreadcrumbItem` | workspace hierarchy adapter | org/workspace/project adapter | shared presentation; Cloud has no current breadcrumb requirement |
 | Event sequences | `EventList`, `EventItem`, `EventTime` | trace-span adapter | run/issue/activity adapters | shared leaf structure only; sorting, folding, streaming and domain event models stay local |
 | Modal overlays | Dialog, Drawer, AlertDialog, ConfirmProvider, DialogSurface, Popover | thin adapters | thin visual adapters | shared behavior |
@@ -99,7 +99,9 @@ Notable consolidations discovered during the audit:
    state transitions, transient timers, and presentation-state rendering.
 4. The feature performs mutations and maps success, failure, retry, and
    terminal state back into shared presentation props.
-5. Visual verification runs the same shared scene under both product token
+5. Session view navigation pushes the exact view URL; Back, Forward and reload
+   restore it. Leaving Trace removes only its selected event coordinate.
+6. Visual verification runs the same shared scene under both product token
    maps; consumer interaction tests verify adapter contracts.
 
 For overlays, consumer validation additionally opens the real product surface:
@@ -166,7 +168,11 @@ All three consumers pin the same complete source-built npm archive, with no
 expanded workspace copy or hand-assembled distribution modules. Agents removes its
 local button, switch, segmented control, picker, card-body, skeleton and confirmation-provider wrappers and its
 secret editor state machine. Copy, tone, schema localization, grid query state,
-CardHeader composition and usage projections remain product adapters. Workforce
+CardHeader composition and usage projections remain product adapters. The follow-up
+removes the remaining generic notice recipe, moves all 55 notice call sites to
+`InlineNotice`, and uses `TabNav` for Session URL navigation. Product-request
+callbacks, pending state, error classification and alert/status roles remain local.
+Workforce
 removes its input, field, selector and generic state CSS recipes. Cloud uses
 shared SelectField and the intrinsic DataTable layout, retaining its accessible
 scroll region, organization switching, permissions and command state.
