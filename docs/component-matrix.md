@@ -1,7 +1,7 @@
 # Component authority and migration matrix
 
 This document is the inventory and migration source of truth for
-`awaken-1.0.0-dev`, `oversight-next`, `awaken-cloud`, and `@awaken/ui`. It records ownership;
+`awaken-1.0.0-dev`, `awaken-flow` (Workforce), `oversight-next`, `awaken-cloud`, and `@awaken/ui`. It records ownership;
 the normative boundary rules remain in [architecture.md](architecture.md) and
 [development-standards.md](development-standards.md).
 
@@ -154,15 +154,17 @@ overlapping implementations, all relevant callers use the authority or a thin
 adapter, obsolete code/CSS is removed, interaction/build checks pass, and the
 same scene has browser screenshots under Awaken and Oversight token maps.
 
-The repeatable gallery currently contains 26 browser comparisons: 13 shared
-scenes under each token map. Dialog and Drawer have independent focused
-baselines in addition to Popover and confirmation.
+The [repeatable gallery](../tests/visual/gallery.spec.ts) owns the executable
+scene inventory under both demo token maps, including separate Dialog, Drawer,
+Popover and confirmation baselines. Product browser journeys additionally verify
+the actual consumer themes and placement.
 
 ## Agents, Workforce and Cloud consolidation (0.4.0)
 
 Flow is the Workforce product; its repository/package identifiers remain stable.
-All three consumers use one source-built UI distribution. Agents removes its
-local button, switch, segmented control, card-body and skeleton wrappers and its
+All three consumers pin the same complete source-built npm archive, with no
+expanded workspace copy or hand-assembled distribution modules. Agents removes its
+local button, switch, segmented control, picker, card-body, skeleton and confirmation-provider wrappers and its
 secret editor state machine. Copy, tone, schema localization, grid query state,
 CardHeader composition and usage projections remain product adapters. Workforce
 removes its input, field, selector and generic state CSS recipes. Cloud uses
