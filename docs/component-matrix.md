@@ -216,7 +216,7 @@ key; Cloud and Workforce gain system/light/dark selection.
 The appearance-phase artifact was `awaken-ui-0.6.0.tgz`, built from UI source
 commit `5d25055`. Its SHA-256 is
 `a1223f3bdf9536076ccce83fafc96a1f59099bf6062aa5e6a34b8c36f959b049`.
-This artifact is superseded by the current 0.8.1 integration below; no distribution
+This artifact is superseded by the current 0.8.2 integration below; no distribution
 module is patched after packaging.
 
 Shared acceptance covers all four identities in both modes, long Chinese copy,
@@ -225,7 +225,7 @@ cross-tab changes. Product browser checks cover actual control placement,
 refresh and route continuity. The Chinese website docs header now wraps at narrow
 widths; its search keeps an accessible name when visible text is hidden.
 
-## Functional icons and responsive layout (0.7.0–0.8.1)
+## Functional icons and responsive layout (0.7.0–0.8.2)
 
 All four family consumers use `@awaken/ui/icons` or the pure `icons/data` export.
 Lucide 0.468.0 is the single functional geometry source. Workforce removes its
@@ -235,15 +235,19 @@ icon choices, command state and routing stay with the consumer. Product marks
 remain distinct from functional icons: A for Works/Agents, O for Objects, W for
 Workforce, and Works A beside the Cloud name.
 
-The current immutable artifact is `awaken-ui-0.8.1.tgz`, built from committed
-UI source `eae473a`. SHA-256:
-`9396629a53746a693deafc8d6a7dd84a414998cd2e16a92aeb70515b592c2900`.
+The current immutable artifact is `awaken-ui-0.8.2.tgz`, built from committed
+UI source `5d9d0fc`. SHA-256:
+`cfb264e0bf554fa959908b33d301ceddd33c24681bbbd205c47bd95be71ea944`.
 Agents, Workforce, Cloud and website pin the same archive and lockfile integrity.
 Version 0.7.0 introduced the optional icons; 0.8.0 fixes responsive recipes.
 Version 0.8.1 makes the existing EventItem marker slot exclusive: an empty slot
 uses the default dot, while supplied icons/text get a transparent full-size slot.
 This removes overlapping dots from Workforce setup without a consumer override
 or a second timeline implementation; forced colors keeps the same distinction.
+Version 0.8.2 aligns the custom slot with the title rather than stretching it
+through the event body. Workforce removes its global 1.05rem SVG size override
+so supplied setup icons use the shared 16px default. Consumer acceptance checks
+the actual zero-Project setup precondition in an independent Workspace.
 
 Static: `DescriptionList` owns native term/detail structure, columns and narrow
 collapse. Workforce's Resource/schema renderer, Outcome fulfillment renderer,
