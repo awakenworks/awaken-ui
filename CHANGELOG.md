@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.2
+
+- Align supplied event markers with the title instead of stretching their slot
+  through the event body and metadata.
+
 ## 0.8.1
 
 - Render a supplied EventItem marker without a second default dot, including
