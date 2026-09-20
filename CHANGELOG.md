@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.9.0
+
+- Add the product-neutral i18n engine for BCP 47 locale resolution, explicit
+  fallback chains, interpolation, plural categories and locale-bound `Intl`
+  formatting.
+- Add the React provider contract for product-owned catalogs, preference
+  persistence, browser-language initialization, cross-tab updates and document
+  `lang`/`dir`, including RTL locales. No product copy moved into the package.
+
 ## 0.8.2
 
 - Align supplied event markers with the title instead of stretching their slot

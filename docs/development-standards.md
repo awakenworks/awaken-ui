@@ -36,6 +36,9 @@ then resume.
 - product-neutral layout recipes;
 - the `--ui-*` semantic token contract;
 - product-neutral view models and pure presentation algorithms.
+- product-neutral locale resolution, catalog fallback, interpolation, plural
+  selection, explicit `Intl` formatting, and document language/direction
+  projection through the optional i18n exports;
 
 ### Consuming products own
 
@@ -44,7 +47,8 @@ then resume.
 - routing and URL state;
 - authentication, authorization, and capability decisions;
 - Workspace, Project, Issue, Session, Agent, Workflow, and other domain terms;
-- localization, product copy, date/number formatting, and icon choices;
+- admitted locale lists, translation keys/catalogs, product copy, domain
+  formatting policy, and icon choices;
 - brand selection and token-to-`--ui-*` mappings (Awaken family raw values
   and appearance persistence come from the optional shared brand exports);
 - domain DTO-to-view-model adapters.
@@ -89,7 +93,8 @@ Production source must not import:
 - `react-router` or another application router;
 - `@tanstack/react-query` or another server-state library;
 - consumer API clients or generated DTOs;
-- product app state, permission, localization, or telemetry modules.
+- product app state, permission, product localization catalogs, or telemetry
+  modules.
 
 ## 4. Component API design
 
@@ -246,12 +251,22 @@ Forbidden:
 - Shared components contain no user-facing product copy.
 - Accessible labels, button labels, empty-state text, and errors are passed by
   the consumer.
+- Use `@awaken/ui/i18n` for the shared locale/fallback/plural/formatting
+  mechanism instead of adding a product-local language controller. Keep exactly
+  one catalog owner in each consuming product.
+- Locale identifiers are BCP 47 strings. Do not encode a two-language union or
+  infer that every non-English locale is Chinese.
+- Catalog lookup falls back through explicitly declared locale parents and the
+  product default; untranslated messages remain visible through a caller-owned
+  default message or stable key.
+- Apply the resolved locale to `document.documentElement.lang` and its declared
+  writing direction. Layout and CSS use logical properties so RTL is usable.
 - Punctuation and sentence construction belong to the consumer; do not build
   translated sentences by concatenating fragments.
 - Shared components may provide development-only invariant error messages in
   English when they are not user-facing.
 - Dates, numbers, currencies, durations, and relative time arrive formatted or
-  with an explicit formatter contract.
+  use the i18n context's explicit resolved locale; never depend on a host default.
 
 ## 9. Errors and asynchronous behavior
 
@@ -351,4 +366,3 @@ A change is done when:
 - obsolete implementations are removed;
 - documentation is updated at its authoritative owner;
 - no required follow-up is hidden as an undocumented compatibility path.
-

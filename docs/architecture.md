@@ -13,10 +13,11 @@ The live cross-repository inventory is
 ```text
 product feature -> product adapter -> @awaken/ui -> internal headless library
 product tokens  ---------------------> --ui-* semantic token contract
+product catalog -> @awaken/ui/i18n ----> Intl + document lang/direction
 ```
 
 - Public components contain no product DTO, route, API, query, authorization,
-  localization, or tenant vocabulary.
+  translated copy, or tenant vocabulary.
 - Base UI is an internal implementation detail and is imported only through
   `src/internal/headless`.
 - Components consume only the `--ui-*` semantic token contract.
@@ -29,6 +30,41 @@ The shared package owns DOM semantics, focus, keyboard interaction, portals,
 dismissal, controlled component state, and transient UI state. A consuming
 product owns the trigger, copy, authorization hint, domain draft, mutation,
 retry, cache invalidation, and terminal result.
+
+## Optional internationalization engine
+
+`@awaken/ui/i18n` is the one product-neutral owner of locale resolution,
+fallback traversal, parameter interpolation, plural-category selection and
+explicit `Intl` formatting. `@awaken/ui/i18n/react` adds the one React provider
+contract for preference persistence, browser-language initialization,
+cross-tab updates, and document `lang`/`dir` projection.
+
+Products own the admitted locale registry, translation keys and catalogs,
+default locale, storage-key namespace, domain terminology, and the placement of
+the language selector. No product string ships in `@awaken/ui`. Catalogs are
+passed to the engine as immutable product inputs; the engine does not fetch or
+merge remote translation state and is not a second copy source.
+
+Static ownership is therefore:
+
+```text
+product locale registry + catalogs + copy
+                 |
+                 v
+@awaken/ui/i18n (resolution, fallback, plural, formatting)
+                 |
+                 v
+React context + document lang/dir + Intl output
+```
+
+At startup, the provider resolves an explicit initial locale, then a persisted
+preference, then browser preferences, and finally the product default. A locale
+change validates against the product registry, updates in-memory state, applies
+`lang` and `dir`, and best-effort persists the preference. A same-origin storage
+event revalidates and applies the external value. Blocked storage never blocks
+rendering. A missing message follows the declared locale fallback chain and then
+the default catalog; the caller-owned default message or key is the terminal
+result. Formatting always receives the resolved locale explicitly.
 
 ## Duplication rule
 

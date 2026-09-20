@@ -33,6 +33,39 @@ See [docs/architecture.md](docs/architecture.md) for ownership and dependency
 rules and [docs/development-standards.md](docs/development-standards.md) for
 the authoritative engineering standards.
 
+## Internationalization (optional)
+
+Use `createI18n` from `@awaken/ui/i18n/react` once per product. The product
+supplies BCP 47 locale definitions and its single typed catalog; the shared
+engine owns resolution, fallback, persistence, plural rules, explicit `Intl`
+formatting and document `lang`/`dir`. It contains no Awaken product copy and is
+not limited to English and Chinese.
+
+```tsx
+const i18n = createI18n({
+  locales: [
+    { id: "en", label: "English", htmlLang: "en" },
+    { id: "ja", label: "日本語", htmlLang: "ja" },
+    { id: "ar", label: "العربية", htmlLang: "ar", direction: "rtl" },
+  ] as const,
+  defaultLocale: "en",
+  storageKey: "example.locale",
+  catalogs: {
+    en: { greeting: "Hello, {name}" },
+    ja: { greeting: "こんにちは、{name}" },
+    ar: { greeting: "مرحبًا، {name}" },
+  },
+});
+
+<i18n.I18nProvider>
+  <ProductApp />
+</i18n.I18nProvider>
+```
+
+The product renders the language selector from `useI18n().locales`, owns every
+label and fallback decision, and may add any admitted locale without changing
+the shared package.
+
 ## Shared information and navigation primitives
 
 Use `InlineNotice` for contextual feedback; the product decides its copy,

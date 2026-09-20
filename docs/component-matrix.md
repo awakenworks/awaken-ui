@@ -17,6 +17,8 @@ product adapter (copy, icons, routes, DTO mapping)
 Base UI (private headless behavior)
         |
 product token map -> --ui-* contract -> shared structural CSS
+
+product locale registry + one catalog -> @awaken/ui/i18n -> lang/dir + Intl
 ```
 
 There is one behavioral owner per responsibility. A product-local file is
@@ -49,12 +51,22 @@ parallel generic implementation is not an accepted migration state.
 | Usage and analytics | display primitives only | Awaken token/cache billing projection | Oversight run/domain analytics | intentionally product-owned calculations |
 | Product identity generation | none | product-owned | `EntityIcon` prompt/hash/rendering | intentionally product-owned |
 | Routing/API/query state | none | product-owned | product-owned | never shared |
+| Internationalization | locale resolution, fallback, interpolation, plural rules, explicit `Intl`, React preference/document projection | one product locale registry and catalog | one product locale registry and catalog | shared engine supports arbitrary admitted BCP 47 locales; translated copy and domain formatting policy remain product-owned |
+| Console artifact compatibility | none | product build/runtime + Foundation `ConsoleArtifactManifest` | product build/runtime + Foundation `ConsoleArtifactManifest` | build digests and API/profile admission are not React interaction responsibilities |
 
 `awaken-cloud` is the third consumer. Its console keeps OAuth/session state,
 operator and tenant authorization, Billing/Organization/Operations DTOs and API
 calls, navigation, copy, and Cloud token mapping. Shared Button, Card, Badge,
 Table, loading/error state, and neutral layout primitives are authoritative;
 the former inline-style implementations were removed during adoption.
+
+Local-binary versus hosted-Console compatibility remains outside this package.
+Each product builds and serves one content-addressed Console artifact and uses
+the Foundation-owned neutral manifest to bind its assets, generated API
+contract, supported product profiles and this package's pinned archive digest.
+`@awaken/ui` neither reads that manifest nor infers deployment posture; doing so
+would duplicate product bootstrap, routing and release admission in a React
+component library.
 
 ## Current audit evidence
 
