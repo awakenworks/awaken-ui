@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.11.0
+
+- Make invalid/missing date data render safely through one shared formatter.
+- Share one locale store between React views and imperative product messages;
+  add safe rich placeholders that preserve user content and React interaction.
+- Load product-owned language chunks before switching, fence stale requests and
+  retain drafts on failures. Share the accessible language selection control.
+- Prepare the built package when installing a pinned GitHub revision; Rust
+  interoperability tests remain in repository CI rather than consumer install.
+
 ## 0.10.0
 
 - Own Console artifact emission through the optional Node build export and

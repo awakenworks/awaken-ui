@@ -1,6 +1,6 @@
 {
   "name": "@awaken/ui",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Shared, product-neutral React UI primitives for Awaken products.",
   "license": "MIT",
   "type": "module",
@@ -71,7 +71,8 @@
     "test:visual:update": "playwright test --update-snapshots",
     "test:watch": "vitest",
     "boundaries:check": "node scripts/check-boundaries.mjs",
-    "prepack": "pnpm check"
+    "prepare": "pnpm build",
+    "prepublishOnly": "pnpm check"
   },
   "dependencies": {
     "@base-ui/react": "1.6.0",

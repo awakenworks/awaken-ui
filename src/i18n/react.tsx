@@ -1,15 +1,20 @@
 import {
   createContext,
-  useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
+  useSyncExternalStore,
+  useRef,
   useState,
+  Fragment,
   type ReactNode,
 } from "react";
+import { SelectField } from "../forms/field.js";
 
 import {
   directionOf,
+  formatDateValue,
   htmlLanguageOf,
   resolveLocale,
   selectPlural,
@@ -18,6 +23,7 @@ import {
   type PluralForms,
   type TranslateOptions,
   type TranslationCatalogs,
+  type TranslationCatalog,
 } from "./core.js";
 
 export interface I18nConfig<Locale extends string, Key extends string> {
@@ -25,6 +31,7 @@ export interface I18nConfig<Locale extends string, Key extends string> {
   defaultLocale: Locale;
   catalogs: TranslationCatalogs<Locale, Key>;
   storageKey: string;
+  loadCatalog?: (locale: Locale) => Promise<TranslationCatalog<Key>>;
 }
 
 export interface I18nProviderProps<Locale extends string> {
@@ -36,7 +43,7 @@ export interface I18nContextValue<Locale extends string, Key extends string> {
   locale: Locale;
   localeDefinition: LocaleDefinition<Locale>;
   locales: readonly LocaleDefinition<Locale>[];
-  setLocale: (locale: Locale) => void;
+  setLocale: (locale: Locale) => Promise<boolean>;
   t: (key: Key, options?: TranslateOptions) => string;
   plural: (count: number, forms: PluralForms, options?: Intl.PluralRulesOptions) => string;
   formatNumber: (value: number | bigint, options?: Intl.NumberFormatOptions) => string;
@@ -77,27 +84,78 @@ export function createI18n<Locale extends string, Key extends string>(
 
   const Context = createContext<I18nContextValue<Locale, Key> | undefined>(undefined);
 
+  // One product instance owns locale for React views and event/validation
+  // helpers. Both read this store; imperative messages never read DOM/storage.
+  let currentLocale = config.defaultLocale;
+  const catalogs = { ...config.catalogs };
+  const loaded = new Set<Locale>();
+  const pending = new Map<Locale, Promise<void>>();
+  let request = 0;
+  const listeners = new Set<() => void>();
+  const subscribe = (listener: () => void) => {
+    listeners.add(listener);
+    return () => { listeners.delete(listener); };
+  };
+  const snapshot = () => currentLocale;
+  const serverSnapshot = () => config.defaultLocale;
+  function updateLocale(next: Locale) {
+    if (next === currentLocale) return;
+    currentLocale = next;
+    listeners.forEach((listener) => listener());
+  }
+  async function setLocale(next: Locale, persist = true): Promise<boolean> {
+    const admitted = resolveLocale(next, config.locales, config.defaultLocale);
+    if (admitted !== next) return false;
+    const selected = ++request;
+    if (config.loadCatalog && !loaded.has(next)) {
+      let load = pending.get(next);
+      if (!load) {
+        load = config.loadCatalog(next).then((catalog) => {
+          catalogs[next] = { ...catalog, ...config.catalogs[next] };
+          loaded.add(next);
+        }).finally(() => { pending.delete(next); });
+        pending.set(next, load);
+      }
+      try { await load; } catch { return false; }
+    }
+    if (selected !== request) return false;
+    updateLocale(next);
+    if (persist && typeof window !== "undefined") {
+      try { window.localStorage.setItem(config.storageKey, next); }
+      catch { /* In-memory locale remains usable when storage is blocked. */ }
+    }
+    return true;
+  }
+  function text(key: Key, options?: TranslateOptions): string {
+    return translate({ locale: currentLocale, defaultLocale: config.defaultLocale, locales: config.locales, catalogs }, key, options);
+  }
+  function textForLocale(locale: Locale, key: Key, options?: TranslateOptions): string {
+    return translate({ locale, defaultLocale: config.defaultLocale, locales: config.locales, catalogs }, key, options);
+  }
+  /** Subscribe a view that uses localized descriptors or imperative helpers. */
+  function useTranslationUpdates() {
+    return useSyncExternalStore(subscribe, snapshot, serverSnapshot);
+  }
+  /** Rich placeholders preserve React nodes, event handlers and user content.
+   * Translation strings are rendered as text; no HTML parsing is involved. */
+  function RichText({ message, values = {} }: { message: Key; values?: Readonly<Record<string, ReactNode>> }) {
+    useTranslationUpdates();
+    const scoped = useContext(Context);
+    return <>{(scoped?.t(message) ?? text(message)).split(/(\{[A-Za-z0-9_.-]+\})/g).map((part, index) => {
+      const key = part.startsWith("{") ? part.slice(1, -1) : "";
+      return <Fragment key={index}>{Object.prototype.hasOwnProperty.call(values, key) ? values[key] : part}</Fragment>;
+    })}</>;
+  }
+
   function I18nProvider({ children, initialLocale }: I18nProviderProps<Locale>) {
-    const [locale, updateLocale] = useState<Locale>(() =>
-      resolveLocale(
+    const locale = useSyncExternalStore(subscribe, snapshot, () => initialLocale ?? config.defaultLocale);
+    useLayoutEffect(() => {
+      void setLocale(resolveLocale(
         initialLocale ?? storedLocale(config.storageKey) ?? browserLocales(),
         config.locales,
         config.defaultLocale,
-      ),
-    );
-
-    const setLocale = useCallback((next: Locale) => {
-      const admitted = resolveLocale(next, config.locales, config.defaultLocale);
-      if (admitted !== next) return;
-      updateLocale(next);
-      if (typeof window !== "undefined") {
-        try {
-          window.localStorage.setItem(config.storageKey, next);
-        } catch {
-          // The live selection remains authoritative when browser storage is blocked.
-        }
-      }
-    }, []);
+      ), false);
+    }, [initialLocale]);
 
     useEffect(() => {
       if (typeof document === "undefined") return;
@@ -110,7 +168,7 @@ export function createI18n<Locale extends string, Key extends string>(
       const onStorage = (event: StorageEvent) => {
         if (event.key !== config.storageKey || event.newValue === null) return;
         const next = resolveLocale(event.newValue, config.locales, config.defaultLocale);
-        if (next === event.newValue) updateLocale(next);
+        if (next === event.newValue) void setLocale(next, false);
       };
       window.addEventListener("storage", onStorage);
       return () => window.removeEventListener("storage", onStorage);
@@ -123,13 +181,13 @@ export function createI18n<Locale extends string, Key extends string>(
       locales: config.locales,
       setLocale,
       t: (key, options) => translate(
-        { locale, defaultLocale: config.defaultLocale, locales: config.locales, catalogs: config.catalogs },
+        { locale, defaultLocale: config.defaultLocale, locales: config.locales, catalogs },
         key,
         options,
       ),
       plural: (count, forms, options) => selectPlural(htmlLocale, count, forms, options),
       formatNumber: (input, options) => new Intl.NumberFormat(htmlLocale, options).format(input),
-      formatDate: (input, options) => new Intl.DateTimeFormat(htmlLocale, options).format(input),
+      formatDate: (input, options) => formatDateValue(htmlLocale, input, options),
       formatList: (input, options) => new Intl.ListFormat(htmlLocale, options).format(input),
       formatRelativeTime: (input, unit, options) =>
         new Intl.RelativeTimeFormat(htmlLocale, options).format(input, unit),
@@ -144,5 +202,30 @@ export function createI18n<Locale extends string, Key extends string>(
     return value;
   }
 
-  return { I18nProvider, useI18n } as const;
+  function LanguageSelect({ label, errorLabel }: { label: string; errorLabel: string }) {
+    const i18n = useI18n();
+    const generation = useRef(0);
+    const [pending, setPending] = useState(false);
+    const [failed, setFailed] = useState(false);
+    useEffect(() => () => { generation.current += 1; }, []);
+    return <div>
+      <SelectField label={label} value={i18n.locale} aria-busy={pending || undefined}
+        onChange={(event) => {
+          const revision = ++generation.current;
+          setPending(true);
+          setFailed(false);
+          void i18n.setLocale(event.target.value as Locale).then((accepted) => {
+            if (revision !== generation.current) return;
+            setPending(false);
+            setFailed(!accepted);
+          });
+        }}>
+        {i18n.locales.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
+      </SelectField>
+      {failed ? <span role="alert">{errorLabel}</span> : null}
+    </div>;
+  }
+
+  const getFormattingLocale = () => htmlLanguageOf(currentLocale, config.locales);
+  return { I18nProvider, useI18n, text, textForLocale, useTranslationUpdates, RichText, LanguageSelect, getFormattingLocale } as const;
 }

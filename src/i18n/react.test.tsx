@@ -29,6 +29,52 @@ function Probe() {
 }
 
 describe("i18n React owner", () => {
+  it("reports a failed catalog load without changing locale or losing the draft", async () => {
+    // Requested locale + loader failure -> retain current locale/draft, expose
+    // an accessible retryable failure; no reload or mutation of user input.
+    const instance = createI18n<Locale, Key>({
+      locales: [{ id: "en", label: "English" }, { id: "ja", label: "日本語" }],
+      defaultLocale: "en", storageKey: "test.failure.locale", catalogs: {},
+      loadCatalog: async () => { throw new Error("unavailable"); },
+    });
+    render(<instance.I18nProvider initialLocale="en"><instance.LanguageSelect label="Language" errorLabel="Language unavailable. Try again." /><input aria-label="Draft" defaultValue="keep" /></instance.I18nProvider>);
+    await userEvent.selectOptions(screen.getByRole("combobox", { name: "Language" }), "ja");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Language unavailable. Try again.");
+    expect(screen.getByRole("combobox")).toHaveValue("en");
+    expect(screen.getByRole("textbox", { name: "Draft" })).toHaveValue("keep");
+  });
+  it("loads one catalog before switching and fences stale language requests", async () => {
+    // R1 pending locale preserves current copy/state; R2 a later selection wins;
+    // R3 failed loading preserves usable copy; R4 rich placeholders stay React
+    // nodes, including user content and click handlers, never parsed HTML.
+    let finishJapanese!: (value: { welcome: string }) => void;
+    const instance = createI18n<Locale, Key>({
+      locales: [{ id: "en", label: "English" }, { id: "ja", label: "日本語" }, { id: "ar", label: "العربية" }],
+      defaultLocale: "en", storageKey: "test.lazy.locale",
+      catalogs: { en: { welcome: "Hello {name}" } },
+      loadCatalog: (locale) => locale === "ja"
+        ? new Promise((resolve) => { finishJapanese = resolve; })
+        : Promise.resolve({ welcome: locale === "ar" ? "مرحبًا {name}" : "Hello {name}" }),
+    });
+    const clicked = vi.fn();
+    let context!: ReturnType<typeof instance.useI18n>;
+    function Content() {
+      context = instance.useI18n();
+      return <><input aria-label="Draft" defaultValue="keep draft" /><instance.RichText message="welcome" values={{ name: <button onClick={clicked}>User &lt;b&gt;</button> }} /></>;
+    }
+    render(<instance.I18nProvider initialLocale="en"><Content /></instance.I18nProvider>);
+    await act(async () => { await context.setLocale("en"); });
+    let pending!: Promise<boolean>;
+    act(() => { pending = context.setLocale("ja"); });
+    expect(context.locale).toBe("en");
+    await act(async () => { await context.setLocale("ar"); });
+    await act(async () => { finishJapanese({ welcome: "こんにちは {name}" }); await pending; });
+    expect(context.locale).toBe("ar");
+    expect(screen.getByRole("textbox", { name: "Draft" })).toHaveValue("keep draft");
+    await userEvent.click(screen.getByRole("button", { name: "User <b>" }));
+    expect(clicked).toHaveBeenCalledTimes(1);
+    expect(instance.text("welcome")).toBe("مرحبًا {name}");
+  });
   afterEach(() => window.localStorage.clear());
 
   // Decision table: explicit locale -> render it and project lang/dir; a user

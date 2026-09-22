@@ -1,5 +1,6 @@
 import {
   directionOf,
+  formatDateValue,
   interpolate,
   localeFallbackChain,
   resolveLocale,
@@ -19,6 +20,21 @@ const locales: readonly LocaleDefinition<Locale>[] = [
 ];
 
 describe("i18n core", () => {
+  it("keeps invalid dates out of the render path and preserves valid instants", () => {
+    // R1 absent/blank/invalid/non-finite -> caller's absence text; R2 epoch zero
+    // and valid dates -> explicit locale/timezone output; R3 bad options -> throw
+    // so data tolerance cannot mask a programming error.
+    for (const input of [null, undefined, "", " ", "not-a-date", NaN, Infinity, -Infinity, new Date(NaN)]) {
+      expect(formatDateValue("en", input)).toBe("—");
+      expect(formatDateValue("ar", input, undefined, "Unavailable")).toBe("Unavailable");
+    }
+    for (const locale of ["en", "zh-Hans", "ja", "ar"]) {
+      const options = { timeZone: "UTC", year: "numeric" as const };
+      expect(formatDateValue(locale, 0, options)).toBe(new Intl.DateTimeFormat(locale, options).format(0));
+      expect(formatDateValue(locale, "2026-09-22T12:00:00Z", options)).toBe(new Intl.DateTimeFormat(locale, options).format(new Date("2026-09-22T12:00:00Z")));
+    }
+    expect(() => formatDateValue("en", 0, { timeZone: "invalid/zone" })).toThrow();
+  });
   // Cause/effect rules: exact BCP 47 input selects the exact admitted locale;
   // a regional browser tag selects the same-language locale; an unsupported or
   // malformed tag terminates at the admitted default rather than inventing an id.

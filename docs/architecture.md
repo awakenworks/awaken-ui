@@ -42,8 +42,8 @@ cross-tab updates, and document `lang`/`dir` projection.
 Products own the admitted locale registry, translation keys and catalogs,
 default locale, storage-key namespace, domain terminology, and the placement of
 the language selector. No product string ships in `@awaken/ui`. Catalogs are
-passed to the engine as immutable product inputs; the engine does not fetch or
-merge remote translation state and is not a second copy source.
+passed as immutable product inputs or loaded from product-owned bundled modules.
+The engine never generates translations or fetches a remote translation service.
 
 Static ownership is therefore:
 
@@ -57,14 +57,27 @@ product locale registry + catalogs + copy
 React context + document lang/dir + Intl output
 ```
 
+One product instance owns a locale store shared by React subscriptions and
+imperative validation/event messages. Rich message placeholders preserve React
+nodes and user data; translated text is never interpreted as HTML. Consumers
+subscribe through the product provider or its translation-update hook. The
+context hook still requires its provider; standalone descriptor readers use
+the configured product default until the provider initializes it.
+
 At startup, the provider resolves an explicit initial locale, then a persisted
 preference, then browser preferences, and finally the product default. A locale
-change validates against the product registry, updates in-memory state, applies
+change validates against the product registry, loads the admitted catalog,
+updates in-memory state, applies
 `lang` and `dir`, and best-effort persists the preference. A same-origin storage
-event revalidates and applies the external value. Blocked storage never blocks
+event revalidates and applies the external value. The latest language request
+wins; failed imports retain the current language and the caller-labelled
+language selector exposes a retryable error. Neither outcome remounts views
+or loses drafts. Blocked storage never blocks
 rendering. A missing message follows the declared locale fallback chain and then
 the default catalog; the caller-owned default message or key is the terminal
-result. Formatting always receives the resolved locale explicitly.
+result. Formatting always receives the resolved locale explicitly. Invalid or
+absent date data returns a caller-supplied unavailable marker; invalid formatter
+configuration still raises a programming error.
 
 ## Optional frontend artifact build tool
 

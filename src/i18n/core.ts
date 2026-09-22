@@ -1,5 +1,19 @@
 export type TextDirection = "ltr" | "rtl";
 
+/** Missing/malformed data is presentational absence, never a render exception.
+ * Invalid locale/format options still fail: those are configuration errors. */
+export function formatDateValue(
+  locale: string,
+  value: Date | string | number | null | undefined,
+  options?: Intl.DateTimeFormatOptions,
+  unavailable = "—",
+): string {
+  if (value === null || value === undefined || (typeof value === "string" && !value.trim())) return unavailable;
+  const date = value instanceof Date ? value : new Date(value);
+  if (!Number.isFinite(date.getTime())) return unavailable;
+  return new Intl.DateTimeFormat(locale, options).format(date);
+}
+
 export interface LocaleDefinition<Id extends string = string> {
   id: Id;
   label: string;
