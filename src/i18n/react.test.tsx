@@ -77,6 +77,37 @@ describe("i18n React owner", () => {
   });
   afterEach(() => window.localStorage.clear());
 
+  it("preserves interactive placeholder identity when translation reorders nodes", async () => {
+    // R1 a translator reorders named placeholders -> move the existing nodes;
+    // R2 uncontrolled draft and event handlers -> retain exact state and identity.
+    // The stable identity is the placeholder name, never its sentence position.
+    const instance = createI18n<"en" | "ja", "fields">({
+      locales: [{ id: "en", label: "English" }, { id: "ja", label: "日本語" }],
+      defaultLocale: "en", storageKey: "test.reordered.locale",
+      catalogs: { en: { fields: "First {first}; second {second}" }, ja: { fields: "二つ目 {second}、一つ目 {first}" } },
+    });
+    let context!: ReturnType<typeof instance.useI18n>;
+    function Content() {
+      context = instance.useI18n();
+      return <instance.RichText message="fields" values={{
+        first: <input aria-label="First draft" defaultValue="first seed" />,
+        second: <input aria-label="Second draft" defaultValue="second seed" />,
+      }} />;
+    }
+    render(<instance.I18nProvider initialLocale="en"><Content /></instance.I18nProvider>);
+    const first = screen.getByRole("textbox", { name: "First draft" });
+    const second = screen.getByRole("textbox", { name: "Second draft" });
+    await userEvent.clear(first);
+    await userEvent.type(first, "unsaved first");
+    await userEvent.clear(second);
+    await userEvent.type(second, "unsaved second");
+    await act(async () => { await context.setLocale("ja"); });
+    expect(screen.getByRole("textbox", { name: "First draft" })).toBe(first);
+    expect(screen.getByRole("textbox", { name: "Second draft" })).toBe(second);
+    expect(first).toHaveValue("unsaved first");
+    expect(second).toHaveValue("unsaved second");
+  });
+
   // Decision table: explicit locale -> render it and project lang/dir; a user
   // choice -> update copy, formatting, document and storage together; no second
   // product-local controller is involved.

@@ -141,9 +141,15 @@ export function createI18n<Locale extends string, Key extends string>(
   function RichText({ message, values = {} }: { message: Key; values?: Readonly<Record<string, ReactNode>> }) {
     useTranslationUpdates();
     const scoped = useContext(Context);
+    const occurrences = new Map<string, number>();
     return <>{(scoped?.t(message) ?? text(message)).split(/(\{[A-Za-z0-9_.-]+\})/g).map((part, index) => {
-      const key = part.startsWith("{") ? part.slice(1, -1) : "";
-      return <Fragment key={index}>{Object.prototype.hasOwnProperty.call(values, key) ? values[key] : part}</Fragment>;
+      const name = part.match(/^\{([A-Za-z0-9_.-]+)\}$/)?.[1];
+      if (name === undefined || !Object.prototype.hasOwnProperty.call(values, name)) {
+        return <Fragment key={`text:${index}`}>{part}</Fragment>;
+      }
+      const occurrence = occurrences.get(name) ?? 0;
+      occurrences.set(name, occurrence + 1);
+      return <Fragment key={`value:${name}:${occurrence}`}>{values[name]}</Fragment>;
     })}</>;
   }
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.1
+
+- Preserve rich placeholder node identity by name and occurrence when a
+  translation reorders the sentence. Locale changes no longer swap uncontrolled
+  input drafts between fields. Unknown placeholders remain literal text.
+
 ## 0.11.0
 
 - Make invalid/missing date data render safely through one shared formatter.
