@@ -1,6 +1,6 @@
 {
   "name": "@awaken/ui",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Shared, product-neutral React UI primitives for Awaken products.",
   "license": "MIT",
   "type": "module",
@@ -9,10 +9,12 @@
   ],
   "files": [
     "dist",
+    "build/console-artifact.mjs",
     "README.md",
     "LICENSE"
   ],
   "exports": {
+    "./build/console-artifact": "./build/console-artifact.mjs",
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
@@ -59,7 +61,8 @@
   },
   "scripts": {
     "build": "pnpm clean && tsc -p tsconfig.build.json && node scripts/copy-styles.mjs",
-    "check": "pnpm typecheck && pnpm test && pnpm boundaries:check && pnpm build",
+    "check": "pnpm typecheck && pnpm test && pnpm test:artifact && pnpm boundaries:check && pnpm build",
+    "test:artifact": "cargo test --locked --manifest-path crates/awaken-ui-artifact/Cargo.toml",
     "clean": "node scripts/clean.mjs",
     "dev": "vite --config vite.dev.config.ts",
     "typecheck": "tsc --noEmit",

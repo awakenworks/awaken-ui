@@ -23,5 +23,5 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: rustup toolchain install 1.96.0 --profile minimal && rustup default 1.96.0
       - run: pnpm check
-

@@ -66,6 +66,17 @@ The product renders the language selector from `useI18n().locales`, owns every
 label and fallback decision, and may add any admitted locale without changing
 the shared package.
 
+## Console artifact builds (optional)
+
+Node build scripts can import `writeConsoleArtifact` from
+`@awaken/ui/build/console-artifact` and pass `dist`, `apiContract`, `product`,
+and `profiles`. Rust delivery adapters consume `awaken-ui-artifact` from this
+repository at the same reviewed revision as the npm archive. The optional build
+entry is never imported by browser code. See [artifact ownership](docs/architecture.md#optional-frontend-artifact-build-tool).
+
+Repository checks require Node 22+, pnpm 11+, and Rust 1.88+; CI pins Rust
+1.96.0 for the Node-to-Rust artifact tests.
+
 ## Shared information and navigation primitives
 
 Use `InlineNotice` for contextual feedback; the product decides its copy,

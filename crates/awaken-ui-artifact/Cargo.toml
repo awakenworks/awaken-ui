@@ -1,0 +1,17 @@
+[package]
+name = "awaken-ui-artifact"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "MIT"
+repository = "https://github.com/awakenworks/awaken-ui"
+description = "Rust host reader for the frontend-owned Awaken Console build artifact"
+publish = false
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+
+[dev-dependencies]
+tempfile = "3"

@@ -66,6 +66,33 @@ rendering. A missing message follows the declared locale fallback chain and then
 the default catalog; the caller-owned default message or key is the terminal
 result. Formatting always receives the resolved locale explicitly.
 
+## Optional frontend artifact build tool
+
+`@awaken/ui/build/console-artifact` owns the Node build-time manifest writer
+shared by product frontends. It accepts product/profile labels and a generated
+API contract path from the consuming build; no product defaults are embedded.
+It has no browser export, fetch, mounting decision, release provenance or UI
+dependency-version policy. The frontend repository also owns the small
+`awaken-ui-artifact` Rust reader in `crates/awaken-ui-artifact`, consumed by Rust
+hosts as a pinned library. Foundation has no Console artifact responsibility.
+Cross-language tests build real assets through the Node writer and load them
+through this reader, including filenames whose locale and byte order differ.
+
+The build enumerates regular assets, rejects symlinks and unsafe paths, hashes
+paths in UTF-8 byte order, and writes the manifest only after all inputs have
+validated. Products supply their API contract and profile admission policy.
+The format contains version, opaque product/profile labels, asset digest and
+API contract digest only. Source revision and dependency provenance belong to
+release evidence. Version 2 rejects the retired version 1 format explicitly.
+
+Digest encoding is SHA-256 over each sorted entry: unsigned 64-bit big-endian
+UTF-8 path length, path bytes, unsigned 64-bit big-endian content length, then
+content bytes. The manifest is excluded. Relative paths forbid backslashes,
+colon, NUL, empty and dot components. This proves byte integrity at validation
+time; it does not authenticate a publisher or prove API behavioral equivalence.
+External asset directories must be deployed immutably for the serving process
+lifetime. Browser startup and recovery remain with each product's frontend.
+
 ## Duplication rule
 
 Once a product migrates a responsibility to `@awaken/ui`, its local

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.10.0
+
+- Own Console artifact emission through the optional Node build export and
+  the `awaken-ui-artifact` Rust host reader. Products retain API/profile policy;
+  Foundation no longer defines Console delivery.
+- Use one version 2 format without unverified source/dependency provenance or
+  unused browser comparison logic. UTF-8 byte ordering and actual Node-to-Rust
+  tests prevent locale-dependent build/host digest disagreement.
+
 ## 0.9.0
 
 - Add the product-neutral i18n engine for BCP 47 locale resolution, explicit
