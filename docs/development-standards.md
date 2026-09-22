@@ -309,6 +309,32 @@ Consumers test token mapping, themes, domain adapters, API behavior, routing,
 permissions, localization, and feature integration. Do not copy shared behavior
 tests into every consumer.
 
+### Product replacement acceptance
+
+A route/export inventory is a useful loss detector, not proof of feature parity.
+Before replacing an existing UI, freeze its product revision and use the existing
+product journey tests as the capability authority. Every original user task must
+retain its reads, commands, permission boundaries, validation, cancellation,
+retry, draft preservation, deep links and terminal evidence. Attach missing
+cause/effect rules to those tests; do not create a second feature registry here.
+
+Product catalogs may be partitioned along existing feature boundaries, but each
+message has one owner and every admitted locale has the same key set. Validate
+placeholder multiplicity and preserve executable examples, identifiers and
+user-supplied values. A fallback prevents disappearance; it is not translation
+completion. Key equality and automated translation do not establish semantic
+quality. Review security, destructive-action and recovery instructions before
+release. Never form another language's sentence with English plural suffixes.
+
+Run representative journeys against old and new builds with the same fixtures,
+roles, locale and viewport. Record task steps, completion/failure recovery,
+keyboard/focus behavior, overflow, accessibility findings and loading budgets in
+the product's release evidence. A claimed improvement names a measured result;
+it cannot rest on screenshots, component reuse, or a green build. Do not claim
+overall superiority while original capabilities regress or the comparison has
+not been performed. Local/hosted parity uses the same frontend artifact and
+owner APIs; a frontend profile does not create a commercial product or grant.
+
 ## 11. Documentation
 
 - Public components use TSDoc for non-obvious behavior and invariants.
