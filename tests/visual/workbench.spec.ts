@@ -5,6 +5,8 @@ import { expect, test } from "@playwright/test";
 // W2 tall assistant + focus last input -> only its bounded rail scrolls;
 // W3 collapse/reopen or Test/Design -> uncontrolled drafts remain unchanged;
 // W4 mobile LTR/RTL -> one visible mode, ordinary page scroll, no overflow.
+// W5 collapsed rail + product-controlled Describe -> visible assistant, same
+// draft; hide from Describe -> Design, not an empty conversation viewport.
 for (const direction of ["ltr", "rtl"]) {
   test(`desktop ${direction} workbench retains reachable controls and drafts`, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
@@ -27,6 +29,12 @@ for (const direction of ["ltr", "rtl"]) {
     expect(await viewport.evaluate((node) => node.scrollTop)).toBe(priorScroll);
     await modes.getByRole("button", { name: "Hide assistant" }).click();
     await expect(rail).toBeHidden();
+    await page.getByRole("button", { name: "Request assistance" }).click();
+    await expect(rail).toBeVisible();
+    await expect(modes.getByRole("button", { name: "Describe", exact: true })).toHaveAttribute("aria-pressed", "true");
+    await modes.getByRole("button", { name: "Hide assistant" }).click();
+    await expect(modes.getByRole("button", { name: "Design", exact: true })).toHaveAttribute("aria-pressed", "true");
+    await expect(rail).toBeHidden();
     await modes.getByRole("button", { name: "Show assistant" }).click();
     await modes.getByRole("button", { name: "Test", exact: true }).click();
     await page.getByLabel("Test input").fill("preserved test");
@@ -41,7 +49,7 @@ for (const direction of ["ltr", "rtl"]) {
     await page.setViewportSize({ width: 360, height: 800 });
     await page.goto("/workbench");
     await page.evaluate((dir) => { document.documentElement.dir = dir; }, direction);
-    await page.getByRole("button", { name: "Describe", exact: true }).click();
+    await page.getByRole("button", { name: "Request assistance" }).click();
     const rail = page.getByRole("region", { name: "Design assistant" });
     await expect(rail).toHaveCSS("position", "static");
     await expect(rail).toHaveCSS("max-height", "none");

@@ -1,6 +1,6 @@
 {
   "name": "@awaken/ui",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "Shared, product-neutral React UI primitives for Awaken products.",
   "license": "MIT",
   "type": "module",

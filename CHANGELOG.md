@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.13.1
+
+- Reveal the mounted assistant when a product opens Describe after a test or
+  repair request, even if the rail was collapsed. Hiding it from Describe
+  returns to Design rather than leaving an empty mobile view. Unsent inputs
+  and the prior rail preference remain intact; no new product state or API.
+
 ## 0.13.0
 
 - Consolidate static translation-catalog checks under the optional i18n export:

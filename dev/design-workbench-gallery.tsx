@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DesignWorkbench, TextAreaField, TextField, type DesignWorkbenchMode } from "../src/index.js";
+import { Button, DesignWorkbench, TextAreaField, TextField, type DesignWorkbenchMode } from "../src/index.js";
 import familyTheme from "../src/styles/family.css?raw";
 
 export function DesignWorkbenchGallery() {
@@ -12,7 +12,7 @@ export function DesignWorkbenchGallery() {
       .workbench-gallery__scroll { flex: 1; min-height: 0; overflow: auto; padding: 1rem; }
       .workbench-gallery .ui-design-workbench__pane > div { display: grid; gap: 1rem; padding: 1rem; }
     `}</style>
-    <header>Long-form authoring layout</header>
+    <header>Long-form authoring layout <Button onClick={() => setMode("describe")}>Request assistance</Button></header>
     <div className="workbench-gallery__scroll">
       <DesignWorkbench mode={mode} onModeChange={setMode}
         labels={{ mode: "Design modes", describe: "Describe", design: "Design", test: "Test", review: "Review",

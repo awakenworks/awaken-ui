@@ -191,6 +191,9 @@ export function DesignWorkbench({
   const [railCollapsed, setRailCollapsed] = useState(false);
   const hasTest = test !== undefined && Boolean(labels.test && labels.testPanel);
   const activeMode = mode === "test" && !hasTest ? "design" : mode;
+  // A product can open Describe after a repair/test request. Derive its visible
+  // rail from the controlled mode, not just the mode bar's click handler.
+  const collapsed = activeMode !== "describe" && railCollapsed;
   const modes: readonly DesignWorkbenchMode[] = hasTest
     ? ["describe", "design", "test", "review"]
     : ["describe", "design", "review"];
@@ -199,7 +202,7 @@ export function DesignWorkbench({
       className={cx("ui-design-workbench", className)}
       data-mode={activeMode}
       data-rail-position={railPosition}
-      data-rail-collapsed={railCollapsed || undefined}
+      data-rail-collapsed={collapsed || undefined}
     >
       <div aria-label={labels.mode} className="ui-design-workbench__modes" role="group">
         {modes.map((item) => (
@@ -218,11 +221,14 @@ export function DesignWorkbench({
         ))}
         {labels.showRail && labels.hideRail ? <Button
           className="ui-design-workbench__rail-toggle"
-          aria-expanded={!railCollapsed}
-          onClick={() => setRailCollapsed((current) => !current)}
+          aria-expanded={!collapsed}
+          onClick={() => {
+            setRailCollapsed(!collapsed);
+            if (activeMode === "describe") onModeChange("design");
+          }}
           size="sm"
           variant="ghost"
-        >{railCollapsed ? labels.showRail : labels.hideRail}</Button> : null}
+        >{collapsed ? labels.showRail : labels.hideRail}</Button> : null}
       </div>
       <section
         aria-label={labels.rail}

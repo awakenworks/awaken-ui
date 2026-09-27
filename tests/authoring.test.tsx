@@ -119,4 +119,33 @@ describe("authoring chrome", () => {
     fireEvent.click(screen.getByRole("button", { name: "Show assistant" }));
     expect(screen.getByRole("textbox", { name: "Message" })).toHaveValue("Unsent");
   });
+
+  it.each(["design", "test", "review"] as const)("opens controlled Describe after a collapsed %s without losing inputs", (mode) => {
+    // DT-RAIL: R1 non-Describe + collapse -> rail hidden, content mounted;
+    // R2 external controlled Describe -> rail visible and aria-expanded true,
+    // independent of a mode-bar click; R3 hide while describing -> request
+    // Design once instead of an empty Describe; R4 return to prior mode ->
+    // prior collapsed preference and both unsent values retained. No domain
+    // callbacks, requests, resets or duplicate visibility state are introduced.
+    const props = {
+      labels: { mode: "Mode", describe: "Describe", design: "Design", test: "Test", review: "Review",
+        rail: "Assistant", editor: "Editor", testPanel: "Test run", reviewPanel: "Changes",
+        showRail: "Show assistant", hideRail: "Hide assistant" },
+      onModeChange: vi.fn(), rail: <input aria-label="Message" defaultValue="Unsent request" />,
+      editor: <input aria-label="Draft" defaultValue="Unsent edit" />,
+      test: <p>Run</p>, review: <p>Changes</p>,
+    };
+    const { container, rerender } = render(<DesignWorkbench {...props} mode={mode} />);
+    fireEvent.click(screen.getByRole("button", { name: "Hide assistant" }));
+    expect(container.firstElementChild).toHaveAttribute("data-rail-collapsed", "true");
+    rerender(<DesignWorkbench {...props} mode="describe" />);
+    expect(container.firstElementChild).not.toHaveAttribute("data-rail-collapsed");
+    expect(screen.getByRole("button", { name: "Hide assistant" })).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("textbox", { name: "Message" })).toHaveValue("Unsent request");
+    fireEvent.click(screen.getByRole("button", { name: "Hide assistant" }));
+    expect(props.onModeChange).toHaveBeenCalledExactlyOnceWith("design");
+    rerender(<DesignWorkbench {...props} mode="design" />);
+    expect(container.firstElementChild).toHaveAttribute("data-rail-collapsed", "true");
+    expect(screen.getByRole("textbox", { name: "Draft" })).toHaveValue("Unsent edit");
+  });
 });
