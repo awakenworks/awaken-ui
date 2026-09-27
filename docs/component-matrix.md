@@ -45,7 +45,7 @@ parallel generic implementation is not an accepted migration state.
 | Event sequences | `EventList`, `EventItem`, `EventTime` | trace-span adapter | run/issue/activity adapters | shared leaf structure only; sorting, folding, streaming and domain event models stay local |
 | Modal overlays | Dialog, Drawer, AlertDialog, ConfirmProvider, DialogSurface, Popover | thin adapters | thin visual adapters | shared behavior |
 | Suite navigation | `SuiteSwitcher` product/destination menu semantics and layout | labels/icons/Cloud URLs adapter | labels/icons/Cloud URLs adapter | shared; Cloud remains the only route and authorization authority |
-| Authoring/editor chrome | `EditorForm`, `AuthoringHeader`, `AuthoringGuide`, controlled tab state | product editor composition | thin modal/editor adapters | shared chrome complete; editor domain models remain local |
+| Authoring/editor chrome | `EditorForm`, `AuthoringHeader`, `AuthoringGuide`, `DesignWorkbench`, controlled tab state | product editor composition and candidate/draft authority | thin modal/editor adapters | shared Describe/Design/Review composition; conversation, proposal, draft, validation and publication remain product-owned |
 | Inspectors | `JsonInspector` | i18n/class adapter | shared inspector available where raw JSON is appropriate | disclosure, serialization and clipboard state shared |
 | Trace views | shared chat/tool/approval/JSON primitives | `session-log` → span projection | run-event → tool/approval/output projection | intentionally separate domain projections; no common DTO |
 | Usage and analytics | display primitives only | Awaken token/cache billing projection | Oversight run/domain analytics | intentionally product-owned calculations |

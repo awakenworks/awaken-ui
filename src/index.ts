@@ -260,9 +260,13 @@ export {
 export {
   AuthoringGuide,
   AuthoringHeader,
+  DesignWorkbench,
   type AuthoringGuideProps,
   type AuthoringGuideStep,
   type AuthoringHeaderProps,
+  type DesignWorkbenchLabels,
+  type DesignWorkbenchMode,
+  type DesignWorkbenchProps,
 } from "./surfaces/authoring.js";
 export {
   Toolbar,

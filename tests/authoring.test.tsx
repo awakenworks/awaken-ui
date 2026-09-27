@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { AuthoringGuide, AuthoringHeader } from "../src/index.js";
+import { AuthoringGuide, AuthoringHeader, DesignWorkbench } from "../src/index.js";
 
 describe("authoring chrome", () => {
   it("emits name and window state changes", () => {
@@ -44,5 +44,39 @@ describe("authoring chrome", () => {
       />,
     );
     expect(screen.getByRole("button", { name: /Rules/ })).toHaveClass("is-current");
+  });
+
+  it("keeps product state controlled while sharing the design composition", () => {
+    // Cause/effect table: R1 selected mode -> matching pressed control and root
+    // projection; R2 user selects another mode -> one callback only; R3 rail at
+    // end -> presentation attribute only, with all product content unchanged.
+    const onModeChange = vi.fn();
+    const { container } = render(
+      <DesignWorkbench
+        editor={<p>Structured editor</p>}
+        labels={{
+          mode: "Design mode",
+          describe: "Describe",
+          design: "Design",
+          review: "Review",
+          rail: "Design assistant",
+          editor: "Structured design",
+          reviewPanel: "Change review",
+        }}
+        mode="describe"
+        onModeChange={onModeChange}
+        rail={<p>Conversation</p>}
+        railPosition="end"
+        review={<p>Diff</p>}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "Describe" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("region", { name: "Design assistant" })).toHaveTextContent("Conversation");
+    expect(screen.getByRole("region", { name: "Structured design" })).toHaveTextContent("Structured editor");
+    expect(screen.getByRole("region", { name: "Change review" })).toHaveTextContent("Diff");
+    expect(container.firstElementChild).toHaveAttribute("data-rail-position", "end");
+    fireEvent.click(screen.getByRole("button", { name: "Review" }));
+    expect(onModeChange).toHaveBeenCalledTimes(1);
+    expect(onModeChange).toHaveBeenCalledWith("review");
   });
 });

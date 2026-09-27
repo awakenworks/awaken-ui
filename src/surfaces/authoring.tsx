@@ -138,3 +138,91 @@ export function AuthoringGuide<Key extends string>({
     </nav>
   );
 }
+
+export type DesignWorkbenchMode = "describe" | "design" | "review";
+
+export interface DesignWorkbenchLabels {
+  readonly mode: string;
+  readonly describe: string;
+  readonly design: string;
+  readonly review: string;
+  readonly rail: string;
+  readonly editor: string;
+  readonly reviewPanel: string;
+}
+
+export interface DesignWorkbenchProps {
+  readonly mode: DesignWorkbenchMode;
+  readonly onModeChange: (mode: DesignWorkbenchMode) => void;
+  readonly labels: DesignWorkbenchLabels;
+  readonly rail: ReactNode;
+  readonly editor: ReactNode;
+  readonly review: ReactNode;
+  readonly footer?: ReactNode;
+  readonly railPosition?: "start" | "end";
+  readonly className?: string;
+}
+
+/**
+ * Product-neutral natural-language authoring composition.
+ *
+ * Products own conversation transport, candidate state, drafts, validation,
+ * authorization and every durable action. This component owns only the shared
+ * desktop split and the controlled Describe / Design / Review mobile view.
+ */
+export function DesignWorkbench({
+  mode,
+  onModeChange,
+  labels,
+  rail,
+  editor,
+  review,
+  footer,
+  railPosition = "start",
+  className,
+}: DesignWorkbenchProps) {
+  const modes: readonly DesignWorkbenchMode[] = ["describe", "design", "review"];
+  return (
+    <div
+      className={cx("ui-design-workbench", className)}
+      data-mode={mode}
+      data-rail-position={railPosition}
+    >
+      <div aria-label={labels.mode} className="ui-design-workbench__modes" role="group">
+        {modes.map((item) => (
+          <button
+            aria-pressed={mode === item}
+            className="ui-design-workbench__mode"
+            key={item}
+            onClick={() => onModeChange(item)}
+            type="button"
+          >
+            {labels[item]}
+          </button>
+        ))}
+      </div>
+      <section
+        aria-label={labels.rail}
+        className="ui-design-workbench__pane ui-design-workbench__rail"
+        data-design-pane="describe"
+      >
+        {rail}
+      </section>
+      <section
+        aria-label={labels.editor}
+        className="ui-design-workbench__pane ui-design-workbench__editor"
+        data-design-pane="design"
+      >
+        {editor}
+      </section>
+      <section
+        aria-label={labels.reviewPanel}
+        className="ui-design-workbench__pane ui-design-workbench__review"
+        data-design-pane="review"
+      >
+        {review}
+      </section>
+      {footer ? <footer className="ui-design-workbench__footer">{footer}</footer> : null}
+    </div>
+  );
+}
