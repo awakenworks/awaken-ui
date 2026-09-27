@@ -34,6 +34,7 @@ describe("shared browser styling", () => {
       '@import "./components-chat.css";',
       '@import "./components-forms-data.css";',
       '@import "./components-layout-navigation.css";',
+      '@import "./components-workbench.css";',
     ]);
   });
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.1
+
+- Keep workbench mode controls and the assistant rail reachable while editing
+  long desktop forms. The rail uses its own bounded scroll region; mobile
+  retains one ordinary page scroll and the same mounted content.
+- Split workbench styling by responsibility without changing public imports.
+
 ## 0.12.0
 
 - Extend DesignWorkbench with optional product-owned Test content and a

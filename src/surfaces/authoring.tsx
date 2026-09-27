@@ -173,7 +173,8 @@ export interface DesignWorkbenchProps {
  *
  * Products own conversation transport, candidate state, drafts, validation,
  * authorization and every durable action. This component owns only the shared
- * desktop split and the controlled Describe / Design / Review mobile view.
+ * desktop split and controlled Describe / Design / Test / Review views. Long
+ * forms retain a reachable mode bar and a bounded desktop assistant rail.
  */
 export function DesignWorkbench({
   mode,
