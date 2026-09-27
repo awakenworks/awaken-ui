@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.13.0
+
+- Consolidate static translation-catalog checks under the optional i18n export:
+  fragment ownership, key coverage, parameters, exact code literals and
+  unexplained generator remnants. Products retain copy and semantic review.
+- No change to locale resolution, runtime fallback, preferences or draft state.
+
 ## 0.12.1
 
 - Keep workbench mode controls and the assistant rail reachable while editing

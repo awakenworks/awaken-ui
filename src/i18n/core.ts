@@ -1,5 +1,7 @@
 export type TextDirection = "ltr" | "rtl";
 
+export { inspectTranslationCatalog, type TranslationCatalogIssue } from "./catalog-structure.js";
+
 /** Missing/malformed data is presentational absence, never a render exception.
  * Invalid locale/format options still fail: those are configuration errors. */
 export function formatDateValue(

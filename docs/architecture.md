@@ -45,6 +45,15 @@ the language selector. No product string ships in `@awaken/ui`. Catalogs are
 passed as immutable product inputs or loaded from product-owned bundled modules.
 The engine never generates translations or fetches a remote translation service.
 
+`inspectTranslationCatalog` owns product-neutral structural admission of static
+catalog fragments. It checks one owner per key, source key coverage, nonblank
+copy, placeholder multiplicity, exact inline-code tokens and unexplained
+translation-generator remnants. Products pass their English source and named
+fragments, fix their own copy, and retain task/semantic translation tests. This
+pure build/test tool returns diagnostics; it neither changes runtime fallback
+nor certifies native-language meaning. Consumer-local copies of these checks
+are removed on migration.
+
 Static ownership is therefore:
 
 ```text

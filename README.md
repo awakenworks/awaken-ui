@@ -66,6 +66,20 @@ The product renders the language selector from `useI18n().locales`, owns every
 label and fallback decision, and may add any admitted locale without changing
 the shared package.
 
+Use the same optional export for structural catalog checks in product tests:
+
+```ts
+import { inspectTranslationCatalog } from "@awaken/ui/i18n";
+
+const issues = inspectTranslationCatalog(
+  { greeting: "Hello, {name}" },
+  { shell: { greeting: "مرحبًا، {name}" } },
+);
+// [] means structural admission passed, not native-language semantic approval.
+```
+
+Pass named fragments before merging them so duplicate owners remain observable.
+
 ## Console artifact builds (optional)
 
 Node build scripts can import `writeConsoleArtifact` from
