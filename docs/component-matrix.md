@@ -45,14 +45,14 @@ parallel generic implementation is not an accepted migration state.
 | Event sequences | `EventList`, `EventItem`, `EventTime` | trace-span adapter | run/issue/activity adapters | shared leaf structure only; sorting, folding, streaming and domain event models stay local |
 | Modal overlays | Dialog, Drawer, AlertDialog, ConfirmProvider, DialogSurface, Popover | thin adapters | thin visual adapters | shared behavior |
 | Suite navigation | `SuiteSwitcher` product/destination menu semantics and layout | labels/icons/Cloud URLs adapter | labels/icons/Cloud URLs adapter | shared; Cloud remains the only route and authorization authority |
-| Authoring/editor chrome | `EditorForm`, `AuthoringHeader`, `AuthoringGuide`, `DesignWorkbench`, controlled tab state | product editor composition and candidate/draft authority | thin modal/editor adapters | shared Describe/Design/Review composition; conversation, proposal, draft, validation and publication remain product-owned |
+| Authoring/editor chrome | `EditorForm`, `AuthoringHeader`, `AuthoringGuide`, `DesignWorkbench`, controlled tab state | product editor composition and candidate/draft authority | thin modal/editor adapters | shared Describe/Design/Test/Review with mounted content and collapsible rail; execution and publication remain product-owned |
 | Inspectors | `JsonInspector` | i18n/class adapter | shared inspector available where raw JSON is appropriate | disclosure, serialization and clipboard state shared |
 | Trace views | shared chat/tool/approval/JSON primitives | `session-log` → span projection | run-event → tool/approval/output projection | intentionally separate domain projections; no common DTO |
 | Usage and analytics | display primitives only | Awaken token/cache billing projection | Oversight run/domain analytics | intentionally product-owned calculations |
 | Product identity generation | none | product-owned | `EntityIcon` prompt/hash/rendering | intentionally product-owned |
 | Routing/API/query state | none | product-owned | product-owned | never shared |
 | Internationalization | locale resolution, fallback, interpolation, plural rules, explicit `Intl`, React preference/document projection | one product locale registry and catalog | one product locale registry and catalog | shared engine supports arbitrary admitted BCP 47 locales; translated copy and domain formatting policy remain product-owned |
-| Console artifact compatibility | none | product build/runtime + Foundation `ConsoleArtifactManifest` | product build/runtime + Foundation `ConsoleArtifactManifest` | build digests and API/profile admission are not React interaction responsibilities |
+| Console artifact compatibility | UI build writer and `awaken-ui-artifact` reader | product build/runtime and API/profile policy | product build/runtime and API/profile policy | UI repository owns byte format; Foundation has no Console responsibility |
 
 `awaken-cloud` is the third consumer. Its console keeps OAuth/session state,
 operator and tenant authorization, Billing/Organization/Operations DTOs and API
@@ -60,13 +60,10 @@ calls, navigation, copy, and Cloud token mapping. Shared Button, Card, Badge,
 Table, loading/error state, and neutral layout primitives are authoritative;
 the former inline-style implementations were removed during adoption.
 
-Local-binary versus hosted-Console compatibility remains outside this package.
-Each product builds and serves one content-addressed Console artifact and uses
-the Foundation-owned neutral manifest to bind its assets, generated API
-contract, supported product profiles and this package's pinned archive digest.
-`@awaken/ui` neither reads that manifest nor infers deployment posture; doing so
-would duplicate product bootstrap, routing and release admission in a React
-component library.
+Each product builds and serves one Console artifact using the frontend-owned
+build writer and paired Rust reader described in [architecture.md](architecture.md#optional-frontend-artifact-build-tool).
+Products own API/profile admission and immutable release publication. React
+components infer no deployment posture, artifact admission or product authority.
 
 ## Current audit evidence
 

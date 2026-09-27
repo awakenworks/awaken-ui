@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { cx } from "../internal/cx.js";
 import { Button } from "../primitives/button.js";
 
@@ -139,7 +139,7 @@ export function AuthoringGuide<Key extends string>({
   );
 }
 
-export type DesignWorkbenchMode = "describe" | "design" | "review";
+export type DesignWorkbenchMode = "describe" | "design" | "test" | "review";
 
 export interface DesignWorkbenchLabels {
   readonly mode: string;
@@ -149,6 +149,10 @@ export interface DesignWorkbenchLabels {
   readonly rail: string;
   readonly editor: string;
   readonly reviewPanel: string;
+  readonly test?: string;
+  readonly testPanel?: string;
+  readonly showRail?: string;
+  readonly hideRail?: string;
 }
 
 export interface DesignWorkbenchProps {
@@ -158,6 +162,7 @@ export interface DesignWorkbenchProps {
   readonly rail: ReactNode;
   readonly editor: ReactNode;
   readonly review: ReactNode;
+  readonly test?: ReactNode;
   readonly footer?: ReactNode;
   readonly railPosition?: "start" | "end";
   readonly className?: string;
@@ -177,29 +182,46 @@ export function DesignWorkbench({
   rail,
   editor,
   review,
+  test,
   footer,
   railPosition = "start",
   className,
 }: DesignWorkbenchProps) {
-  const modes: readonly DesignWorkbenchMode[] = ["describe", "design", "review"];
+  const [railCollapsed, setRailCollapsed] = useState(false);
+  const hasTest = test !== undefined && Boolean(labels.test && labels.testPanel);
+  const activeMode = mode === "test" && !hasTest ? "design" : mode;
+  const modes: readonly DesignWorkbenchMode[] = hasTest
+    ? ["describe", "design", "test", "review"]
+    : ["describe", "design", "review"];
   return (
     <div
       className={cx("ui-design-workbench", className)}
-      data-mode={mode}
+      data-mode={activeMode}
       data-rail-position={railPosition}
+      data-rail-collapsed={railCollapsed || undefined}
     >
       <div aria-label={labels.mode} className="ui-design-workbench__modes" role="group">
         {modes.map((item) => (
           <button
-            aria-pressed={mode === item}
+            aria-pressed={activeMode === item}
             className="ui-design-workbench__mode"
             key={item}
-            onClick={() => onModeChange(item)}
+            onClick={() => {
+              if (item === "describe") setRailCollapsed(false);
+              onModeChange(item);
+            }}
             type="button"
           >
             {labels[item]}
           </button>
         ))}
+        {labels.showRail && labels.hideRail ? <Button
+          className="ui-design-workbench__rail-toggle"
+          aria-expanded={!railCollapsed}
+          onClick={() => setRailCollapsed((current) => !current)}
+          size="sm"
+          variant="ghost"
+        >{railCollapsed ? labels.showRail : labels.hideRail}</Button> : null}
       </div>
       <section
         aria-label={labels.rail}
@@ -212,13 +234,21 @@ export function DesignWorkbench({
         aria-label={labels.editor}
         className="ui-design-workbench__pane ui-design-workbench__editor"
         data-design-pane="design"
+        hidden={activeMode === "test" || activeMode === "review"}
       >
         {editor}
       </section>
+      {hasTest ? <section
+        aria-label={labels.testPanel}
+        className="ui-design-workbench__pane ui-design-workbench__test"
+        data-design-pane="test"
+        hidden={activeMode !== "test"}
+      >{test}</section> : null}
       <section
         aria-label={labels.reviewPanel}
         className="ui-design-workbench__pane ui-design-workbench__review"
         data-design-pane="review"
+        hidden={activeMode !== "review"}
       >
         {review}
       </section>

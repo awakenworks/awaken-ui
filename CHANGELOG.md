@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.12.0
+
+- Extend DesignWorkbench with optional product-owned Test content and a
+  collapsible assistant rail. Design, Test and Review share the main workspace;
+  content stays mounted so drafts, conversations and test tasks survive switches.
+- Show the mode controls on desktop as well as mobile. Consumers must open
+  Review explicitly; it no longer competes with the editor below the fold.
+- Correct the component inventory to the frontend-owned Console artifact format.
+
 ## 0.11.1
 
 - Preserve rich placeholder node identity by name and occurrence when a
