@@ -39,6 +39,14 @@ and resizing execute no recovery callback; native action activation reports
 the same caller intent. Products neither copy this layout nor reinterpret it
 as availability, permission or retry authority.
 
+`DesignWorkbench` owns one transient rail preference and its mounted panes.
+Products may choose an initially collapsed rail for focused manual editing;
+omitting that optional input preserves the existing expanded default. Later
+default-input changes do not override the user's choice. Controlled Describe
+reveals the same rail without changing its retained preference; collapse uses
+native hidden semantics without discarding inputs, conversations or test state.
+The product still owns mode selection, availability and all command effects.
+
 ## Optional internationalization engine
 
 `@awaken/ui/i18n` is the one product-neutral owner of locale resolution,

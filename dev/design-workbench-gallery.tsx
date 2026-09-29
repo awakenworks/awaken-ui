@@ -4,6 +4,7 @@ import familyTheme from "../src/styles/family.css?raw";
 
 export function DesignWorkbenchGallery() {
   const [mode, setMode] = useState<DesignWorkbenchMode>("design");
+  const parameters = new URLSearchParams(window.location.search);
   return <main className="workbench-gallery">
     <style>{familyTheme}</style>
     <style>{`
@@ -15,6 +16,8 @@ export function DesignWorkbenchGallery() {
     <header>Long-form authoring layout <Button onClick={() => setMode("describe")}>Request assistance</Button></header>
     <div className="workbench-gallery__scroll">
       <DesignWorkbench mode={mode} onModeChange={setMode}
+        defaultRailCollapsed={parameters.get("rail") === "collapsed"}
+        railPosition={parameters.get("side") === "end" ? "end" : "start"}
         labels={{ mode: "Design modes", describe: "Describe", design: "Design", test: "Test", review: "Review",
           rail: "Design assistant", editor: "Structured design", testPanel: "Test workspace", reviewPanel: "Review workspace",
           showRail: "Show assistant", hideRail: "Hide assistant" }}

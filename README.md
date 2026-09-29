@@ -117,6 +117,12 @@ An operational announcement may compose `InlineNotice`, but announcement
 delivery, audience filtering, expiry, priority, and dismissal persistence stay
 in the consuming product.
 
+For focused manual editing, pass `defaultRailCollapsed` to `DesignWorkbench`.
+It sets only the initial rail preference; omit it to retain the expanded default.
+The existing mode controls and caller-labelled show/hide action reveal the same
+mounted content. Controlled `mode="describe"` also reveals the rail without
+resetting its retained preference. Products still own modes and every command.
+
 The icon and event-marker slots are decorative; repeat their meaning in text.
 Before releasing or migrating these primitives, follow the automated and
 manual gates in [docs/accessibility-validation.md](docs/accessibility-validation.md).

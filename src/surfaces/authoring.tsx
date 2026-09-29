@@ -165,6 +165,10 @@ export interface DesignWorkbenchProps {
   readonly test?: ReactNode;
   readonly footer?: ReactNode;
   readonly railPosition?: "start" | "end";
+  /** Initial presentation preference only; omitted retains the expanded rail.
+   * Describe always reveals the mounted rail. Later prop changes never reset
+   * the user's preference or the caller-owned content. */
+  readonly defaultRailCollapsed?: boolean;
   readonly className?: string;
 }
 
@@ -186,9 +190,10 @@ export function DesignWorkbench({
   test,
   footer,
   railPosition = "start",
+  defaultRailCollapsed = false,
   className,
 }: DesignWorkbenchProps) {
-  const [railCollapsed, setRailCollapsed] = useState(false);
+  const [railCollapsed, setRailCollapsed] = useState(defaultRailCollapsed);
   const hasTest = test !== undefined && Boolean(labels.test && labels.testPanel);
   const activeMode = mode === "test" && !hasTest ? "design" : mode;
   // A product can open Describe after a repair/test request. Derive its visible
@@ -234,6 +239,7 @@ export function DesignWorkbench({
         aria-label={labels.rail}
         className="ui-design-workbench__pane ui-design-workbench__rail"
         data-design-pane="describe"
+        hidden={collapsed}
       >
         {rail}
       </section>

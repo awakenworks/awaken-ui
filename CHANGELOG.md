@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.14.0
+
+- Add optional `DesignWorkbench.defaultRailCollapsed` so products can start
+  manual design with the main editor at full width. Omission preserves the
+  existing expanded default; later default changes do not reset user choices.
+- Collapse uses native hidden semantics while retaining the same mounted rail.
+  Describe and explicit expansion preserve unsent inputs and test content.
+  Products retain mode, availability, conversation and command ownership.
+
 ## 0.13.2
 
 - Keep neutral empty-state titles, explanations and actions stacked instead of

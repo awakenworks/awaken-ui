@@ -8,6 +8,45 @@ import { expect, test } from "@playwright/test";
 // W5 collapsed rail + product-controlled Describe -> visible assistant, same
 // draft; hide from Describe -> Design, not an empty conversation viewport.
 for (const direction of ["ltr", "rtl"]) {
+  for (const width of [320, 1280]) for (const side of ["start", "end"]) {
+    test(`initially collapsed ${side} rail gives ${width}px ${direction} editing the full width`, async ({ page }) => {
+      // I1 initially collapsed + either rail side/direction/viewport -> no
+      // empty reserved column and no accessible conversation controls. I2 user
+      // Describe/reopen -> same mounted values; Design restores the full main
+      // task. Native controls remain keyboard reachable, with zero overflow.
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`/workbench?rail=collapsed&side=${side}`);
+      await page.evaluate((dir) => { document.documentElement.dir = dir; }, direction);
+      const editor = page.getByRole("region", { name: "Structured design" });
+      const workbench = page.locator(".ui-design-workbench");
+      const assertFocusedWidth = async () => {
+        const available = await workbench.boundingBox();
+        const focused = await editor.boundingBox();
+        expect(focused!.width).toBeGreaterThanOrEqual(available!.width * 0.99);
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      };
+      await assertFocusedWidth();
+      await expect(page.getByRole("textbox", { name: "Assistant message" })).toHaveCount(0);
+      await page.getByLabel("Design field 1", { exact: true }).fill("focused manual draft");
+      const modes = page.getByRole("group", { name: "Design modes" });
+      const describe = modes.getByRole("button", { name: "Describe", exact: true });
+      await describe.focus();
+      await describe.press("Enter");
+      await page.getByLabel("Assistant message").fill("retained optional request");
+      await modes.getByRole("button", { name: "Design", exact: true }).click();
+      await expect(page.getByLabel("Design field 1", { exact: true })).toHaveValue("focused manual draft");
+      if (width >= 640) {
+        const hide = modes.getByRole("button", { name: "Hide assistant" });
+        await hide.click();
+        await assertFocusedWidth();
+        const show = modes.getByRole("button", { name: "Show assistant" });
+        await expect(show).toBeFocused();
+        await show.press("Enter");
+      } else await describe.click();
+      await expect(page.getByLabel("Assistant message")).toHaveValue("retained optional request");
+    });
+  }
+
   test(`desktop ${direction} workbench retains reachable controls and drafts`, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto("/workbench");

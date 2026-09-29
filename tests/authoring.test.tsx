@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { AuthoringGuide, AuthoringHeader, DesignWorkbench } from "../src/index.js";
 
@@ -118,6 +119,47 @@ describe("authoring chrome", () => {
     expect(container.firstElementChild).toHaveAttribute("data-rail-collapsed", "true");
     fireEvent.click(screen.getByRole("button", { name: "Show assistant" }));
     expect(screen.getByRole("textbox", { name: "Message" })).toHaveValue("Unsent");
+  });
+
+  it.each(["design", "test", "review"] as const)("starts focused in %s without unmounting the optional assistant", async (mode) => {
+    // DT-INITIAL: I1 explicit initially collapsed + a non-Describe mode ->
+    // native hidden rail, full-width main pane and no mode callback. I2 keyboard
+    // expansion -> same mounted message; collapse/reopen -> same unsent input
+    // and focused toggle. I3 later default prop changes -> no mirrored reset.
+    // I4 externally selected Describe -> reveal even while preference is
+    // collapsed; return to prior mode -> retain preference and both drafts.
+    // Legacy omitted/default-false behavior remains covered by the other rules.
+    const user = userEvent.setup();
+    const props = {
+      defaultRailCollapsed: true,
+      labels: { mode: "Mode", describe: "Describe", design: "Design", test: "Test", review: "Review",
+        rail: "Assistant", editor: "Editor", testPanel: "Test run", reviewPanel: "Changes",
+        showRail: "Show assistant", hideRail: "Hide assistant" },
+      onModeChange: vi.fn(), rail: <input aria-label="Message" defaultValue="Unsent request" />,
+      editor: <input aria-label="Draft" defaultValue="Unsent edit" />,
+      test: <p>Run</p>, review: <p>Changes</p>,
+    };
+    const { rerender } = render(<DesignWorkbench {...props} mode={mode} />);
+    const rail = screen.getByLabelText("Assistant");
+    expect(rail).toHaveAttribute("hidden");
+    expect(screen.queryByRole("textbox", { name: "Message" })).not.toBeInTheDocument();
+    const toggle = screen.getByRole("button", { name: "Show assistant" });
+    toggle.focus();
+    await user.keyboard("{Enter}");
+    const message = screen.getByRole("textbox", { name: "Message" });
+    await user.type(message, " kept");
+    await user.click(screen.getByRole("button", { name: "Hide assistant" }));
+    expect(toggle).toHaveFocus();
+    rerender(<DesignWorkbench {...props} defaultRailCollapsed={false} mode={mode} />);
+    expect(rail).toHaveAttribute("hidden");
+    rerender(<DesignWorkbench {...props} mode="describe" />);
+    expect(rail).not.toHaveAttribute("hidden");
+    expect(screen.getByRole("textbox", { name: "Message" })).toBe(message);
+    expect(message).toHaveValue("Unsent request kept");
+    rerender(<DesignWorkbench {...props} mode={mode} />);
+    expect(rail).toHaveAttribute("hidden");
+    expect(screen.getByRole("textbox", { name: "Draft", hidden: true })).toHaveValue("Unsent edit");
+    expect(props.onModeChange).not.toHaveBeenCalled();
   });
 
   it.each(["design", "test", "review"] as const)("opens controlled Describe after a collapsed %s without losing inputs", (mode) => {
