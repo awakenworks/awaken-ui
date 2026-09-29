@@ -8,6 +8,7 @@ const aggregate = readFileSync(resolve(root, "components.css"), "utf8");
 const core = readFileSync(resolve(root, "components-core.css"), "utf8");
 const chat = readFileSync(resolve(root, "components-chat.css"), "utf8");
 const forms = readFileSync(resolve(root, "components-forms-data.css"), "utf8");
+const layout = readFileSync(resolve(root, "components-layout-navigation.css"), "utf8");
 
 function cssBlockDepth(source: string): { minimum: number; final: number } {
   const structural = source
@@ -24,6 +25,14 @@ function cssBlockDepth(source: string): { minimum: number; final: number } {
 }
 
 describe("shared browser styling", () => {
+  it("does not confuse neutral block tone with compact loading-row layout", () => {
+    // S1 EmptyState neutral tone -> original stacked grid; S2 LoadingRow's
+    // existing status role -> compact flex. Tone alone cannot choose row layout.
+    // Browser geometry separately crosses token/viewport/direction and actions.
+    expect(layout).toMatch(/\.ui-state--neutral\[role="status"\]\s*\{/);
+    expect(layout).not.toMatch(/\.ui-state--neutral\s*\{/);
+    expect(layout).toMatch(/\.ui-state h2,\s*\.ui-state p\s*\{[^}]*overflow-wrap:\s*anywhere/s);
+  });
   // Cause/effect: consumers import one stylesheet; every shared recipe must be
   // reachable once in cascade order, including icon layout before controls.
   it("keeps the public component stylesheet as the single ordered entry point", () => {

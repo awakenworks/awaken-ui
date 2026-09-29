@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.13.2
+
+- Keep neutral empty-state titles, explanations and actions stacked instead of
+  squeezing them into the loading-row recipe. Existing status loading rows
+  remain compact; long translated and unbroken text wraps inside either layout.
+- No component prop, DOM, token, callback, artifact or product-state change.
+
 ## 0.13.1
 
 - Reveal the mounted assistant when a product opens Describe after a test or

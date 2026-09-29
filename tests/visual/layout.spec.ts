@@ -1,5 +1,54 @@
 import { expect, test } from "@playwright/test";
 
+// State geometry cause/effect table:
+// S1 neutral EmptyState -> stacked title/body/action, not a loading row;
+// S2 danger ErrorState -> the same block structure; S3 LoadingState/LoadingRow
+// -> compact flex status rows. Cross both token profiles, narrow/wide and RTL.
+// Long translated/unbroken content stays inside its owner; each native action
+// is keyboard reachable and fires once. CSS never infers a product/API state.
+for (const profile of ["Awaken", "Oversight"]) {
+  for (const width of [320, 1280]) {
+    for (const direction of ["ltr", "rtl"]) {
+      test(`feedback blocks ${profile}/${width}/${direction} preserve readable order and actions`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto("/feedback");
+        await page.getByRole("button", { name: `${profile} tokens` }).click();
+        await page.evaluate((dir) => { document.documentElement.dir = dir; }, direction);
+        const scene = page.getByRole("region", { name: "Feedback states" });
+        // Geometry uses the public styling hook so changing fixture text does
+        // not invalidate the locator. Interaction still uses native roles.
+        const empty = scene.locator(".ui-state--neutral").filter({ has: page.getByRole("heading") });
+        const error = scene.locator(".ui-state--danger");
+        for (const block of [empty, error]) {
+          await block.locator("h2").evaluate((node) => { node.textContent = "لا توجد بيانات متاحة · 未找到匹配记录"; });
+          await block.locator("p").evaluate((node) => { node.textContent = "UnbrokenLocalizedRecoveryIdentifier".repeat(6); });
+          await expect(block).toHaveCSS("display", "grid");
+          const heading = await block.locator("h2").boundingBox();
+          const body = await block.locator("p").boundingBox();
+          const action = await block.getByRole("button").boundingBox();
+          const box = await block.boundingBox();
+          expect(body!.y).toBeGreaterThanOrEqual(heading!.y + heading!.height);
+          expect(action!.y).toBeGreaterThanOrEqual(body!.y + body!.height);
+          expect(body!.x).toBeGreaterThanOrEqual(box!.x);
+          expect(body!.x + body!.width).toBeLessThanOrEqual(box!.x + box!.width + 1);
+        }
+        for (const status of await scene.getByRole("status").filter({ hasText: /^Loading/ }).all()) await expect(status).toHaveCSS("display", "flex");
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+        const create = scene.getByRole("button", { name: "Create record" });
+        await create.focus();
+        await page.keyboard.press("Enter");
+        await expect(scene.getByLabel("Feedback action count")).toHaveText("1");
+        await scene.getByRole("button", { name: "Retry records" }).focus();
+        await page.keyboard.press("Enter");
+        await expect(scene.getByLabel("Feedback action count")).toHaveText("2");
+        if (width === 1280 && direction === "ltr") {
+          await expect(scene).toHaveScreenshot(`feedback-states-${profile.toLowerCase()}.png`);
+        }
+      });
+    }
+  }
+}
+
 // Description rules D1-D6: authored columns (2/3) x viewport (360/640/1280).
 // At <=40rem every list becomes one column; above it authored columns win.
 // Zero values, long identifiers and native term/detail structure remain intact.

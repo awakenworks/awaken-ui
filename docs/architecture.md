@@ -31,6 +31,14 @@ dismissal, controlled component state, and transient UI state. A consuming
 product owns the trigger, copy, authorization hint, domain draft, mutation,
 retry, cache invalidation, and terminal result.
 
+Feedback states retain one shared structural recipe. Empty/error blocks stack
+caller-owned title, explanation and recovery action; existing status loading
+rows remain compact. Neutral tone is not a row-layout decision. Translated and
+unbroken content wraps within the state owner in either direction. Rendering
+and resizing execute no recovery callback; native action activation reports
+the same caller intent. Products neither copy this layout nor reinterpret it
+as availability, permission or retry authority.
+
 ## Optional internationalization engine
 
 `@awaken/ui/i18n` is the one product-neutral owner of locale resolution,

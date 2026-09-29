@@ -70,6 +70,7 @@
 
 .ui-state {
   display: grid;
+  min-inline-size: 0;
   justify-items: center;
   gap: var(--ui-space-2);
   padding: var(--ui-space-6);
@@ -82,7 +83,7 @@
 }
 
 .ui-state--loading,
-.ui-state--neutral {
+.ui-state--neutral[role="status"] {
   display: flex;
   justify-content: flex-start;
   padding: var(--ui-space-3);
@@ -92,6 +93,9 @@
 .ui-state h2,
 .ui-state p {
   margin: 0;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
 }
 
 .ui-inline-notice {

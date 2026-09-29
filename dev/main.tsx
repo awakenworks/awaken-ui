@@ -26,6 +26,10 @@ import {
   EventTime,
   IdentityCard,
   InlineNotice,
+  EmptyState,
+  ErrorState,
+  LoadingState,
+  LoadingRow,
   JsonInspector,
   MenuPopover,
   ReasoningBlock,
@@ -76,6 +80,7 @@ function Gallery() {
   const [gridSort, setGridSort] = useState("name");
   const [switchEnabled, setSwitchEnabled] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
+  const [stateActionCount, setStateActionCount] = useState(0);
 
   return (
     <main className="gallery">
@@ -432,6 +437,16 @@ function Gallery() {
       >
         Product-owned detail content.
       </Drawer>
+      {window.location.pathname === "/feedback" ? <section aria-label="Feedback states">
+        <h2>Feedback states</h2>
+        <EmptyState title="No matching records" body="Choose another filter or create a reviewed record."
+          action={{ label: "Create record", onClick: () => setStateActionCount((count) => count + 1) }} />
+        <ErrorState title="Records unavailable" body="The original read can be retried without creating a record."
+          action={{ label: "Retry records", onClick: () => setStateActionCount((count) => count + 1) }} />
+        <LoadingState label="Loading records" />
+        <LoadingRow label="Loading current page" />
+        <output aria-label="Feedback action count">{stateActionCount}</output>
+      </section> : null}
     <BrandGallery />
     </main>
   );
