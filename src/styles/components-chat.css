@@ -176,8 +176,14 @@
   grid-template-columns: auto minmax(0, 1fr) auto auto;
 }
 
+.ui-chat-tool__icon { grid-column: 1; grid-row: 1; }
+.ui-chat-tool__name { grid-column: 2; grid-row: 1; }
+.ui-chat-tool__status { grid-column: 3; grid-row: 1; }
+.ui-chat-tool__chevron { grid-column: 4; grid-row: 1; }
+
 .ui-chat-tool__badges {
   grid-column: 1 / -1;
+  grid-row: 2;
   display: flex;
   min-inline-size: 0;
   flex-wrap: wrap;

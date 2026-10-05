@@ -70,7 +70,11 @@ describe("shared browser styling", () => {
     // bounded width; B2 no badge -> empty lane hidden; action/status remain
     // in the original button, preserving keyboard and approval semantics.
     expect(chat).toMatch(/\.ui-chat-tool__header\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*auto minmax\(0, 1fr\) auto auto/s);
+    for (const [part, column] of [["icon", 1], ["name", 2], ["status", 3], ["chevron", 4]] as const) {
+      expect(chat).toMatch(new RegExp(`\\.ui-chat-tool__${part}\\s*\\{[^}]*grid-column:\\s*${column};\\s*grid-row:\\s*1`));
+    }
     expect(chat).toMatch(/\.ui-chat-tool__badges\s*\{[^}]*grid-column:\s*1 \/ -1;[^}]*flex-wrap:\s*wrap/s);
+    expect(chat).toMatch(/\.ui-chat-tool__badges\s*\{[^}]*grid-row:\s*2/s);
     expect(chat).toMatch(/\.ui-chat-tool__badges:empty\s*\{\s*display:\s*none/s);
     expect(chat).toMatch(/\.ui-chat-tool__badges \.ui-status-pill\s*\{[^}]*max-inline-size:\s*100%;[^}]*white-space:\s*normal/s);
   });
