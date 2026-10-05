@@ -341,6 +341,21 @@
   border-radius: var(--ui-radius-control);
 }
 
+/* A model can return a GFM table wider than a phone chat bubble. Keep the
+   native table semantics, but contain its columns and wrap long cell values
+   instead of shifting the entire conversation viewport sideways. */
+.ui-chat-markdown table {
+  inline-size: 100%;
+  max-inline-size: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.ui-chat-markdown :is(th, td) {
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+
 .ui-chat-code {
   position: relative;
 }

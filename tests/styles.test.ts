@@ -55,6 +55,16 @@ describe("shared browser styling", () => {
     expect(`${core}\n${chat}\n${forms}`).not.toContain("::-webkit-scrollbar");
   });
 
+  it("contains Markdown tables inside narrow chat bubbles without replacing table semantics", () => {
+    // T1 model returns a GFM table with long field names/values + narrow
+    // bubble -> table keeps native display, uses the bubble width and wraps
+    // cells; T2 ordinary prose/code and application DataTable stay on their
+    // existing recipes. Browser geometry is verified in a consuming product.
+    expect(forms).toMatch(/\.ui-chat-markdown table\s*\{[^}]*inline-size:\s*100%;[^}]*max-inline-size:\s*100%;[^}]*table-layout:\s*fixed/s);
+    expect(forms).toMatch(/\.ui-chat-markdown :is\(th, td\)\s*\{[^}]*overflow-wrap:\s*anywhere/s);
+    expect(forms).not.toMatch(/\.ui-chat-markdown table\s*\{[^}]*display\s*:/s);
+  });
+
   it("themes native fields without replacing their platform behavior", () => {
     expect(forms).toMatch(/\.ui-input::placeholder\s*\{[^}]*var\(--ui-color-text-muted\)/s);
     expect(forms).toMatch(/\.ui-input:disabled\s*\{[^}]*cursor:\s*not-allowed/s);

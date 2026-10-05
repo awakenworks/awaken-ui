@@ -90,7 +90,7 @@ adapter; it is not a product-owned dialog implementation.
 Notable consolidations discovered during the audit:
 
 - Oversight Markdown now delegates detection, code-block wrapping, clipboard
-  status, failure handling, and timer cleanup to shared `ChatMarkdown`; it keeps
+  status, failure handling, timer cleanup, and narrow GFM table layout to shared `ChatMarkdown`; it keeps
   only its sanitized link renderer and Mermaid enhancement.
 - Oversight Modal and Drawer now delegate semantic DOM, focus, dismissal,
   portal, title, close control, body, and footer structure to the shared

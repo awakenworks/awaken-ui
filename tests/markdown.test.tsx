@@ -43,6 +43,17 @@ describe("safe chat markdown", () => {
     expect(screen.getByRole("button", { name: "Copy code" })).toBeInTheDocument();
   });
 
+  it("retains native table headers and cells for a model's account/result summary", () => {
+    // M6: table Markdown + long identity field -> one semantic table with
+    // readable header/cell text; product-neutral CSS owns its narrow width.
+    render(<ChatMarkdown body={"| Field | Value |\n| --- | --- |\n| credential_account | Personal |"}
+      copyCodeLabel="Copy" copiedCodeLabel="Copied" copyFailedLabel="Failed" />);
+    expect(screen.getByRole("table")).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Field" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "credential_account" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "Personal" })).toBeInTheDocument();
+  });
+
   it.each([false, true])("retains one working copy action across rerenders (strict=%s)", async (strict) => {
     // M graph: normal/StrictMode mount x same content/class/labels/new content.
     // M1 every commit retains exactly one reachable action; M2 repeated identical
