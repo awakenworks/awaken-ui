@@ -38,6 +38,7 @@ import {
   SelectField,
   StatCard,
   StatGrid,
+  StatusPill,
   Tab,
   TabList,
   TabNav,
@@ -48,6 +49,7 @@ import {
   TextAreaField,
   TextField,
   ToolCallGroup,
+  ToolCallCard,
   ToastProvider,
   useConfirm,
   useToast,
@@ -170,6 +172,18 @@ function Gallery() {
             stopLabel="Stop"
             hint="Ctrl/Cmd+Enter to send"
           />
+        </div>
+      </section>
+
+      <section>
+        <h2>Long tool identity</h2>
+        <div style={{ inlineSize: 274, maxInlineSize: "100%" }}>
+          <ToolCallCard name="read_source" statusLabel="running" tone="running" input="{}"
+            labels={{ input: "Input", output: "Result", inputAriaLabel: "Tool input", outputAriaLabel: "Tool result" }}
+            badges={<>
+              <StatusPill>MCP · controlled-source-12345678</StatusPill>
+              <StatusPill>ask</StatusPill>
+            </>} />
         </div>
       </section>
 
