@@ -3,6 +3,7 @@ import {
   ChatApproval,
   ChatComposer,
   ChatMessage,
+  ToolCallCard,
   ToolCallGroup,
   aggregateToolCallTone,
   formatChatTime,
@@ -61,6 +62,18 @@ describe("chat", () => {
     expect(aggregateToolCallTone(calls)).toBe("error");
     render(<ToolCallGroup calls={calls} summaryLabel="2 calls" labels={labels} />);
     expect(screen.getByText("read")).toBeInTheDocument();
+  });
+
+  it("keeps long external badges in their own tool-header row", () => {
+    // B1 long badge + narrow card -> one contained badge lane after the
+    // action/status row; B2 no badge -> no visible empty lane. Exact tool
+    // identity and consumer-owned status still render unchanged.
+    const { rerender } = render(<ToolCallCard name="read_source" statusLabel="done" tone="done"
+      input="{}" labels={labels} badges={<span className="ui-status-pill">MCP · controlled-source-12345678</span>} />);
+    expect(screen.getByRole("button", { name: /read_source/ })).toHaveTextContent("MCP · controlled-source-12345678");
+    expect(document.querySelector(".ui-chat-tool__badges .ui-status-pill")).toBeInTheDocument();
+    rerender(<ToolCallCard name="read_source" statusLabel="done" tone="done" input="{}" labels={labels} />);
+    expect(document.querySelector(".ui-chat-tool__badges")).toBeEmptyDOMElement();
   });
 
   it("delegates approval decisions to the consumer", () => {

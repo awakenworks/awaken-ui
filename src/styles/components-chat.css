@@ -168,6 +168,31 @@
   border: 0;
 }
 
+/* Tool badges may contain a long external identity. Keep the action/status
+   readable on the first row and wrap badges inside the card, not by shifting
+   the entire chat viewport horizontally. */
+.ui-chat-tool__header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+}
+
+.ui-chat-tool__badges {
+  grid-column: 1 / -1;
+  display: flex;
+  min-inline-size: 0;
+  flex-wrap: wrap;
+  gap: var(--ui-space-1);
+  overflow-wrap: anywhere;
+}
+
+.ui-chat-tool__badges:empty { display: none; }
+
+.ui-chat-tool__badges .ui-status-pill {
+  max-inline-size: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 .ui-chat-tool__name,
 .ui-chat-tool-group > button > :nth-child(2),
 .ui-chat-reasoning > button > :nth-child(2) {

@@ -65,6 +65,16 @@ describe("shared browser styling", () => {
     expect(forms).not.toMatch(/\.ui-chat-markdown table\s*\{[^}]*display\s*:/s);
   });
 
+  it("contains long tool badges without scrolling the whole conversation sideways", () => {
+    // B1 external identity badge + narrow chat -> second row with wrap and
+    // bounded width; B2 no badge -> empty lane hidden; action/status remain
+    // in the original button, preserving keyboard and approval semantics.
+    expect(chat).toMatch(/\.ui-chat-tool__header\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*auto minmax\(0, 1fr\) auto auto/s);
+    expect(chat).toMatch(/\.ui-chat-tool__badges\s*\{[^}]*grid-column:\s*1 \/ -1;[^}]*flex-wrap:\s*wrap/s);
+    expect(chat).toMatch(/\.ui-chat-tool__badges:empty\s*\{\s*display:\s*none/s);
+    expect(chat).toMatch(/\.ui-chat-tool__badges \.ui-status-pill\s*\{[^}]*max-inline-size:\s*100%;[^}]*white-space:\s*normal/s);
+  });
+
   it("themes native fields without replacing their platform behavior", () => {
     expect(forms).toMatch(/\.ui-input::placeholder\s*\{[^}]*var\(--ui-color-text-muted\)/s);
     expect(forms).toMatch(/\.ui-input:disabled\s*\{[^}]*cursor:\s*not-allowed/s);

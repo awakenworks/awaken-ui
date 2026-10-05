@@ -57,7 +57,7 @@ export function ToolCallCard({
       >
         <span className={cx("ui-chat-tool__icon", classes?.icon)} aria-hidden="true">{icon ?? toneMark(tone)}</span>
         <span className={cx("ui-chat-tool__name", classes?.name)}>{name}</span>
-        {badges}
+        <span className="ui-chat-tool__badges">{badges}</span>
         <span className={cx("ui-chat-tool__status", classes?.status)}>{statusLabel}</span>
         {hasDetail ? <span className={cx(classes?.chevron, open && "is-open")} data-open={open || undefined} aria-hidden="true">{expandIcon ?? (open ? <ChevronDown /> : <ChevronRight />)}</span> : null}
       </button>

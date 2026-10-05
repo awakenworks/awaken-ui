@@ -92,6 +92,8 @@ Notable consolidations discovered during the audit:
 - Oversight Markdown now delegates detection, code-block wrapping, clipboard
   status, failure handling, timer cleanup, and narrow GFM table layout to shared `ChatMarkdown`; it keeps
   only its sanitized link renderer and Mermaid enhancement.
+- Shared `ToolCallCard` keeps action/status and arbitrarily long caller badges
+  inside its own card at narrow widths; products still own badge meaning and copy.
 - Oversight Modal and Drawer now delegate semantic DOM, focus, dismissal,
   portal, title, close control, body, and footer structure to the shared
   components. Product adapters supply class slots, Lucide icons, translations,
