@@ -1,16 +1,16 @@
 import {
   createElement,
   useCallback,
-  useEffect,
   useRef,
   type HTMLAttributes,
   type ReactNode,
   type RefObject,
 } from "react";
-import { HeadlessDialog } from "../internal/headless/dialog.js";
+import { HeadlessDialog, modalOpenChange } from "../internal/headless/dialog.js";
 
 export interface DialogSurfaceProps {
   readonly open: boolean;
+  /** Return false to decline dismissal without processing close focus. */
   readonly onOpenChange: (open: boolean) => void;
   readonly children: ReactNode;
   readonly rootClassName?: string;
@@ -46,69 +46,25 @@ export function DialogSurface({
   closeOnBackdrop = true,
   panelProps,
 }: DialogSurfaceProps) {
-  const returnFocusRef = useRef<HTMLElement | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
-  const activePanelRef = useRef<HTMLDivElement | null>(null);
   const setPanelRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (panelRef) panelRef.current = node;
-      activePanelRef.current = node;
-      if (!node || !open) return;
-      returnFocusRef.current =
-        document.activeElement instanceof HTMLElement ? document.activeElement : null;
-      node
-        .querySelector<HTMLElement>(
-          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
-        )
-        ?.focus();
     },
-    [open, panelRef],
+    [panelRef],
   );
-
-  useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key !== "Tab") return;
-      const panel = activePanelRef.current;
-      if (!panel) return;
-      const focusable = Array.from(
-        panel.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
-        ),
-      );
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last?.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first?.focus();
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open]);
 
   if (!open) return null;
 
   return (
     <div
       className={rootClassName}
-      onMouseDown={(event) => {
-        if (closeOnBackdrop && event.target === event.currentTarget) {
-          onOpenChange(false);
-        }
-      }}
       ref={rootRef}
       role="presentation"
     >
       <HeadlessDialog.Root
         disablePointerDismissal={!closeOnBackdrop}
-        onOpenChange={(nextOpen) => {
-          onOpenChange(nextOpen);
-          if (!nextOpen) returnFocusRef.current?.focus();
-        }}
+        onOpenChange={modalOpenChange(onOpenChange)}
         open={open}
       >
         <HeadlessDialog.Portal
@@ -118,9 +74,6 @@ export function DialogSurface({
           {overlayClassName ? (
             <HeadlessDialog.Backdrop
               className={overlayClassName}
-              onMouseDown={
-                closeOnBackdrop ? () => onOpenChange(false) : undefined
-              }
             />
           ) : null}
           <HeadlessDialog.Viewport className="ui-dialog-surface__viewport">

@@ -4,8 +4,9 @@ import {
   useId,
   type HTMLAttributes,
   type ReactNode,
+  type RefObject,
 } from "react";
-import { HeadlessDialog } from "../internal/headless/dialog.js";
+import { HeadlessDialog, modalOpenChange } from "../internal/headless/dialog.js";
 import { cx } from "../internal/cx.js";
 import { Button } from "../primitives/button.js";
 
@@ -24,6 +25,7 @@ export type DialogClasses = {
 export interface DialogProps
   extends Omit<HTMLAttributes<HTMLDivElement>, "title"> {
   readonly open: boolean;
+  /** Return false to decline dismissal without processing close focus. */
   readonly onOpenChange: (open: boolean) => void;
   readonly title: ReactNode;
   readonly description?: ReactNode;
@@ -33,6 +35,9 @@ export interface DialogProps
   readonly closeLabel: string;
   readonly closeOnOutsidePress?: boolean;
   readonly initialFocus?: boolean;
+  /** Caller-owned opener for forms whose native autofocus precedes modal
+   * entry, or whose successful close unmounts the dialog immediately. */
+  readonly restoreFocusTo?: RefObject<HTMLElement | null>;
   readonly titleId?: string;
   readonly closeIcon?: ReactNode;
   readonly classes?: DialogClasses;
@@ -54,6 +59,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
       description,
       footer,
       initialFocus = true,
+      restoreFocusTo,
       onOpenChange,
       open,
       size = "md",
@@ -69,7 +75,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
     return (
       <HeadlessDialog.Root
         disablePointerDismissal={!closeOnOutsidePress}
-        onOpenChange={(nextOpen) => onOpenChange(nextOpen)}
+        onOpenChange={modalOpenChange(onOpenChange)}
         open={open}
       >
         <HeadlessDialog.Portal>
@@ -82,6 +88,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
               className={cx("ui-dialog", classes?.panel, className)}
               data-size={size}
               initialFocus={initialFocus}
+              finalFocus={restoreFocusTo}
               ref={ref}
             >
               <header className={cx("ui-dialog__header", classes?.header)}>

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.15.0
+
+- Add optional `Dialog.restoreFocusTo` for native-autofocused forms and immediate
+  successful unmounts. Products provide the opener; the existing headless modal
+  remains the sole focus-restoration owner.
+- Modal `onOpenChange` callbacks may return `false` to decline dismissal. One
+  private adapter cancels the engine transition, retaining modal focus until an
+  actual accepted close rather than leaving stale outside-dismissal state.
+- Remove the redundant document Tab trap and forced close focus from
+  `DialogSurface`; keyboard containment and restoration use the same modal
+  engine as other shared overlays.
+
 ## 0.14.0
 
 - Add optional `DesignWorkbench.defaultRailCollapsed` so products can start

@@ -1,5 +1,5 @@
 import { useId, useRef, type ReactNode } from "react";
-import { HeadlessAlertDialog } from "../internal/headless/dialog.js";
+import { HeadlessAlertDialog, modalOpenChange } from "../internal/headless/dialog.js";
 import { cx } from "../internal/cx.js";
 import { Button } from "../primitives/button.js";
 
@@ -31,6 +31,7 @@ export interface AlertDialogClasses {
 
 export interface AlertDialogProps {
   readonly open: boolean;
+  /** Return false to decline dismissal without processing close focus. */
   readonly onOpenChange: (open: boolean) => void;
   readonly title: ReactNode;
   readonly description?: ReactNode;
@@ -68,7 +69,7 @@ export function AlertDialog({
   const cancelRef = useRef<HTMLButtonElement>(null);
   return (
     <HeadlessAlertDialog.Root
-      onOpenChange={(nextOpen) => onOpenChange(nextOpen)}
+      onOpenChange={modalOpenChange(onOpenChange)}
       open={open}
     >
       <HeadlessAlertDialog.Portal>

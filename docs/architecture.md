@@ -31,6 +31,18 @@ dismissal, controlled component state, and transient UI state. A consuming
 product owns the trigger, copy, authorization hint, domain draft, mutation,
 retry, cache invalidation, and terminal result.
 
+An autofocused or conditionally mounted form can supply its exact opener through
+`Dialog.restoreFocusTo`. The shared modal forwards that product-neutral element
+reference to the existing headless focus owner; products do not add a focus
+timer or trap. `DialogSurface` likewise delegates focus entry, containment and
+return to that same engine instead of maintaining a document-level Tab handler
+or a competing manual restoration path. A rejected close keeps the modal open;
+the existing engine handles restoration only when the modal actually leaves.
+All modal presentations share one private refusal adapter: a caller's explicit
+`false` cancels the engine's transition instead of merely keeping controlled
+`open` true after a close event has already changed focus bookkeeping. This
+adds no event-detail type to the public contract and no separate focus owner.
+
 Feedback states retain one shared structural recipe. Empty/error blocks stack
 caller-owned title, explanation and recovery action; existing status loading
 rows remain compact. Neutral tone is not a row-layout decision. Translated and

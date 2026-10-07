@@ -5,7 +5,7 @@ import {
   type HTMLAttributes,
   type ReactNode,
 } from "react";
-import { HeadlessDialog } from "../internal/headless/dialog.js";
+import { HeadlessDialog, modalOpenChange } from "../internal/headless/dialog.js";
 import { cx } from "../internal/cx.js";
 import { Button } from "../primitives/button.js";
 
@@ -25,6 +25,7 @@ export type DrawerClasses = {
 export interface DrawerProps
   extends Omit<HTMLAttributes<HTMLDivElement>, "title"> {
   readonly open: boolean;
+  /** Return false to decline dismissal without processing close focus. */
   readonly onOpenChange: (open: boolean) => void;
   readonly title: ReactNode;
   readonly description?: ReactNode;
@@ -67,7 +68,7 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
     return (
       <HeadlessDialog.Root
         disablePointerDismissal={!closeOnOutsidePress}
-        onOpenChange={(nextOpen) => onOpenChange(nextOpen)}
+        onOpenChange={modalOpenChange(onOpenChange)}
         open={open}
       >
         <HeadlessDialog.Portal>
