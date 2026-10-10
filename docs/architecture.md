@@ -31,6 +31,11 @@ dismissal, controlled component state, and transient UI state. A consuming
 product owns the trigger, copy, authorization hint, domain draft, mutation,
 retry, cache invalidation, and terminal result.
 
+`JsonInspector` reuses the one icon-only `CopyButton` and its clipboard feedback.
+Caller-owned translated copy labels name the control and its tooltip; they do
+not replace icon geometry with text in a square button. Disclosure remains
+independent of copying and label changes, with no product transport effects.
+
 An autofocused or conditionally mounted form can supply its exact opener through
 `Dialog.restoreFocusTo`. The shared modal forwards that product-neutral element
 reference to the existing headless focus owner; products do not add a focus

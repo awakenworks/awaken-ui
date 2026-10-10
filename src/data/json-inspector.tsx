@@ -58,9 +58,7 @@ export function JsonInspector({
         </Button>
         <CopyButton
           className={cx("ui-json-inspector__copy", classes?.copy)}
-          copiedIcon={resolvedLabels.copied}
           copiedLabel={resolvedLabels.copied}
-          icon={resolvedLabels.copy}
           label={resolvedLabels.copy}
           value={text}
         />

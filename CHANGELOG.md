@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.15.1
+
+- Keep JSON copy controls icon-only, with translated accessible names and
+  tooltips. Long labels no longer wrap inside a square icon button. Disclosure,
+  source content, clipboard feedback and public props remain unchanged.
+
 ## 0.15.0
 
 - Add optional `Dialog.restoreFocusTo` for native-autofocused forms and immediate
