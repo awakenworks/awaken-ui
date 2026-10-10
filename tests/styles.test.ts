@@ -80,9 +80,13 @@ describe("shared browser styling", () => {
   });
 
   it("themes native fields without replacing their platform behavior", () => {
+    // DT-FIELD: readonly text input/textarea -> canvas; enabled select ->
+    // surface even though CSS :read-only matches native selects; disabled
+    // controls -> existing disabled recipe. Browser cases own computed colors.
     expect(forms).toMatch(/\.ui-input::placeholder\s*\{[^}]*var\(--ui-color-text-muted\)/s);
     expect(forms).toMatch(/\.ui-input:disabled\s*\{[^}]*cursor:\s*not-allowed/s);
-    expect(forms).toMatch(/\.ui-input:read-only:not\(:disabled\)\s*\{/);
+    expect(forms).toMatch(/input\.ui-input:read-only:not\(:disabled\),\s*textarea\.ui-input:read-only:not\(:disabled\)\s*\{/);
+    expect(forms).not.toMatch(/^\.ui-input:read-only/m);
     expect(forms).toMatch(/input\[type="checkbox"\][^{]*\{[^}]*accent-color:\s*var\(--ui-color-accent\)/s);
   });
 

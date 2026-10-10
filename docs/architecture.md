@@ -36,6 +36,10 @@ Caller-owned translated copy labels name the control and its tooltip; they do
 not replace icon geometry with text in a square button. Disclosure remains
 independent of copying and label changes, with no product transport effects.
 
+Native text-input read-only presentation does not apply to interactive selects
+merely because CSS `:read-only` matches them. Controls use caller-mapped semantic
+colors in their presentation partition; disabled state remains independent.
+
 An autofocused or conditionally mounted form can supply its exact opener through
 `Dialog.restoreFocusTo`. The shared modal forwards that product-neutral element
 reference to the existing headless focus owner; products do not add a focus

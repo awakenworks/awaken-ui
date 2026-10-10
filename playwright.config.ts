@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+const port = process.env.PLAYWRIGHT_PORT ?? "4173";
 
 export default defineConfig({
   testDir: "./tests/visual",
@@ -6,12 +7,12 @@ export default defineConfig({
   reporter: "line",
   use: {
     ...devices["Desktop Chrome"],
-    baseURL: "http://127.0.0.1:4173",
+    baseURL: `http://127.0.0.1:${port}`,
     colorScheme: "light",
   },
   webServer: {
-    command: "pnpm dev --host 127.0.0.1",
-    url: "http://127.0.0.1:4173",
-    reuseExistingServer: true,
+    command: `pnpm dev --host 127.0.0.1 --port ${port}`,
+    url: `http://127.0.0.1:${port}`,
+    reuseExistingServer: false,
   },
 });

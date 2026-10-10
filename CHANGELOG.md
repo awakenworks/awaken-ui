@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.15.2
+
+- Restrict read-only field backgrounds to native inputs and textareas.
+  Interactive selects retain their surface color, including controls in an
+  isolated dark presentation context. Disabled controls keep their recipe.
+
 ## 0.15.1
 
 - Keep JSON copy controls icon-only, with translated accessible names and

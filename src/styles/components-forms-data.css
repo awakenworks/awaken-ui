@@ -87,7 +87,8 @@
   opacity: 0.7;
 }
 
-.ui-input:read-only:not(:disabled) {
+input.ui-input:read-only:not(:disabled),
+textarea.ui-input:read-only:not(:disabled) {
   background: var(--ui-color-canvas);
 }
 
