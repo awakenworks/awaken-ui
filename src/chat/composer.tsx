@@ -15,7 +15,9 @@ export type ChatComposerSendMode = "modifier-enter" | "enter";
 export function resizeComposerToContent(textarea: HTMLTextAreaElement | null): void {
   if (!textarea) return;
   textarea.style.height = "auto";
-  textarea.style.height = `${textarea.scrollHeight}px`;
+  const height = textarea.scrollHeight;
+  // A mounted hidden pane has no layout. Keep native rows until it is visible.
+  if (height > 0) textarea.style.height = `${height}px`;
 }
 
 export function useAutoGrowingComposer(value: string): {
@@ -25,6 +27,21 @@ export function useAutoGrowingComposer(value: string): {
   const ref = useRef<HTMLTextAreaElement>(null);
   const resize = useCallback(() => resizeComposerToContent(ref.current), []);
   useLayoutEffect(() => resize(), [resize, value]);
+  useLayoutEffect(() => {
+    const textarea = ref.current;
+    if (!textarea || typeof ResizeObserver === "undefined") return;
+    let inlineSize: number | undefined;
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries.find(entry => entry.target === textarea);
+      if (!entry || entry.contentRect.width === inlineSize) return;
+      inlineSize = entry.contentRect.width;
+      // Record zero too: reveal at the old width must re-measure a draft that
+      // changed while hidden. Ignore height changes caused by our own resize.
+      if (inlineSize > 0) resize();
+    });
+    observer.observe(textarea);
+    return () => observer.disconnect();
+  }, [resize]);
   return { ref, resize };
 }
 

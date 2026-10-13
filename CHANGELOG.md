@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.15.3
+
+- Keep mounted chat inputs usable after a collapsed pane is revealed. The
+  existing composer measurement also follows width changes without changing
+  the draft, focus, send behavior, or public props.
+
 ## 0.15.2
 
 - Restrict read-only field backgrounds to native inputs and textareas.

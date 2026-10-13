@@ -31,6 +31,15 @@ dismissal, controlled component state, and transient UI state. A consuming
 product owns the trigger, copy, authorization hint, domain draft, mutation,
 retry, cache invalidation, and terminal result.
 
+`ChatComposer` and its existing `useAutoGrowingComposer` hook own native
+textarea measurement. Hidden mounted panes retain their draft and natural
+one-row height rather than committing a zero measurement. The same helper
+re-measures content when its observed inline size changes, including reveal
+and viewport reflow; height-only notifications do not create a resize loop.
+Unmount disconnects the observer. Measurement never submits, edits the draft,
+focuses the input, or enters a product API. Consumers keep the same public props
+and must not add local sizing or visibility controllers.
+
 `JsonInspector` reuses the one icon-only `CopyButton` and its clipboard feedback.
 Caller-owned translated copy labels name the control and its tooltip; they do
 not replace icon geometry with text in a square button. Disclosure remains

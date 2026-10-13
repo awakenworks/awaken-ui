@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Button, DesignWorkbench, TextAreaField, TextField, type DesignWorkbenchMode } from "../src/index.js";
+import { Button, ChatComposer, DesignWorkbench, TextAreaField, TextField, type DesignWorkbenchMode } from "../src/index.js";
 import familyTheme from "../src/styles/family.css?raw";
 
 export function DesignWorkbenchGallery() {
   const [mode, setMode] = useState<DesignWorkbenchMode>("design");
+  const [message, setMessage] = useState("");
   const parameters = new URLSearchParams(window.location.search);
   return <main className="workbench-gallery">
     <style>{familyTheme}</style>
@@ -21,7 +22,9 @@ export function DesignWorkbenchGallery() {
         labels={{ mode: "Design modes", describe: "Describe", design: "Design", test: "Test", review: "Review",
           rail: "Design assistant", editor: "Structured design", testPanel: "Test workspace", reviewPanel: "Review workspace",
           showRail: "Show assistant", hideRail: "Hide assistant" }}
-        rail={<div><h2>Design assistant</h2>{Array.from({ length: 20 }, (_, index) => <p key={index}>Conversation turn {index + 1}</p>)}<TextAreaField label="Assistant message" /></div>}
+        rail={<div><h2>Design assistant</h2>{Array.from({ length: 20 }, (_, index) => <p key={index}>Conversation turn {index + 1}</p>)}
+          <ChatComposer value={message} onChange={setMessage} onSubmit={() => setMessage("")} ariaLabel="Assistant message" placeholder="Assistant message" sendLabel="Send message" />
+        </div>}
         editor={<div>{Array.from({ length: 30 }, (_, index) => <TextField key={index} label={`Design field ${index + 1}`} />)}</div>}
         test={<div><TextAreaField label="Test input" /></div>}
         review={<div>Review the exact candidate</div>}

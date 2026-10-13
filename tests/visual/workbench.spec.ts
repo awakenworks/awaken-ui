@@ -32,6 +32,10 @@ for (const direction of ["ltr", "rtl"]) {
       const describe = modes.getByRole("button", { name: "Describe", exact: true });
       await describe.focus();
       await describe.press("Enter");
+      // C6 mounted while hidden + revealed at real browser geometry -> the
+      // shared composer has a visible native row and accepts keyboard input.
+      // Value, visibility and reflow remain UI behavior, not a product command.
+      await expect(page.getByLabel("Assistant message")).toBeVisible();
       await page.getByLabel("Assistant message").fill("retained optional request");
       await modes.getByRole("button", { name: "Design", exact: true }).click();
       await expect(page.getByLabel("Design field 1", { exact: true })).toHaveValue("focused manual draft");
@@ -101,3 +105,30 @@ for (const direction of ["ltr", "rtl"]) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
 }
+
+test("a hidden composer reflows its retained draft on reveal and viewport changes", async ({ page }) => {
+  // C7 hidden mount -> reveal -> multiline input; C8 collapse/reveal at the
+  // same width retains the same draft and sizing; C9 narrow RTL -> text reflows
+  // within the real viewport. No fake DOM geometry or forced input activation.
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/workbench?rail=collapsed");
+  const modes = page.getByRole("group", { name: "Design modes" });
+  await modes.getByRole("button", { name: "Describe", exact: true }).click();
+  const input = page.getByLabel("Assistant message");
+  const value = "Retained multiline draft\n".repeat(5);
+  await input.fill(value);
+  const measured = await input.evaluate(node => ({ height: node.clientHeight, content: node.scrollHeight }));
+  expect(measured.height).toBeGreaterThan(0);
+  expect(measured.height).toBe(measured.content);
+  await modes.getByRole("button", { name: "Hide assistant" }).click();
+  await modes.getByRole("button", { name: "Show assistant" }).click();
+  await expect(input).toHaveValue(value);
+  await expect(input).toBeVisible();
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.locator("html").evaluate(node => { node.setAttribute("dir", "rtl"); });
+  await modes.getByRole("button", { name: "Describe", exact: true }).click();
+  await expect(input).toHaveValue(value);
+  await input.fill("مسودة محفوظة\n".repeat(4));
+  expect(await input.evaluate(node => node.clientHeight)).toBeGreaterThan(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});

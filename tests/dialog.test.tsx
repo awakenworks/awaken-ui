@@ -45,6 +45,9 @@ describe("Dialog", () => {
     await waitFor(() => expect(opener).toHaveFocus());
   });
   it("moves focus into the modal, closes with Escape, and restores focus", async () => {
+    // F1 native activation schedules the one headless focus owner; dialog
+    // presence is not its completed focus receipt. F2 Escape schedules return
+    // to the same opener. Await these effects without replacing their owner.
     const user = userEvent.setup();
     render(<DialogHarness />);
     const trigger = screen.getByRole("button", { name: "Open profile" });
@@ -52,12 +55,12 @@ describe("Dialog", () => {
     await user.click(trigger);
 
     expect(screen.getByRole("dialog", { name: "Profile" })).toBeVisible();
-    expect(screen.getByRole("button", { name: "Close profile" })).toHaveFocus();
+    await waitFor(() => expect(screen.getByRole("button", { name: "Close profile" })).toHaveFocus());
 
     await user.keyboard("{Escape}");
 
     expect(screen.queryByRole("dialog", { name: "Profile" })).not.toBeInTheDocument();
-    expect(trigger).toHaveFocus();
+    await waitFor(() => expect(trigger).toHaveFocus());
   });
 
   it("provides an accessible close control", async () => {
