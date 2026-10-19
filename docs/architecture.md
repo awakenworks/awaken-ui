@@ -61,6 +61,12 @@ All modal presentations share one private refusal adapter: a caller's explicit
 `open` true after a close event has already changed focus bookkeeping. This
 adds no event-detail type to the public contract and no separate focus owner.
 
+Modal content also takes pointer precedence over background notifications. The
+shared toast recipe derives its presentation from the shared modal viewports:
+while a modal is mounted, notifications remain queued beneath its overlay and
+cannot intercept its controls. Closing the last modal restores their ordinary
+layer and actions. This adds no dialog state, dismissal handler or focus owner.
+
 Feedback states retain one shared structural recipe. Empty/error blocks stack
 caller-owned title, explanation and recovery action; existing status loading
 rows remain compact. Neutral tone is not a row-layout decision. Translated and

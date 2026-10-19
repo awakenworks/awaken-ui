@@ -232,6 +232,9 @@ function Gallery() {
             onClick={() =>
               toast.push({
                 message: "The draft was saved.",
+                // Keep the gallery notification available for explicit dismissal
+                // and modal collision checks; timer behavior has unit coverage.
+                duration: 0,
                 tone: "success",
               })
             }

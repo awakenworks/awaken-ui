@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.15.4
+
+- Keep queued notifications beneath active modals so they cannot intercept a
+  dialog action or dismiss it as an outside click. Notification controls return
+  after the modal closes.
+
 ## 0.15.3
 
 - Keep mounted chat inputs usable after a collapsed pane is revealed. The

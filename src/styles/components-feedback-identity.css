@@ -24,6 +24,17 @@
   pointer-events: auto;
 }
 
+/* The existing modal viewport is the presentation authority. Do not add a
+   second modal registry or let an interactive background toast opt back into
+   pointer events beneath the headless engine's inert page. */
+body:has(.ui-overlay__viewport, .ui-drawer__viewport, .ui-dialog-surface__viewport) .ui-toast-region {
+  z-index: calc(var(--ui-z-overlay) - 1);
+}
+
+body:has(.ui-overlay__viewport, .ui-drawer__viewport, .ui-dialog-surface__viewport) .ui-toast {
+  pointer-events: none;
+}
+
 .ui-toast[data-tone="danger"],
 .ui-toast[data-tone="error"] {
   border-inline-start-color: var(--ui-color-danger);
