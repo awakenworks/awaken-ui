@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.16.0
+
+- Add optional `SchemaForm.onValidityChange` and form/source presentation for
+  one shared JSON editor. Basic root types reuse the caller Schema. Retain invalid text, refresh valid source after caller
+  edits, and keep remaining row buffers aligned after array removal. Domain
+  validation and caller values remain with the consuming application.
+
 ## 0.15.4
 
 - Keep queued notifications beneath active modals so they cannot intercept a

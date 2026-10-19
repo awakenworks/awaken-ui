@@ -45,6 +45,19 @@ Caller-owned translated copy labels name the control and its tooltip; they do
 not replace icon geometry with text in a square button. Disclosure remains
 independent of copying and label changes, with no product transport effects.
 
+`SchemaForm` owns one transient JSON-buffer collection for its fallback fields.
+The same renderer supports form/source presentation and reports the combined
+editing status through optional `onValidityChange`. JSON syntax and simple root
+types come from the supplied Schema; full Schema/domain admission stays outside. Invalid text never
+replaces caller data. Field edits refresh a valid source view; invalid buffers
+survive ordinary rerenders and hidden mounted panes. Explicit array removal
+remaps the remaining buffers with their rows, and unmount discards only local
+editing state. Source/form changes retain unapplied errors. A valid replacement of a whole
+value explicitly supersedes its nested buffers. This is not full JSON Schema or
+domain validation: products keep their
+existing admission, save and execution owners. Consumers must not add another
+fallback parser or infer validity by querying component DOM.
+
 Native text-input read-only presentation does not apply to interactive selects
 merely because CSS `:read-only` matches them. Controls use caller-mapped semantic
 colors in their presentation partition; disabled state remains independent.
