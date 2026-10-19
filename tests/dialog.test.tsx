@@ -23,6 +23,28 @@ function DialogHarness() {
 }
 
 describe("Dialog", () => {
+  it("returns to a dialog-selected field through the original focus owner", async () => {
+    // DT-CLOSE R1 selection + closed disclosure -> engine-owned return to the
+    // exact field after modal cleanup; R2 Escape without selection -> original
+    // opener. No callback/timer competes with the engine's final focus.
+    function Form() {
+      const [open, setOpen] = useState(false);
+      const restore = useRef<HTMLElement | null>(null);
+      const destination = useRef<HTMLInputElement>(null);
+      return <><button onClick={(event) => { restore.current = event.currentTarget; setOpen(true); }}>Find field</button>
+        <details><summary>More settings</summary><input aria-label="Destination" ref={destination} /></details>
+        <Dialog open={open} onOpenChange={setOpen} closeLabel="Close search" title="Fields" restoreFocusTo={restore}>
+          <button onClick={() => { restore.current = destination.current; setOpen(false); }}>Choose field</button>
+        </Dialog></>;
+    }
+    const user = userEvent.setup(); render(<Form />);
+    const opener = screen.getByRole("button", { name: "Find field" });
+    await user.click(opener);
+    await user.click(screen.getByRole("button", { name: "Choose field" }));
+    await waitFor(() => expect(screen.getByLabelText("Destination")).toHaveFocus());
+    await user.click(opener); await user.keyboard("{Escape}");
+    await waitFor(() => expect(opener).toHaveFocus());
+  });
   it.each(["save", "escape", "close"])("restores an explicit opener after an autofocused form unmounts through %s", async (action) => {
     // DT-FOCUS1 native autofocus + conditional mounted form x acknowledged
     // save/Escape/close -> engine-owned return to the exact connected opener.

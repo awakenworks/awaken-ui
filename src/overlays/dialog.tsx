@@ -9,6 +9,7 @@ import {
 import { HeadlessDialog, modalOpenChange } from "../internal/headless/dialog.js";
 import { cx } from "../internal/cx.js";
 import { Button } from "../primitives/button.js";
+import { revealFocusTarget } from "../forms/reveal-and-focus.js";
 
 export type OverlaySize = "sm" | "md" | "lg";
 export type DialogClasses = {
@@ -88,7 +89,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
               className={cx("ui-dialog", classes?.panel, className)}
               data-size={size}
               initialFocus={initialFocus}
-              finalFocus={restoreFocusTo}
+              finalFocus={restoreFocusTo ? () => revealFocusTarget(restoreFocusTo.current, true) ?? null : undefined}
               ref={ref}
             >
               <header className={cx("ui-dialog__header", classes?.header)}>

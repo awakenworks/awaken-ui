@@ -38,6 +38,11 @@ Hidden, inert, disabled and detached targets cannot receive focus. Products own
 field-path resolution and call the helper only after their existing navigation
 has revealed the destination; the helper never switches tabs, validates a
 domain value, edits inputs, submits, retries or restores a modal's focus.
+Dialog-selected navigation updates the existing `Dialog.restoreFocusTo` ref.
+The same disclosure preparation resolves that destination during the engine's
+final-focus callback, without focusing inert background content. The engine
+alone performs focus after closing. Products do not add a focus timer, lifecycle
+callback or competing restoration handler; ordinary dismissal retains its opener.
 
 `ChatComposer` and its existing `useAutoGrowingComposer` hook own native
 textarea measurement. Hidden mounted panes retain their draft and natural
