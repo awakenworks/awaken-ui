@@ -141,6 +141,7 @@ export {
   type EditorFormClasses,
   type EditorFormProps,
 } from "./forms/editor-form.js";
+export { revealAndFocus } from "./forms/reveal-and-focus.js";
 export {
   SchemaForm,
   stringControlForSchema,

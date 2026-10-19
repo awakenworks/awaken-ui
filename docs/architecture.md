@@ -31,6 +31,14 @@ dismissal, controlled component state, and transient UI state. A consuming
 product owns the trigger, copy, authorization hint, domain draft, mutation,
 retry, cache invalidation, and terminal result.
 
+`revealAndFocus` owns explicit navigation to a caller-selected field or section.
+It opens native disclosure ancestors and focuses the requested control (or the
+first available control inside a section), without animation or activation.
+Hidden, inert, disabled and detached targets cannot receive focus. Products own
+field-path resolution and call the helper only after their existing navigation
+has revealed the destination; the helper never switches tabs, validates a
+domain value, edits inputs, submits, retries or restores a modal's focus.
+
 `ChatComposer` and its existing `useAutoGrowingComposer` hook own native
 textarea measurement. Hidden mounted panes retain their draft and natural
 one-row height rather than committing a zero measurement. The same helper
