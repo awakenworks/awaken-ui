@@ -26,7 +26,10 @@ export function revealAndFocus(target: HTMLElement | null | undefined): boolean 
  * focus after removing the modal boundary. This helper never focuses. */
 export function revealFocusTarget(target: HTMLElement | null | undefined, restoring = false): HTMLElement | undefined {
   if (!target || !available(target, restoring)) return;
-  const candidates = target.matches(controls) ? [target] : [...target.querySelectorAll<HTMLElement>(controls)];
+  const candidates = target.matches(controls) ? [target] : [...new Set([
+    ...target.querySelectorAll<HTMLElement>('input:not([type="hidden"]), textarea, select'),
+    ...target.querySelectorAll<HTMLElement>(controls),
+  ])];
   const control = candidates.find((candidate) => available(candidate, restoring));
   if (!control) return;
   for (let ancestor = control.parentElement; ancestor; ancestor = ancestor.parentElement) {

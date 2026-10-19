@@ -33,7 +33,7 @@ retry, cache invalidation, and terminal result.
 
 `revealAndFocus` owns explicit navigation to a caller-selected field or section.
 It opens native disclosure ancestors and focuses the requested control (or the
-first available control inside a section), without animation or activation.
+first available form control inside a section, before links/actions), without animation or activation.
 Hidden, inert, disabled and detached targets cannot receive focus. Products own
 field-path resolution and call the helper only after their existing navigation
 has revealed the destination; the helper never switches tabs, validates a

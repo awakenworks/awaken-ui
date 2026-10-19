@@ -39,11 +39,12 @@ it("rejects unavailable targets without opening disclosures or moving focus", ()
 });
 
 it("uses the first available section control and permits read-only inspection", () => {
-  // R3 section + unavailable early controls -> first available native control;
+  // R3 section + navigation/disclosure/unavailable early controls -> first
+  // available form control, before links, section actions or summaries;
   // R4 read-only field -> focus only, still read-only; R5 repeated request ->
   // explicit focus can return to the same field without a timer or activation.
-  const { container } = render(<section><input disabled /><input hidden />
-    <input aria-label="Inspect" readOnly value="unchanged" /><button>Other</button></section>);
+  const { container } = render(<section><a href="#help">Guide</a><input disabled /><input hidden />
+    <details><summary>Settings</summary><input aria-label="Inspect" readOnly value="unchanged" /></details><button>Other</button></section>);
   expect(revealAndFocus(container.firstElementChild as HTMLElement)).toBe(true);
   expect(screen.getByLabelText("Inspect")).toHaveFocus();
   screen.getByRole("button").focus();
