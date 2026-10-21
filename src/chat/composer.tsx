@@ -31,16 +31,21 @@ export function useAutoGrowingComposer(value: string): {
     const textarea = ref.current;
     if (!textarea || typeof ResizeObserver === "undefined") return;
     let inlineSize: number | undefined;
+    let frame: number | undefined;
     const observer = new ResizeObserver((entries) => {
       const entry = entries.find(entry => entry.target === textarea);
       if (!entry || entry.contentRect.width === inlineSize) return;
       inlineSize = entry.contentRect.width;
       // Record zero too: reveal at the old width must re-measure a draft that
       // changed while hidden. Ignore height changes caused by our own resize.
-      if (inlineSize > 0) resize();
+      if (frame !== undefined) cancelAnimationFrame(frame);
+      frame = inlineSize > 0 ? requestAnimationFrame(() => { frame = undefined; resize(); }) : undefined;
     });
     observer.observe(textarea);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (frame !== undefined) cancelAnimationFrame(frame);
+    };
   }, [resize]);
   return { ref, resize };
 }

@@ -1,7 +1,7 @@
 import { act, render, screen } from "@testing-library/react";
 import { ChatComposer, resizeComposerToContent } from "../src/index.js";
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); });
 
 it("retains native row sizing when there is no measurable layout", () => {
   // C1 absent element => no effect. C2 hidden/zero scrollHeight => natural
@@ -20,7 +20,10 @@ it("uses the same content measurement for reveal, reflow and hidden edits, then 
   // resize retained multiline content; R3 same width + height change => no
   // feedback loop; R4 changed width => reflow; R5 hidden edit then reveal at
   // old width => measure new content. R6 unmount => disconnect.
+  // R8 width observation -> measure next animation frame, outside the observer
+  // delivery phase, so resizing cannot raise an undelivered-notification loop.
   // Every rule leaves the draft and product submit callback untouched.
+  vi.useFakeTimers();
   let notify!: ResizeObserverCallback;
   const observe = vi.fn(), disconnect = vi.fn();
   vi.stubGlobal("ResizeObserver", class {
@@ -34,10 +37,13 @@ it("uses the same content measurement for reveal, reflow and hidden edits, then 
   const field = screen.getByRole("textbox") as HTMLTextAreaElement;
   let height = 0;
   Object.defineProperty(field, "scrollHeight", { configurable: true, get: () => height });
-  const report = (width: number) => act(() => notify([{
-    target: field, contentRect: new DOMRectReadOnly(0, 0, width, 0),
-    borderBoxSize: [], contentBoxSize: [], devicePixelContentBoxSize: [],
-  }], {} as ResizeObserver));
+  const report = (width: number) => act(() => {
+    notify([{
+      target: field, contentRect: new DOMRectReadOnly(0, 0, width, 0),
+      borderBoxSize: [], contentBoxSize: [], devicePixelContentBoxSize: [],
+    }], {} as ResizeObserver);
+    vi.advanceTimersToNextFrame();
+  });
   report(0); expect(field.style.height).toBe("auto");
   height = 84; report(240); expect(field.style.height).toBe("84px");
   height = 999; report(240); expect(field.style.height).toBe("84px");

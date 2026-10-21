@@ -37,6 +37,7 @@ export function ChatMessageList({
 }: ChatMessageListProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const followingRef = useRef(true);
+  const geometryRef = useRef<{ width: number; height: number } | undefined>(undefined);
   const [showJump, setShowJump] = useState(false);
   const scrollToBottom = useCallback((behavior: ScrollBehavior) => {
     const viewport = viewportRef.current;
@@ -45,23 +46,26 @@ export function ChatMessageList({
     if (typeof viewport.scrollTo !== "function") viewport.scrollTop = viewport.scrollHeight;
   }, []);
 
+  const synchronize = useCallback(() => {
+    const viewport = viewportRef.current;
+    if (!viewport || viewport.clientHeight === 0) return;
+    if (followingRef.current) scrollToBottom("auto");
+    geometryRef.current = { width: viewport.clientWidth, height: viewport.clientHeight };
+    const following = isNearChatBottom(viewport.scrollTop, viewport.scrollHeight, viewport.clientHeight);
+    followingRef.current = following;
+    setShowJump(!following);
+  }, [scrollToBottom]);
+
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
-    const synchronize = () => {
-      if (viewport.clientHeight === 0) return;
-      if (followingRef.current) scrollToBottom("auto");
-      const following = isNearChatBottom(viewport.scrollTop, viewport.scrollHeight, viewport.clientHeight);
-      followingRef.current = following;
-      setShowJump(!following);
-    };
     const mutations = typeof MutationObserver === "undefined" ? undefined : new MutationObserver(synchronize);
     const resize = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(synchronize);
     mutations?.observe(viewport, { childList: true, subtree: true, characterData: true });
     resize?.observe(viewport);
     synchronize();
     return () => { mutations?.disconnect(); resize?.disconnect(); };
-  }, [scrollToBottom]);
+  }, [synchronize]);
 
   return (
     <div className={cx("ui-chat-list", className)}>
@@ -76,6 +80,14 @@ export function ChatMessageList({
         onScroll={(event) => {
           const node = event.currentTarget;
           if (node.clientHeight === 0) return;
+          // A browser can dispatch reflow/anchoring scroll before ResizeObserver.
+          // Preserve the reader's preceding decision instead of treating that
+          // geometry change as an intentional scroll into history.
+          const previous = geometryRef.current;
+          if (!previous || previous.width !== node.clientWidth || previous.height !== node.clientHeight) {
+            synchronize();
+            return;
+          }
           const following = isNearChatBottom(node.scrollTop, node.scrollHeight, node.clientHeight);
           followingRef.current = following;
           setShowJump(!following);
@@ -90,7 +102,9 @@ export function ChatMessageList({
           onClick={() => {
             followingRef.current = true;
             setShowJump(false);
-            scrollToBottom(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth");
+            // An explicit jump settles immediately: intermediate smooth-scroll
+            // events must not revoke following before the next reflow.
+            scrollToBottom("auto");
           }}
         >
           <span aria-hidden="true">{jumpIcon ?? <ArrowDown />}</span> {jumpLabel}

@@ -33,7 +33,10 @@ it("uses one follow/read decision for content, resizing and hidden panes", () =>
   const size = () => act(() => resize([], {} as ResizeObserver));
   const content = () => act(() => mutate([], {} as MutationObserver));
   size(); expect(log.scrollTop).toBe(800);
-  height = 268; size(); expect(log.scrollTop).toBe(932);
+  // R7 native reflow scroll can precede the resize callback. It retains the
+  // preceding follow decision, rather than silently switching to history.
+  height = 268; log.scrollTop = 750; fireEvent.scroll(log);
+  size(); expect(log.scrollTop).toBe(932);
   expect(screen.queryByRole("button", { name: "Latest" })).not.toBeInTheDocument();
   log.scrollTop = 300; fireEvent.scroll(log);
   height = 200; size(); total = 1600; content();

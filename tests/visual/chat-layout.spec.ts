@@ -7,6 +7,8 @@ import { expect, test } from "@playwright/test";
 // overflow. This fixture renders the public components, not copied chat DOM.
 for (const width of [320, 1280]) for (const direction of ["ltr", "rtl"]) {
   test(`chat ${width}/${direction} preserves composition and reading position`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on("pageerror", error => errors.push(error.message));
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/chat");
     await page.evaluate(dir => { document.documentElement.dir = dir; }, direction);
@@ -34,6 +36,10 @@ for (const width of [320, 1280]) for (const direction of ["ltr", "rtl"]) {
     const latest = page.getByRole("button", { name: "Latest", exact: true });
     await latest.focus(); await page.keyboard.press("Enter");
     await expect.poll(gap).toBeLessThan(2);
+    await page.setViewportSize({ width: width === 320 ? 640 : 390, height: 844 });
+    await input.fill(Array.from({ length: 12 }, (_, i) => `Retained line ${i}: review evidence.`).join("\n"));
+    await expect.poll(gap).toBeLessThan(2);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    expect(errors).toEqual([]);
   });
 }

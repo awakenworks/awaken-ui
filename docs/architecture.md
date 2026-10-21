@@ -61,6 +61,9 @@ decision. Native scrolling and a focusable log provide the keyboard path; all
 observers disconnect on unmount. The composer owns its input padding and footer
 layout, including its hint and actions. Products supply placement and copy,
 without restoring the retired two-column input layout.
+Native reflow scroll events use that preceding decision even if they arrive
+before a resize notification. Explicit Latest jumps settle immediately, so
+intermediate animation events cannot revoke following during another reflow.
 
 `JsonInspector` reuses the one icon-only `CopyButton` and its clipboard feedback.
 Caller-owned translated copy labels name the control and its tooltip; they do
