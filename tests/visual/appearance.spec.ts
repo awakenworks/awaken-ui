@@ -12,6 +12,22 @@ const styles = ["contract", "family", "components-core", "components-forms-data"
 // Explicit mode wins over later OS changes; system mode resumes live changes.
 for (const mode of ["light", "dark"] as const) {
   for (const brand of ["works", "agents", "objects", "workforce"]) {
+    test(`${brand} ${mode} agent badges remain readable on every ordinary surface`, async ({ page }) => {
+      // DT-INK: four family palettes x light/dark x canvas/surface/muted.
+      // A1 a compact Agent badge inherits its surrounding background -> its
+      // small text must retain AA contrast on every admitted ordinary surface.
+      // The product owns the tone meaning; one shared recipe owns its ink.
+      await page.emulateMedia({ colorScheme: mode });
+      await page.goto("/");
+      await page.setContent(`<!doctype html><html lang="en" data-brand="${brand}" data-theme="${mode}"><head><title>Status contrast</title><style>${styles}
+        body{background:var(--ui-color-canvas);color:var(--ui-color-text);font-family:var(--ui-font-body)}
+      </style></head><body><main><h1>Status contrast</h1>${["canvas", "surface", "surface-muted"].map(surface =>
+        `<section style="padding:16px;background:var(--ui-color-${surface})"><h2>${surface}</h2>${["badge", "status-pill", "chip"].map(recipe =>
+          `<span class="ui-${recipe} ui-${recipe}--agent">Agent activity</span>`).join(" ")}</section>`).join("")}</main></body></html>`);
+      const audit = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
+      expect(audit.violations).toEqual([]);
+    });
+
     test(`${brand} ${mode} appearance handles long text and native controls`, async ({ page }) => {
       await page.emulateMedia({ colorScheme: mode });
       await page.goto("/");

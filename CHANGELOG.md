@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Use the stronger existing accent ink for compact Agent badges, chips and
+  status pills so small text remains readable on canvas and muted surfaces.
+
 ## 0.16.0
 
 - Add optional `SchemaForm.onValidityChange` and form/source presentation for

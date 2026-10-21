@@ -265,7 +265,7 @@ textarea.ui-input:read-only:not(:disabled) {
 .ui-badge--agent,
 .ui-status-pill--agent,
 .ui-chip--agent {
-  color: var(--ui-color-accent);
+  color: var(--ui-color-accent-hover);
 }
 
 .ui-badge--status,
