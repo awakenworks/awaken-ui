@@ -1,4 +1,5 @@
 import { BrandGallery } from "./brand-gallery.js";
+import { ChatGallery } from "./chat-gallery.js";
 import { DesignWorkbenchGallery } from "./design-workbench-gallery.js";
 import { StrictMode, useLayoutEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
@@ -476,7 +477,7 @@ createRoot(document.getElementById("root")!).render(
       regionLabel="Notifications"
     >
       <ConfirmProvider>
-        {window.location.pathname === "/workbench" ? <DesignWorkbenchGallery /> : <Gallery />}
+        {window.location.pathname === "/workbench" ? <DesignWorkbenchGallery /> : window.location.pathname === "/chat" ? <ChatGallery /> : <Gallery />}
       </ConfirmProvider>
     </ToastProvider>
   </StrictMode>,

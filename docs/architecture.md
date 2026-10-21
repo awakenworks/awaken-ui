@@ -53,6 +53,15 @@ Unmount disconnects the observer. Measurement never submits, edits the draft,
 focuses the input, or enters a product API. Consumers keep the same public props
 and must not add local sizing or visibility controllers.
 
+`ChatMessageList` owns the same follow/read decision for content mutations and
+viewport resizing. A reader following the bottom remains there when the composer
+grows or the viewport changes; a reader inspecting history retains their position
+and the existing latest-message action. Hidden viewports do not replace that
+decision. Native scrolling and a focusable log provide the keyboard path; all
+observers disconnect on unmount. The composer owns its input padding and footer
+layout, including its hint and actions. Products supply placement and copy,
+without restoring the retired two-column input layout.
+
 `JsonInspector` reuses the one icon-only `CopyButton` and its clipboard feedback.
 Caller-owned translated copy labels name the control and its tooltip; they do
 not replace icon geometry with text in a square button. Disclosure remains

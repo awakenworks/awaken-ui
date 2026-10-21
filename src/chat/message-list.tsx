@@ -47,12 +47,20 @@ export function ChatMessageList({
 
   useEffect(() => {
     const viewport = viewportRef.current;
-    if (!viewport || typeof MutationObserver === "undefined") return;
-    const observer = new MutationObserver(() => {
+    if (!viewport) return;
+    const synchronize = () => {
+      if (viewport.clientHeight === 0) return;
       if (followingRef.current) scrollToBottom("auto");
-    });
-    observer.observe(viewport, { childList: true, subtree: true, characterData: true });
-    return () => observer.disconnect();
+      const following = isNearChatBottom(viewport.scrollTop, viewport.scrollHeight, viewport.clientHeight);
+      followingRef.current = following;
+      setShowJump(!following);
+    };
+    const mutations = typeof MutationObserver === "undefined" ? undefined : new MutationObserver(synchronize);
+    const resize = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(synchronize);
+    mutations?.observe(viewport, { childList: true, subtree: true, characterData: true });
+    resize?.observe(viewport);
+    synchronize();
+    return () => { mutations?.disconnect(); resize?.disconnect(); };
   }, [scrollToBottom]);
 
   return (
@@ -61,11 +69,13 @@ export function ChatMessageList({
         ref={viewportRef}
         className={cx("ui-chat-list__viewport", viewportClassName)}
         role="log"
+        tabIndex={0}
         aria-label={ariaLabel}
         aria-busy={busy}
         aria-live="polite"
         onScroll={(event) => {
           const node = event.currentTarget;
+          if (node.clientHeight === 0) return;
           const following = isNearChatBottom(node.scrollTop, node.scrollHeight, node.clientHeight);
           followingRef.current = following;
           setShowJump(!following);
@@ -80,7 +90,7 @@ export function ChatMessageList({
           onClick={() => {
             followingRef.current = true;
             setShowJump(false);
-            scrollToBottom("smooth");
+            scrollToBottom(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth");
           }}
         >
           <span aria-hidden="true">{jumpIcon ?? <ArrowDown />}</span> {jumpLabel}

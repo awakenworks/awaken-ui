@@ -134,7 +134,10 @@ export function ChatComposer({
         />
       </div>
       <div className={cx("ui-chat-composer__controls", classes?.controls)}>
-        <div className={cx("ui-chat-composer__leading", classes?.leading)}>{leadingActions}</div>
+        <div className={cx("ui-chat-composer__leading", classes?.leading)}>
+          {leadingActions}
+          {hint === undefined ? null : <div className={cx("ui-chat-composer__hint", classes?.hint)}>{hint}</div>}
+        </div>
         <div className={cx("ui-chat-composer__actions", classes?.actions)}>
           {onStop && stopLabel ? (
             <button className={classes?.stop} type="button" disabled={!busy} onClick={onStop} aria-label={stopLabel} title={stopLabel}>
@@ -146,7 +149,6 @@ export function ChatComposer({
           </button>
         </div>
       </div>
-      {hint === undefined ? null : <div className={cx("ui-chat-composer__hint", classes?.hint)}>{hint}</div>}
     </form>
   );
 }
