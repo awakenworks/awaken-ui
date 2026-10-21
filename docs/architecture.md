@@ -120,6 +120,10 @@ default-input changes do not override the user's choice. Controlled Describe
 reveals the same rail without changing its retained preference; collapse uses
 native hidden semantics without discarding inputs, conversations or test state.
 The product still owns mode selection, availability and all command effects.
+On narrow screens an expanded conversation stays visible above the selected
+main pane through Design, Test and Review. The same explicit rail toggle can
+collapse it at every viewport; changing a main view never silently hides a
+conversation that the user left open. Native page scrolling remains unbounded.
 
 ## Optional internationalization engine
 

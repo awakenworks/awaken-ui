@@ -95,7 +95,7 @@
 
   .ui-design-workbench__modes {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
   }
 
   .ui-design-workbench__mode {
@@ -105,7 +105,11 @@
     white-space: normal;
   }
 
-  .ui-design-workbench__rail-toggle { display: none; }
+  .ui-design-workbench__rail-toggle {
+    display: inline-flex;
+    flex-basis: 100%;
+    white-space: normal;
+  }
   .ui-design-workbench__rail { position: static; max-height: none; overflow: visible; }
 
   .ui-design-workbench__pane,
@@ -115,7 +119,7 @@
     grid-row: auto;
   }
 
-  .ui-design-workbench[data-mode="describe"] [data-design-pane="describe"],
+  .ui-design-workbench:not([data-rail-collapsed]) [data-design-pane="describe"],
   .ui-design-workbench[data-mode="design"] [data-design-pane="design"],
   .ui-design-workbench[data-mode="test"] [data-design-pane="test"],
   .ui-design-workbench[data-mode="review"] [data-design-pane="review"] {

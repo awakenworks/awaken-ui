@@ -4,7 +4,8 @@ import { expect, test } from "@playwright/test";
 // W1 desktop + long editor scroll -> controls and assistant remain in view;
 // W2 tall assistant + focus last input -> only its bounded rail scrolls;
 // W3 collapse/reopen or Test/Design -> uncontrolled drafts remain unchanged;
-// W4 mobile LTR/RTL -> one visible mode, ordinary page scroll, no overflow.
+// W4 mobile LTR/RTL -> retained conversation plus selected main view, ordinary
+// page scroll and no overflow. Only explicit collapse hides the conversation.
 // W5 collapsed rail + product-controlled Describe -> visible assistant, same
 // draft; hide from Describe -> Design, not an empty conversation viewport.
 for (const direction of ["ltr", "rtl"]) {
@@ -92,6 +93,7 @@ for (const direction of ["ltr", "rtl"]) {
     await page.setViewportSize({ width: 360, height: 800 });
     await page.goto("/workbench");
     await page.evaluate((dir) => { document.documentElement.dir = dir; }, direction);
+    await page.getByLabel("Design field 1", { exact: true }).fill("retained mobile configuration");
     await page.getByRole("button", { name: "Request assistance" }).click();
     const rail = page.getByRole("region", { name: "Design assistant" });
     await expect(rail).toHaveCSS("position", "static");
@@ -99,7 +101,17 @@ for (const direction of ["ltr", "rtl"]) {
     await expect(page.getByRole("region", { name: "Structured design" })).toBeHidden();
     await page.getByLabel("Assistant message").fill("mobile draft");
     await page.getByRole("button", { name: "Review", exact: true }).click();
+    await expect(rail).toBeVisible();
+    await expect(page.getByRole("region", { name: "Review workspace" })).toBeVisible();
+    await page.getByRole("button", { name: "Hide assistant", exact: true }).click();
     await expect(rail).toBeHidden();
+    await page.getByRole("button", { name: "Show assistant", exact: true }).click();
+    await page.getByRole("button", { name: "Test", exact: true }).click();
+    await expect(rail).toBeVisible();
+    await page.getByLabel("Test input").fill("retained mobile test");
+    await page.getByRole("button", { name: "Design", exact: true }).click();
+    await expect(page.getByLabel("Design field 1", { exact: true })).toHaveValue("retained mobile configuration");
+    await expect(page.getByLabel("Assistant message")).toHaveValue("mobile draft");
     await page.getByRole("button", { name: "Describe", exact: true }).click();
     await expect(page.getByLabel("Assistant message")).toHaveValue("mobile draft");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
