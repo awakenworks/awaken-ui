@@ -34,6 +34,14 @@ for (const width of [320, 1280]) for (const direction of ["ltr", "rtl"]) {
     await input.fill("Short draft");
     await expect.poll(() => log.evaluate(n => n.scrollTop)).toBeLessThan(2);
     const latest = page.getByRole("button", { name: "Latest", exact: true });
+    // R6 logical direction must not reverse the anchor without reversing a
+    // physical transform: in both directions Latest is centered and wholly
+    // contained in its same transcript, without changing the reader's scroll.
+    const transcriptBox = (await page.locator(".ui-chat-list").boundingBox())!;
+    const latestBox = (await latest.boundingBox())!;
+    expect(Math.abs(latestBox.x + latestBox.width / 2 - transcriptBox.x - transcriptBox.width / 2)).toBeLessThan(1);
+    expect(latestBox.x).toBeGreaterThanOrEqual(transcriptBox.x);
+    expect(latestBox.x + latestBox.width).toBeLessThanOrEqual(transcriptBox.x + transcriptBox.width);
     await latest.focus(); await page.keyboard.press("Enter");
     await expect.poll(gap).toBeLessThan(2);
     await page.setViewportSize({ width: width === 320 ? 640 : 390, height: 844 });
